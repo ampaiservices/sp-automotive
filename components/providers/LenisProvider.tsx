@@ -8,7 +8,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function LenisProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
-    const lenis = new Lenis({ duration: 1.1, smoothWheel: true });
+    const lenis = new Lenis({ duration: 0.8, smoothWheel: true });
     function raf(time: number) { lenis.raf(time * 1000); }
     gsap.ticker.add(raf);
     gsap.ticker.lagSmoothing(0);
