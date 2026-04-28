@@ -6,6 +6,7 @@ import Footer from "@/components/footer/Footer";
 import Analytics from "@/components/analytics/Analytics";
 import LocalBusinessJsonLd from "@/components/seo/LocalBusinessJsonLd";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { FRAMES } from "@/lib/hero-frames";
 import "./globals.css";
 
 const anton = Anton({ subsets: ["latin"], weight: "400", variable: "--font-anton", display: "swap" });
@@ -29,7 +30,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${anton.variable} ${inter.variable}`}>
-      <head><LocalBusinessJsonLd /></head>
+      <head>
+        <LocalBusinessJsonLd />
+        {FRAMES.slice(0, 3).map((src) => (
+          <link key={src} rel="preload" as="image" href={src} />
+        ))}
+      </head>
       <body className="bg-bg text-text font-body antialiased">
         <LenisProvider>
           <Navigation />
