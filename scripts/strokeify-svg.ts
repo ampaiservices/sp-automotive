@@ -25,8 +25,8 @@ function main() {
   <style>
     path {
       fill: none;
-      stroke: #dc2626; /* brand red — only place red appears on the site */
-      stroke-width: 2;
+      stroke: #ef4444; /* bright brand red — only place red appears on the site */
+      stroke-width: 14;
       stroke-linecap: round;
       stroke-linejoin: round;
       stroke-dasharray: 100;
