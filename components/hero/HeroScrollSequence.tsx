@@ -97,14 +97,8 @@ export default function HeroScrollSequence() {
       }
     });
 
-    function render() {
-      // Wrap playhead via modulo for infinite cycling
-      const wrapped = ((playheadRef.current % FRAMES.length) + FRAMES.length) % FRAMES.length;
-      const idx = Math.min(FRAMES.length - 1, Math.floor(wrapped));
-      const img = framesRef.current[idx];
-      if (!img || !img.complete) return;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+    // object-cover draw helper used by both the current and next frame in the cross-fade
+    function drawCover(img: HTMLImageElement) {
       const ca = canvas.width / canvas.height;
       const ia = img.width / img.height;
       let dw, dh, dx, dy;
@@ -120,6 +114,35 @@ export default function HeroScrollSequence() {
         dy = (canvas.height - dh) / 2;
       }
       ctx.drawImage(img, dx, dy, dw, dh);
+    }
+
+    // smoothstep easing so the cross-fade eases in/out instead of being linear
+    const smoothstep = (t: number) => t * t * (3 - 2 * t);
+
+    function render() {
+      // Wrap playhead via modulo for infinite cycling
+      const wrapped = ((playheadRef.current % FRAMES.length) + FRAMES.length) % FRAMES.length;
+      const idx = Math.floor(wrapped) % FRAMES.length;
+      const nextIdx = (idx + 1) % FRAMES.length;
+      const frac = wrapped - Math.floor(wrapped); // 0..1 within the current segment
+      const blend = smoothstep(frac);
+
+      const cur = framesRef.current[idx];
+      const nxt = framesRef.current[nextIdx];
+      if (!cur || !cur.complete) return;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Current frame at full opacity (it's the base layer)
+      ctx.globalAlpha = 1;
+      drawCover(cur);
+
+      // Next frame composited on top with the eased blend factor
+      if (nxt && nxt.complete && blend > 0) {
+        ctx.globalAlpha = blend;
+        drawCover(nxt);
+      }
+      ctx.globalAlpha = 1;
 
       // Beat math on the wrapped playhead
       const progress = wrapped / FRAMES.length;
