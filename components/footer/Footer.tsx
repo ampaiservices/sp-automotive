@@ -7,11 +7,11 @@ export default function Footer() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-7xl mx-auto">
         <div>
           <Image
-            src="/logos/sp-mark.jpeg"
+            src="/logos/sp-mark.png"
             alt="SP Automotive"
-            width={240}
-            height={56}
-            className="h-12 w-auto invert contrast-200"
+            width={654}
+            height={241}
+            className="h-16 w-auto invert"
           />
           <p className="mt-3 text-muted text-sm">Sarasota, FL</p>
         </div>
