@@ -24,7 +24,7 @@ export default function Navigation() {
             width={160}
             height={40}
             priority
-            className="h-8 w-auto invert"
+            className="h-8 w-auto invert contrast-200"
           />
         </Link>
         <ul className="hidden md:flex items-center gap-8">

@@ -11,7 +11,7 @@ export default function Footer() {
             alt="SP Automotive"
             width={240}
             height={56}
-            className="h-12 w-auto invert"
+            className="h-12 w-auto invert contrast-200"
           />
           <p className="mt-3 text-muted text-sm">Sarasota, FL</p>
         </div>
