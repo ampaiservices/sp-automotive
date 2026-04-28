@@ -16,17 +16,19 @@ export default function Navigation() {
   const [open, setOpen] = useState(false);
   return (
     <header className="fixed inset-x-0 top-0 z-50 bg-black/80 backdrop-blur-md border-b border-divider">
-      <nav className="flex items-center justify-between px-6 md:px-10 h-16">
-        <Link href="/" aria-label="SP Automotive home" className="flex items-center">
-          <Image
-            src="/logos/sp-mark.jpeg"
-            alt="SP Automotive"
-            width={160}
-            height={40}
-            priority
-            className="h-8 w-auto invert contrast-200"
-          />
-        </Link>
+      <nav className="flex items-center px-6 md:px-10 h-16">
+        <div className="flex-1 flex justify-start">
+          <Link href="/" aria-label="SP Automotive home" className="flex items-center">
+            <Image
+              src="/logos/sp-mark.jpeg"
+              alt="SP Automotive"
+              width={200}
+              height={48}
+              priority
+              className="h-12 w-auto invert contrast-200"
+            />
+          </Link>
+        </div>
         <ul className="hidden md:flex items-center gap-8">
           {links.map((l) => (
             <li key={l.href}>
@@ -34,8 +36,10 @@ export default function Navigation() {
             </li>
           ))}
         </ul>
-        <div className="hidden md:block"><PhoneCTA /></div>
-        <button className="md:hidden text-accent" onClick={() => setOpen(true)} aria-label="Open menu"><Menu className="h-6 w-6" /></button>
+        <div className="flex-1 flex justify-end items-center">
+          <div className="hidden md:block"><PhoneCTA /></div>
+          <button className="md:hidden text-accent" onClick={() => setOpen(true)} aria-label="Open menu"><Menu className="h-6 w-6" /></button>
+        </div>
       </nav>
 
       {open && (
