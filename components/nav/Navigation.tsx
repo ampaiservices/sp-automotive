@@ -16,16 +16,16 @@ export default function Navigation() {
   const [open, setOpen] = useState(false);
   return (
     <header className="fixed inset-x-0 top-0 z-50 bg-black/80 backdrop-blur-md border-b border-divider">
-      <nav className="flex items-center px-6 md:px-10 h-16">
+      <nav className="flex items-center px-6 md:px-10 h-20">
         <div className="flex-1 flex justify-start">
           <Link href="/" aria-label="SP Automotive home" className="flex items-center">
             <Image
               src="/logos/sp-mark.jpeg"
               alt="SP Automotive"
-              width={200}
-              height={48}
+              width={240}
+              height={64}
               priority
-              className="h-12 w-auto invert contrast-200"
+              className="h-16 w-auto invert contrast-200"
             />
           </Link>
         </div>
