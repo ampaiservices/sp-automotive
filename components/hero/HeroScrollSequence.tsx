@@ -3,30 +3,27 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
-import { FRAMES, BEAT_COUNT } from "@/lib/hero-frames";
+import { BEAT_COUNT } from "@/lib/hero-frames";
 import { BeatCopy, BEATS } from "./HeroBeats";
 import HeroMobileFallback from "./HeroMobileFallback";
-import SmokeOverlay from "./SmokeOverlay";
 import HeroLoader from "./HeroLoader";
 import PhoneCTA from "@/components/ui/PhoneCTA";
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 const MIN_LOAD_MS = 4000;
-// Pixels of scroll required to advance through ONE full cycle of all frames.
-// Roughly one viewport height = one cycle. Lower = faster cycling.
-const PIXELS_PER_CYCLE = 1200;
+// pixels of scroll required to play the video once front-to-back
+const PIXELS_PER_LOOP = 6000;
+const VIDEO_SRC = "/hero-clips/sequence.mp4";
 
 export default function HeroScrollSequence() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const smokeRef = useRef<HTMLDivElement>(null);
-  const framesRef = useRef<HTMLImageElement[]>([]);
   const triggerRef = useRef<ScrollTrigger | null>(null);
-  const playheadRef = useRef(0); // virtual frame counter; cycles via modulo
   const [activeBeat, setActiveBeat] = useState(0);
   const [beatOpacity, setBeatOpacity] = useState(1);
   const [ctaOpacity, setCtaOpacity] = useState(0);
+  const [loopFadeOpacity, setLoopFadeOpacity] = useState(0);
   const [loadProgress, setLoadProgress] = useState(0);
   const [framesReady, setFramesReady] = useState(false);
   const [exited, setExited] = useState(false);
@@ -40,40 +37,35 @@ export default function HeroScrollSequence() {
 
   useEffect(() => {
     if (reduced || isMobile) return;
-    const canvas = canvasRef.current!;
-    const ctx = canvas.getContext("2d")!;
+    const video = videoRef.current!;
 
-    function resize() {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = window.innerWidth * dpr;
-      canvas.height = window.innerHeight * dpr;
-      canvas.style.width = `${window.innerWidth}px`;
-      canvas.style.height = `${window.innerHeight}px`;
-    }
-    resize();
-    window.addEventListener("resize", resize);
-
-    // Load all frames + enforce min 4s display time
-    let loadedCount = 0;
-    const framesPromise = new Promise<void>((resolve) => {
-      for (let i = 0; i < FRAMES.length; i++) {
-        const img = new Image();
-        img.src = FRAMES[i];
-        img.onload = () => {
-          loadedCount++;
-          setLoadProgress(loadedCount / FRAMES.length);
-          if (loadedCount === FRAMES.length) resolve();
-        };
-        framesRef.current.push(img);
+    const onProgress = () => {
+      if (video.buffered.length > 0 && video.duration) {
+        const buffered = video.buffered.end(video.buffered.length - 1);
+        setLoadProgress(Math.min(1, buffered / video.duration));
       }
+    };
+    const onLoadedMetadata = () => setLoadProgress((p) => Math.max(p, 0.1));
+    const onCanPlayThrough = () => setLoadProgress(1);
+
+    video.addEventListener("progress", onProgress);
+    video.addEventListener("loadedmetadata", onLoadedMetadata);
+    video.addEventListener("canplaythrough", onCanPlayThrough);
+
+    // start eager preload
+    video.load();
+
+    const videoPromise = new Promise<void>((resolve) => {
+      if (video.readyState >= 3) return resolve();
+      const handler = () => { video.removeEventListener("canplaythrough", handler); resolve(); };
+      video.addEventListener("canplaythrough", handler);
     });
     const minTimePromise = new Promise<void>((r) => setTimeout(r, MIN_LOAD_MS));
 
-    Promise.all([framesPromise, minTimePromise]).then(() => {
+    Promise.all([videoPromise, minTimePromise]).then(() => {
       setFramesReady(true);
-      render();
-      // Set up infinite-loop pin: very large `end` so the user can't naturally scroll past.
-      // Click "Enter" releases the pin (see handleEnter).
+      const duration = video.duration || 30;
+
       triggerRef.current = ScrollTrigger.create({
         trigger: containerRef.current,
         start: "top top",
@@ -81,82 +73,35 @@ export default function HeroScrollSequence() {
         pin: true,
         pinSpacing: true,
         onUpdate: (self) => {
-          const scrolled = self.scroll() - self.start; // px scrolled into the pin
-          const playhead = (scrolled / PIXELS_PER_CYCLE) * FRAMES.length;
-          playheadRef.current = playhead;
-          render();
+          const scrolled = self.scroll() - self.start;
+          const cycleProgress = scrolled / PIXELS_PER_LOOP;
+          const wrapped = ((cycleProgress % 1) + 1) % 1; // 0..1
+          video.currentTime = wrapped * duration;
+
+          // Beat math (mapped onto the 0..1 wrapped progress)
+          const segment = 1 / BEAT_COUNT;
+          const seg = Math.min(BEAT_COUNT - 1, Math.floor(wrapped / segment));
+          const within = (wrapped - seg * segment) / segment;
+          const op = Math.sin(within * Math.PI);
+          setActiveBeat(seg);
+          setBeatOpacity(seg === BEAT_COUNT - 1 ? 1 : op);
+          setCtaOpacity(seg === BEAT_COUNT - 1 && within > 0.15 ? 1 : 0);
+
+          // Loop fade-to-black: hide the hard cut from "fixed car showroom" → "wreck garage"
+          // Fade up in last 6% of cycle, fade down in first 6%.
+          const FADE_ZONE = 0.06;
+          let fade = 0;
+          if (wrapped > 1 - FADE_ZONE) fade = (wrapped - (1 - FADE_ZONE)) / FADE_ZONE;
+          else if (wrapped < FADE_ZONE) fade = 1 - wrapped / FADE_ZONE;
+          setLoopFadeOpacity(fade);
         },
       });
-
-      if (smokeRef.current) {
-        gsap.to(smokeRef.current, {
-          opacity: 0.6,
-          ease: "sine.inOut",
-          scrollTrigger: { trigger: containerRef.current, start: "top top", end: "+=" + PIXELS_PER_CYCLE * 2, scrub: true },
-        });
-      }
     });
 
-    // object-cover draw helper used by both the current and next frame in the cross-fade
-    function drawCover(img: HTMLImageElement) {
-      const ca = canvas.width / canvas.height;
-      const ia = img.width / img.height;
-      let dw, dh, dx, dy;
-      if (ia > ca) {
-        dh = canvas.height;
-        dw = canvas.height * ia;
-        dx = (canvas.width - dw) / 2;
-        dy = 0;
-      } else {
-        dw = canvas.width;
-        dh = canvas.width / ia;
-        dx = 0;
-        dy = (canvas.height - dh) / 2;
-      }
-      ctx.drawImage(img, dx, dy, dw, dh);
-    }
-
-    // smoothstep easing so the cross-fade eases in/out instead of being linear
-    const smoothstep = (t: number) => t * t * (3 - 2 * t);
-
-    function render() {
-      // Wrap playhead via modulo for infinite cycling
-      const wrapped = ((playheadRef.current % FRAMES.length) + FRAMES.length) % FRAMES.length;
-      const idx = Math.floor(wrapped) % FRAMES.length;
-      const nextIdx = (idx + 1) % FRAMES.length;
-      const frac = wrapped - Math.floor(wrapped); // 0..1 within the current segment
-      const blend = smoothstep(frac);
-
-      const cur = framesRef.current[idx];
-      const nxt = framesRef.current[nextIdx];
-      if (!cur || !cur.complete) return;
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Current frame at full opacity (it's the base layer)
-      ctx.globalAlpha = 1;
-      drawCover(cur);
-
-      // Next frame composited on top with the eased blend factor
-      if (nxt && nxt.complete && blend > 0) {
-        ctx.globalAlpha = blend;
-        drawCover(nxt);
-      }
-      ctx.globalAlpha = 1;
-
-      // Beat math on the wrapped playhead
-      const progress = wrapped / FRAMES.length;
-      const segment = 1 / BEAT_COUNT;
-      const seg = Math.min(BEAT_COUNT - 1, Math.floor(progress / segment));
-      const within = (progress - seg * segment) / segment;
-      const op = Math.sin(within * Math.PI);
-      setActiveBeat(seg);
-      setBeatOpacity(seg === BEAT_COUNT - 1 ? 1 : op);
-      setCtaOpacity(seg === BEAT_COUNT - 1 && within > 0.15 ? 1 : 0);
-    }
-
     return () => {
-      window.removeEventListener("resize", resize);
+      video.removeEventListener("progress", onProgress);
+      video.removeEventListener("loadedmetadata", onLoadedMetadata);
+      video.removeEventListener("canplaythrough", onCanPlayThrough);
       ScrollTrigger.getAll().forEach((t) => t.kill());
     };
   }, [reduced, isMobile]);
@@ -164,10 +109,9 @@ export default function HeroScrollSequence() {
   function handleEnter() {
     setExited(true);
     if (triggerRef.current) {
-      triggerRef.current.kill(true); // true = revert pin spacer immediately
+      triggerRef.current.kill(true);
       triggerRef.current = null;
     }
-    // Scroll smoothly to the section after the hero
     requestAnimationFrame(() => {
       const heroEl = containerRef.current;
       if (!heroEl) return;
@@ -179,8 +123,7 @@ export default function HeroScrollSequence() {
   if (reduced) {
     return (
       <section className="relative min-h-screen bg-bg flex items-center justify-center">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={FRAMES[FRAMES.length - 1]} alt="" className="absolute inset-0 w-full h-full object-cover" />
+        <video src={VIDEO_SRC} autoPlay muted playsInline loop className="absolute inset-0 w-full h-full object-cover" />
         <div className="relative z-10 text-center px-6">
           <h2 className="font-display text-5xl md:text-7xl text-accent tracking-wide">{BEATS[BEAT_COUNT - 1].copy}</h2>
           <div className="mt-8"><PhoneCTA size="lg" /></div>
@@ -193,8 +136,16 @@ export default function HeroScrollSequence() {
   return (
     <section ref={containerRef} className="relative h-screen bg-bg">
       <div className="h-screen w-full overflow-hidden relative">
-        <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
-        <SmokeOverlay ref={smokeRef} />
+        <video
+          ref={videoRef}
+          src={VIDEO_SRC}
+          muted
+          playsInline
+          preload="auto"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        {/* Loop fade overlay — masks the hard cut at video loop boundary */}
+        <div className="absolute inset-0 bg-bg pointer-events-none" style={{ opacity: loopFadeOpacity }} />
         {!framesReady && <HeroLoader progress={loadProgress} />}
         {framesReady && !exited && (
           <>
