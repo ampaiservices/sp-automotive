@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { Beat, Overlay } from "@/lib/process-narrative";
@@ -44,26 +43,8 @@ export default function ProcessBeat({ beat }: { beat: Beat }) {
     };
   }, []);
 
-  // Subtle Ken Burns: image scales 1.02 → 1.08 across the beat
-  const kenBurnsScale = 1.02 + progress * 0.06;
-
   return (
     <section ref={containerRef} className="relative h-screen w-full overflow-hidden bg-bg">
-      <div
-        className="absolute inset-0 will-change-transform"
-        style={{ transform: `scale(${kenBurnsScale})` }}
-      >
-        <Image
-          src={beat.image}
-          alt=""
-          fill
-          priority={beat.index === 0}
-          sizes="100vw"
-          className="object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/40 to-black/70" />
-      </div>
-
       <div className="relative z-10 h-full grid grid-cols-1 md:grid-cols-12 gap-6 px-6 md:px-10 py-16">
         <div className="md:col-span-4 flex flex-col justify-center">
           <p className="text-xs uppercase tracking-[0.3em] text-muted">{beat.eyebrow}</p>

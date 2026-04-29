@@ -1,5 +1,4 @@
 "use client";
-import Image from "next/image";
 import { motion } from "framer-motion";
 import { BEATS, type Beat, type Overlay } from "@/lib/process-narrative";
 import PhoneCTA from "@/components/ui/PhoneCTA";
@@ -23,17 +22,13 @@ export default function ProcessNarrativeMobile() {
 function BeatBlock({ beat }: { beat: Beat }) {
   return (
     <motion.article
-      className="relative w-full min-h-screen flex flex-col"
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
+      className="relative w-full py-16 border-t border-divider first:border-t-0"
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.6 }}
     >
-      <div className="relative w-full aspect-[4/3]">
-        <Image src={beat.image} alt="" fill sizes="100vw" className="object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
-      </div>
-      <div className="px-6 py-10 -mt-16 relative z-10">
+      <div className="px-6">
         <p className="text-xs uppercase tracking-[0.3em] text-muted">{beat.eyebrow}</p>
         <h3 className="mt-3 font-display text-4xl text-accent tracking-wide leading-[0.95]">{beat.title}</h3>
         <p className="mt-5 text-text/85 text-base">{beat.copy}</p>
