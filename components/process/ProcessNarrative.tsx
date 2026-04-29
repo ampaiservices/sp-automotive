@@ -1,26 +1,16 @@
 "use client";
-import { useEffect, useState } from "react";
 import { BEATS } from "@/lib/process-narrative";
 import ProcessBeat from "./ProcessBeat";
 import ProcessNarrativeMobile from "./ProcessNarrativeMobile";
 import RevealWords from "@/components/effects/RevealWords";
+import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
 
 export default function ProcessNarrative() {
-  const [reduced, setReduced] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    setReduced(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-    setIsMobile(window.innerWidth < 768);
-    setReady(true);
-  }, []);
-
-  if (!ready) {
-    // Avoid SSR/CSR mismatch by deferring fallback decision until mounted.
-    // Render the mobile shell as a safe default — replaced after mount on desktop.
-    return <ProcessNarrativeMobile />;
-  }
+  const reduced = useMediaQuery("(prefers-reduced-motion: reduce)");
+  // Server snapshot is `true` so SSR (and the first client render before
+  // hydration) renders the mobile shell as a safe default — matches the
+  // previous behavior, swaps to desktop after hydration on wide viewports.
+  const isMobile = useMediaQuery("(max-width: 767px)", true);
 
   if (reduced || isMobile) {
     return <ProcessNarrativeMobile />;

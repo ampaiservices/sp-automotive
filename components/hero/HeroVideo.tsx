@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import PhoneCTA from "@/components/ui/PhoneCTA";
 import RevealWords from "@/components/effects/RevealWords";
+import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
 
 // Autoplay studio-video hero. Replaces the prior scroll-scrub HeroScrollSequence.
 // Pattern (UX skill — Video-First Hero): 60% dark overlay on video, white text,
@@ -12,17 +13,19 @@ import RevealWords from "@/components/effects/RevealWords";
 export default function HeroVideo() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [revealed, setRevealed] = useState(false);
-  const [reduced, setReduced] = useState(false);
+  const reduced = useMediaQuery("(prefers-reduced-motion: reduce)");
 
   useEffect(() => {
-    setReduced(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
     const v = videoRef.current;
-    if (v && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (v && !reduced) {
       v.play().catch(() => {/* swallow autoplay rejection */});
     }
     const t = setTimeout(() => setRevealed(true), 250);
-    return () => clearTimeout(t);
-  }, []);
+    return () => {
+      clearTimeout(t);
+      v?.pause();
+    };
+  }, [reduced]);
 
   return (
     <section
