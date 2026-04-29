@@ -33,6 +33,14 @@ export default function HeroScrollSequence() {
   useEffect(() => {
     setReduced(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
     setIsMobile(window.innerWidth < 768);
+    // Force scroll to top on mount: prevents browser from restoring a deep scroll position
+    // (which lands the user inside the pin-spacer and looks like the page jumped to the gallery)
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    window.scrollTo(0, 0);
+    // Strip any anchor hash (#process / #work) so it doesn't auto-scroll past the hero
+    if (window.location.hash) {
+      history.replaceState(null, "", window.location.pathname + window.location.search);
+    }
   }, []);
 
   useEffect(() => {
@@ -65,6 +73,8 @@ export default function HeroScrollSequence() {
     Promise.all([videoPromise, minTimePromise]).then(() => {
       setFramesReady(true);
       const duration = video.duration || 30;
+      // Make sure we start the pin from scrollTop = 0 so the hero pins immediately
+      window.scrollTo(0, 0);
 
       triggerRef.current = ScrollTrigger.create({
         trigger: containerRef.current,
@@ -96,13 +106,17 @@ export default function HeroScrollSequence() {
           setLoopFadeOpacity(fade);
         },
       });
+      // Recompute trigger geometry now that pin spacer exists
+      ScrollTrigger.refresh();
     });
 
     return () => {
       video.removeEventListener("progress", onProgress);
       video.removeEventListener("loadedmetadata", onLoadedMetadata);
       video.removeEventListener("canplaythrough", onCanPlayThrough);
-      ScrollTrigger.getAll().forEach((t) => t.kill());
+      // Only kill OUR trigger so we don't nuke other ScrollTriggers in the page (FinalCTA etc.)
+      triggerRef.current?.kill(true);
+      triggerRef.current = null;
     };
   }, [reduced, isMobile]);
 
