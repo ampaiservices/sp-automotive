@@ -6,9 +6,9 @@ import PhoneCTA from "@/components/ui/PhoneCTA";
 export default function ProcessNarrativeMobile() {
   return (
     <section id="process" className="bg-bg">
-      <div className="px-6 pt-24 pb-8">
-        <p className="eyebrow">03 / The Process</p>
-        <h2 className="mt-4 display-md">Six steps. One signature.</h2>
+      <div className="px-6 pt-28 pb-0 text-center">
+        <h1 className="display-md uppercase">The Process</h1>
+        <p className="mt-2 lead text-muted">Six steps. One signature.</p>
       </div>
       {BEATS.map((b) => (
         <BeatBlock key={b.id} beat={b} />

@@ -7,7 +7,8 @@ import { Menu, X } from "lucide-react";
 import PhoneCTA from "@/components/ui/PhoneCTA";
 
 const links = [
-  { href: "/#process", label: "Process" },
+  { href: "/", label: "Home" },
+  { href: "/process", label: "Process" },
   { href: "/#work", label: "Work" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
