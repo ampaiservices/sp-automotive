@@ -31,11 +31,11 @@ export default function HeroVideo() {
         muted
         playsInline
         preload="auto"
-        poster="/showroom/aventador-poster.webp"
+        poster="/hero-clips/cinematic-poster.webp"
         className="absolute inset-0 w-full h-full object-cover"
       >
-        <source src="/showroom/aventador.mp4" type="video/mp4" />
-        <source src="/showroom/aventador.webm" type="video/webm" />
+        <source src="/hero-clips/cinematic.mp4" type="video/mp4" />
+        <source src="/hero-clips/cinematic.webm" type="video/webm" />
       </video>
 
       <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/45 to-black/85" />

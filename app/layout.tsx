@@ -32,8 +32,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${anton.variable} ${inter.variable}`}>
       <head>
         <LocalBusinessJsonLd />
-        <link rel="preload" as="image" href="/showroom/aventador-poster.webp" fetchPriority="high" />
-        <link rel="preload" as="video" href="/showroom/aventador.mp4" type="video/mp4" />
+        <link rel="preload" as="image" href="/hero-clips/cinematic-poster.webp" fetchPriority="high" />
+        <link rel="preload" as="video" href="/hero-clips/cinematic.mp4" type="video/mp4" />
       </head>
       <body className="bg-bg text-text font-body antialiased">
         <LenisProvider>
