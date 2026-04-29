@@ -80,7 +80,7 @@ export default function HeroScrollSequence() {
           trigger: containerRef.current,
           start: "top top",
           end: () => `+=${window.innerHeight * (PIN_DISTANCE_VH / 100)}`,
-          scrub: true,
+          scrub: 0.2,
           pin: true,
           onRefreshInit: (self) => { triggerRef.current = self; },
         },
