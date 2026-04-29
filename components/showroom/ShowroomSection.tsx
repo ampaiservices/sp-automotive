@@ -11,8 +11,9 @@ const BRANDS = [
   "Aston Martin",
 ];
 
-// Slim brand-marquee strip. Replaces the earlier full-bleed video Showroom so
-// the Aventador studio video is reserved for the hero (single, not repeated).
+// Slim brand-marquee strip. Hidden from screen readers (a screen-reader visible
+// summary lives in the heading + alt brand-list below). Marquee animation
+// pauses for prefers-reduced-motion users.
 
 export default function ShowroomSection() {
   const items = [...BRANDS, ...BRANDS];
@@ -25,13 +26,16 @@ export default function ShowroomSection() {
           and the cars older than this list
         </p>
       </div>
-      <div className="relative">
+
+      {/* Screen-reader text alternative — list visible to assistive tech only */}
+      <ul className="sr-only">
+        {BRANDS.map((b) => <li key={b}>{b}</li>)}
+      </ul>
+
+      <div aria-hidden className="relative">
         <div
-          className="flex whitespace-nowrap items-center"
-          style={{
-            animation: "showroom-marquee 40s linear infinite",
-            width: "max-content",
-          }}
+          className="showroom-marquee-track flex whitespace-nowrap items-center"
+          style={{ width: "max-content" }}
         >
           {items.map((b, i) => (
             <div
@@ -50,6 +54,15 @@ export default function ShowroomSection() {
         @keyframes showroom-marquee {
           from { transform: translateX(0); }
           to   { transform: translateX(-50%); }
+        }
+        .showroom-marquee-track {
+          animation: showroom-marquee 40s linear infinite;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .showroom-marquee-track {
+            animation: none;
+            transform: translateX(0);
+          }
         }
       `}</style>
     </section>

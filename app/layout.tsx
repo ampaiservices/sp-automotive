@@ -36,9 +36,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preload" as="video" href="/hero-clips/cinematic.mp4" type="video/mp4" />
       </head>
       <body className="bg-bg text-text font-body antialiased">
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-accent focus:text-bg focus:font-body focus:text-sm focus:uppercase focus:tracking-[0.18em] focus:rounded-md"
+        >
+          Skip to content
+        </a>
         <LenisProvider>
           <Navigation />
-          <main>{children}</main>
+          <main id="main">{children}</main>
           <Footer />
         </LenisProvider>
         <CustomCursor />

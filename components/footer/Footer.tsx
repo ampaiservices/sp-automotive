@@ -1,5 +1,7 @@
 import Image from "next/image";
+import Link from "next/link";
 import PhoneCTA from "@/components/ui/PhoneCTA";
+import { CITY, REGION } from "@/lib/site";
 
 export default function Footer() {
   return (
@@ -8,18 +10,24 @@ export default function Footer() {
         <div>
           <Image
             src="/logos/sp-mark.png"
-            alt="SP Automotive"
+            alt="SP Automotive Collision &amp; Repair"
             width={654}
             height={241}
             className="h-16 w-auto invert"
           />
-          <p className="mt-3 text-muted text-sm">Sarasota, FL</p>
+          <p className="mt-3 text-muted text-sm">{CITY}, {REGION}</p>
+          <p className="mt-1 text-muted text-xs">Exotic collision &amp; restoration</p>
         </div>
+
         <div className="flex md:justify-center"><PhoneCTA /></div>
-        <div className="flex flex-col gap-2 text-sm text-muted md:items-end">
-          <a href="#" className="hover:text-accent transition-colors">Instagram</a>
-          <a href="#" className="hover:text-accent transition-colors">YouTube</a>
-        </div>
+
+        <nav aria-label="Footer" className="flex flex-col gap-2 text-sm text-muted md:items-end">
+          <Link href="/about" className="hover:text-accent transition-colors">About Serge</Link>
+          <Link href="/contact" className="hover:text-accent transition-colors">Contact</Link>
+          <Link href="/lamborghini-collision-repair-sarasota" className="hover:text-accent transition-colors">Lamborghini</Link>
+          <Link href="/mclaren-collision-repair-sarasota" className="hover:text-accent transition-colors">McLaren</Link>
+          <Link href="/audi-r8-collision-repair-sarasota" className="hover:text-accent transition-colors">Audi R8</Link>
+        </nav>
       </div>
     </footer>
   );

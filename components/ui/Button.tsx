@@ -8,7 +8,8 @@ type Props = {
   children: ReactNode;
 };
 
-const base = "inline-flex items-center justify-center gap-2 px-6 py-3 rounded-md font-body text-sm uppercase tracking-[0.18em] transition-colors duration-200";
+const base =
+  "inline-flex items-center justify-center gap-2 px-6 py-3 rounded-md font-body text-sm uppercase tracking-[0.18em] transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg";
 const styles = {
   primary: "border border-accent text-accent hover:bg-accent hover:text-bg",
   ghost: "text-accent hover:underline underline-offset-4",
