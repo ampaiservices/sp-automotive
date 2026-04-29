@@ -58,13 +58,21 @@ export default function HeroVideo() {
       )}
 
       <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/45 to-black/85" />
+      {/* Left-side dark plate so the text column stays legible on bright frames
+          without dimming the right half of the video. */}
+      <div
+        aria-hidden
+        className="absolute inset-y-0 left-0 w-full md:w-3/5 bg-gradient-to-r from-black/75 via-black/30 to-transparent"
+      />
 
       <div
         className="relative z-10 h-full flex flex-col justify-end items-start px-6 md:px-10 pb-24 md:pb-32 transition-opacity duration-700"
         style={{ opacity: revealed ? 1 : 0 }}
       >
-        <p className="eyebrow">01 / Sarasota, FL · Exotic Collision</p>
-        <h2 className="mt-5 display-xl max-w-[12ch]">
+        <p className="eyebrow inline-block bg-black/80 rounded px-2 -mx-2">
+          01 / Sarasota, FL · Exotic Collision
+        </p>
+        <h2 className="mt-5 display-xl max-w-[12ch] drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
           <RevealWords>Where exotics come home.</RevealWords>
         </h2>
         <p className="mt-7 max-w-xl lead">
