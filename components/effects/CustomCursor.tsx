@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
 
 // Desktop-only custom cursor with multiple states.
 //
@@ -16,15 +17,16 @@ export default function CustomCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
   const spotlightRef = useRef<HTMLDivElement>(null);
-  const [enabled, setEnabled] = useState(false);
+  // Server snapshot for coarse=true so SSR renders null (cursor stays hidden
+  // until hydration commits with the real pointer/motion values).
+  const isCoarse = useMediaQuery("(pointer: coarse)", true);
+  const isReduced = useMediaQuery("(prefers-reduced-motion: reduce)");
+  const enabled = !isCoarse && !isReduced;
   const [hover, setHover] = useState(false);
   const [label, setLabel] = useState<string | null>(null);
 
   useEffect(() => {
-    const isCoarse = window.matchMedia("(pointer: coarse)").matches;
-    const isReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (isCoarse || isReduced) return;
-    setEnabled(true);
+    if (!enabled) return;
 
     const dot = dotRef.current;
     const ring = ringRef.current;
@@ -74,7 +76,7 @@ export default function CustomCursor() {
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mouseover", onOver);
     };
-  }, []);
+  }, [enabled]);
 
   if (!enabled) return null;
 

@@ -1,7 +1,7 @@
 // One-time script: crop sp-mark.jpeg tight to logo bounding box and chroma-key the white bg to transparent.
 // Run with: bun scripts/process-logo.ts
 import sharp from "sharp";
-import { readFileSync, writeFileSync } from "fs";
+import { writeFileSync } from "fs";
 
 const SRC = "/Users/abuts/Projects/sp-automotive/public/logos/sp-mark.jpeg";
 const OUT = "/Users/abuts/Projects/sp-automotive/public/logos/sp-mark.png";

@@ -30,4 +30,5 @@ jobs:
             ${{ runner.os }}-bun-
 
       - run: bun install --frozen-lockfile
+      - run: bun run lint
       - run: bun run build
