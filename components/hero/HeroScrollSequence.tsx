@@ -68,7 +68,7 @@ export default function HeroScrollSequence() {
       setFramesReady(true);
       const duration = video.duration || 30;
 
-      // Single play-through pin: scrub video.currentTime as user scrolls through the 700vh section.
+      // Single play-through pin: scrub video.currentTime as user scrolls through the section.
       const obj = { progress: 0 };
       gsap.to(obj, {
         progress: 1,
@@ -77,7 +77,7 @@ export default function HeroScrollSequence() {
           trigger: containerRef.current,
           start: "top top",
           end: "bottom bottom",
-          scrub: 0.3,
+          scrub: true,
           pin: true,
           onRefreshInit: (self) => { triggerRef.current = self; },
         },
@@ -125,7 +125,7 @@ export default function HeroScrollSequence() {
   if (isMobile) return <HeroMobileFallback />;
 
   return (
-    <section ref={containerRef} className="relative h-[500vh] bg-bg">
+    <section ref={containerRef} className="relative h-[400vh] bg-bg">
       <div className="sticky top-0 h-screen w-full overflow-hidden">
         <video
           ref={videoRef}
