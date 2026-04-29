@@ -8,9 +8,11 @@ type Props = { size?: "default" | "lg"; className?: string };
 
 // Note: we intentionally render a <button> rather than an <a href="tel:…">.
 // Chrome shows a native "Click-to-Call" hover card on tel: links that we
-// can't suppress from the page. A button + window.location.href = "tel:…"
+// can't suppress from the page. A button + window.location.replace("tel:…")
 // keeps tap-to-call working on mobile (the dialer opens the same way) and
-// avoids leaking "#" into the URL on desktop click.
+// avoids leaking "#" into the URL or a tel: history entry on desktop click.
+// Tradeoff: this makes the CTA JS-dependent (no anchor fallback for
+// JS-disabled clients / bots), which we accept on a hydrated marketing page.
 export default function PhoneCTA({ size = "default", className = "" }: Props) {
   const sizing = size === "lg" ? "px-10 py-5 text-base" : "";
   return (
@@ -19,7 +21,7 @@ export default function PhoneCTA({ size = "default", className = "" }: Props) {
         <Button
           variant="primary"
           onClick={() => {
-            window.location.href = PHONE_HREF;
+            window.location.replace(PHONE_HREF);
           }}
           ariaLabel={`Call ${PHONE}`}
           className={`${sizing} ${className}`}
