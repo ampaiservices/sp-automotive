@@ -5,6 +5,7 @@ import Navigation from "@/components/nav/Navigation";
 import Footer from "@/components/footer/Footer";
 import Analytics from "@/components/analytics/Analytics";
 import LocalBusinessJsonLd from "@/components/seo/LocalBusinessJsonLd";
+import CustomCursor from "@/components/effects/CustomCursor";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 import { FRAMES } from "@/lib/hero-frames";
 import "./globals.css";
@@ -42,6 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <main>{children}</main>
           <Footer />
         </LenisProvider>
+        <CustomCursor />
         <Analytics />
       </body>
     </html>
