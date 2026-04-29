@@ -36,11 +36,8 @@ export default function HeroScrollSequence() {
   useEffect(() => {
     setReduced(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
     setIsMobile(window.innerWidth < 768);
-    // Force scroll to top on mount: prevents browser from restoring a deep scroll position
-    // (which lands the user inside the pin-spacer and looks like the page jumped to the gallery)
+    // Disable browser scroll restoration; strip anchor hash so refresh doesn't jump past the hero
     if ("scrollRestoration" in history) history.scrollRestoration = "manual";
-    window.scrollTo(0, 0);
-    // Strip any anchor hash (#process / #work) so it doesn't auto-scroll past the hero
     if (window.location.hash) {
       history.replaceState(null, "", window.location.pathname + window.location.search);
     }
@@ -81,8 +78,6 @@ export default function HeroScrollSequence() {
     Promise.all([videoPromise, minTimePromise]).then(() => {
       setFramesReady(true);
       const duration = video.duration || 30;
-      // Make sure we start the pin from scrollTop = 0 so the hero pins immediately
-      window.scrollTo(0, 0);
 
       triggerRef.current = ScrollTrigger.create({
         trigger: containerRef.current,
@@ -109,11 +104,13 @@ export default function HeroScrollSequence() {
           setCtaOpacity(seg === BEAT_COUNT - 1 && within > 0.15 ? 1 : 0);
 
           // Loop fade-to-black: hide the hard cut from "fixed car showroom" → "wreck garage"
-          // Fade up in last 6% of cycle, fade down in first 6%.
+          // Only applies AFTER the first cycle has completed — the very first viewing
+          // starts with the wreck immediately visible (no fade-in from black).
           const FADE_ZONE = 0.06;
+          const hasLooped = cycleProgress >= 1;
           let fade = 0;
           if (wrapped > 1 - FADE_ZONE) fade = (wrapped - (1 - FADE_ZONE)) / FADE_ZONE;
-          else if (wrapped < FADE_ZONE) fade = 1 - wrapped / FADE_ZONE;
+          else if (hasLooped && wrapped < FADE_ZONE) fade = 1 - wrapped / FADE_ZONE;
           setLoopFadeOpacity(fade);
         },
       });
