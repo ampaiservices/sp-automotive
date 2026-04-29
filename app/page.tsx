@@ -1,6 +1,7 @@
 import HeroScrollSequence from "@/components/hero/HeroScrollSequence";
 import ProcessNarrative from "@/components/process/ProcessNarrative";
 import BeforeAfterGallery from "@/components/gallery/BeforeAfterGallery";
+import TestimonialsSection from "@/components/testimonials/TestimonialsSection";
 import AboutStrip from "@/components/about/AboutStrip";
 import FinalCTA from "@/components/cta/FinalCTA";
 
@@ -11,6 +12,7 @@ export default function Home() {
       <HeroScrollSequence />
       <ProcessNarrative />
       <BeforeAfterGallery />
+      <TestimonialsSection />
       <AboutStrip />
       <FinalCTA />
     </>
