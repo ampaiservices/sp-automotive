@@ -1,6 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import { TESTIMONIALS, type Testimonial } from "./testimonials-data";
+import RevealWords from "@/components/effects/RevealWords";
 
 type Props = {
   brand?: string;          // Filter to a specific brand (used on brand pages)
@@ -17,8 +18,8 @@ export default function TestimonialsSection({ brand, heading = "From the owners.
   return (
     <section id="testimonials" className="bg-bg px-6 md:px-10 py-32 border-t border-divider">
       <div className="max-w-3xl mx-auto">
-        <p className="eyebrow">Trust</p>
-        <h2 className="mt-4 display-lg">{heading}</h2>
+        <p className="eyebrow">05 / Trust</p>
+        <h2 className="mt-4 display-lg"><RevealWords>{heading}</RevealWords></h2>
 
         <ul className="mt-16 space-y-16">
           {items.map((t, i) => (

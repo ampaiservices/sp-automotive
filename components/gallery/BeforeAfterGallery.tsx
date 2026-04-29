@@ -1,4 +1,5 @@
 import Image from "next/image";
+import RevealWords from "@/components/effects/RevealWords";
 
 const pairs = [
   { id: 1, caption: "Lamborghini Huracán — front-end collision" },
@@ -11,10 +12,13 @@ export default function BeforeAfterGallery() {
   return (
     <section id="work" className="bg-bg px-6 md:px-10 py-32">
       <div className="max-w-7xl mx-auto">
-        <h2 className="font-display text-5xl md:text-7xl text-accent tracking-wide mb-16">The Work</h2>
+        <p className="eyebrow">04 / The Work</p>
+        <h2 className="mt-4 display-lg mb-16">
+          <RevealWords>What came back better than new.</RevealWords>
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           {pairs.map((p) => (
-            <figure key={p.id}>
+            <figure key={p.id} data-cursor="View">
               <div className="grid grid-cols-[1fr_auto_1fr] gap-4 items-stretch">
                 <div className="relative aspect-[4/3] border border-white/10 hover:border-accent transition-colors">
                   <Image

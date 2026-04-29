@@ -22,11 +22,11 @@ export default function Footer() {
         <div className="flex md:justify-center"><PhoneCTA /></div>
 
         <nav aria-label="Footer" className="flex flex-col gap-2 text-sm text-muted md:items-end">
-          <Link href="/about" className="hover:text-accent transition-colors">About Serge</Link>
-          <Link href="/contact" className="hover:text-accent transition-colors">Contact</Link>
-          <Link href="/lamborghini-collision-repair-sarasota" className="hover:text-accent transition-colors">Lamborghini</Link>
-          <Link href="/mclaren-collision-repair-sarasota" className="hover:text-accent transition-colors">McLaren</Link>
-          <Link href="/audi-r8-collision-repair-sarasota" className="hover:text-accent transition-colors">Audi R8</Link>
+          <Link href="/about" className="link-underline hover:text-accent transition-colors">About Serge</Link>
+          <Link href="/contact" className="link-underline hover:text-accent transition-colors">Contact</Link>
+          <Link href="/lamborghini-collision-repair-sarasota" className="link-underline hover:text-accent transition-colors">Lamborghini</Link>
+          <Link href="/mclaren-collision-repair-sarasota" className="link-underline hover:text-accent transition-colors">McLaren</Link>
+          <Link href="/audi-r8-collision-repair-sarasota" className="link-underline hover:text-accent transition-colors">Audi R8</Link>
         </nav>
       </div>
     </footer>

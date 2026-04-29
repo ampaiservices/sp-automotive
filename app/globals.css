@@ -95,6 +95,48 @@ html, body {
   color: rgba(245, 245, 245, 0.85);
 }
 
+/* Animated underline — left-to-right wipe on hover. Apply to text links. */
+.link-underline {
+  position: relative;
+  display: inline-block;
+}
+.link-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 360ms cubic-bezier(0.65, 0, 0.35, 1);
+}
+.link-underline:hover::after,
+.link-underline:focus-visible::after {
+  transform: scaleX(1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .link-underline::after { transition: none; }
+}
+
+/* Film-grain overlay — subtle organic texture on dark surfaces. SVG turbulence
+   inlined as data URL; very low opacity so it's only "felt," not seen. */
+.film-grain::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: 220px 220px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .film-grain::before { opacity: 0.04; }
+}
+
 /* Selection */
 ::selection {
   background: var(--color-accent);

@@ -7,7 +7,7 @@ export default function ProcessNarrativeMobile() {
   return (
     <section id="process" className="bg-bg">
       <div className="px-6 pt-24 pb-8">
-        <p className="eyebrow">The Process</p>
+        <p className="eyebrow">03 / The Process</p>
         <h2 className="mt-4 display-md">Six steps. One signature.</h2>
       </div>
       {BEATS.map((b) => (

@@ -59,7 +59,7 @@ export default function Navigation() {
               <Link
                 href={l.href}
                 onClick={handleClick(l.href)}
-                className="text-sm uppercase tracking-[0.18em] text-text hover:text-accent transition-colors"
+                className="link-underline text-sm uppercase tracking-[0.18em] text-text hover:text-accent transition-colors"
               >
                 {l.label}
               </Link>

@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import PhoneCTA from "@/components/ui/PhoneCTA";
+import RevealWords from "@/components/effects/RevealWords";
 
 // Autoplay studio-video hero. Replaces the prior scroll-scrub HeroScrollSequence.
 // Pattern (UX skill — Video-First Hero): 60% dark overlay on video, white text,
@@ -59,8 +60,10 @@ export default function HeroVideo() {
         className="relative z-10 h-full flex flex-col justify-end items-start px-6 md:px-10 pb-24 md:pb-32 transition-opacity duration-700"
         style={{ opacity: revealed ? 1 : 0 }}
       >
-        <p className="eyebrow">Sarasota, FL · Exotic Collision</p>
-        <h2 className="mt-5 display-xl max-w-[12ch]">Where exotics come home.</h2>
+        <p className="eyebrow">01 / Sarasota, FL · Exotic Collision</p>
+        <h2 className="mt-5 display-xl max-w-[12ch]">
+          <RevealWords>Where exotics come home.</RevealWords>
+        </h2>
         <p className="mt-7 max-w-xl lead">
           Factory-correct collision repair for Lamborghini, McLaren, Audi R8, and BMW M.
           Forensic intake. Torque-spec rebuild. One signature on the work.
