@@ -106,7 +106,14 @@ export default function CustomCursor() {
           transition: "width 200ms, height 200ms, margin 200ms",
         }}
       />
-      <style>{`@media (pointer: fine) { html, body { cursor: none; } html, body * { cursor: none !important; } }`}</style>
+      <style>{`
+        @media (pointer: fine) {
+          html, body { cursor: none; }
+          html, body *:not(input):not(textarea):not(select):not([contenteditable="true"]) {
+            cursor: none !important;
+          }
+        }
+      `}</style>
     </>
   );
 }

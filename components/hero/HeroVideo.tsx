@@ -44,13 +44,12 @@ export default function HeroVideo() {
           loop
           muted
           playsInline
-          preload="auto"
+          preload="metadata"
           poster="/hero-clips/cinematic-poster.webp"
           className="absolute inset-0 w-full h-full object-cover"
           aria-hidden
         >
           <source src="/hero-clips/cinematic.mp4" type="video/mp4" />
-          <source src="/hero-clips/cinematic.webm" type="video/webm" />
         </video>
       )}
 

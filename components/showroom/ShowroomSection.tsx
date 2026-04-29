@@ -58,6 +58,7 @@ export default function ShowroomSection() {
         .showroom-marquee-track {
           animation: showroom-marquee 40s linear infinite;
         }
+        .showroom-marquee-track:hover { animation-play-state: paused; }
         @media (prefers-reduced-motion: reduce) {
           .showroom-marquee-track {
             animation: none;

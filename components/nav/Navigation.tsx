@@ -4,9 +4,7 @@ import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { Menu, X } from "lucide-react";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import PhoneCTA from "@/components/ui/PhoneCTA";
-import type Lenis from "lenis";
 
 const links = [
   { href: "/#process", label: "Process" },
@@ -20,9 +18,8 @@ export default function Navigation() {
   const router = useRouter();
   const pathname = usePathname();
 
-  // Programmatic navigation that plays nicely with the hero ScrollTrigger pin.
-  // For anchor links on the home page: kill any active triggers first, then smooth-scroll.
-  // For full route changes: just navigate (component unmount handles trigger cleanup).
+  // Anchor links: native scrollIntoView (smooth via CSS scroll-behavior).
+  // Off-home anchor: navigate to /#id; Next.js handles the hash scroll.
   function handleClick(href: string) {
     return (e: MouseEvent) => {
       setOpen(false);
@@ -31,27 +28,18 @@ export default function Navigation() {
 
       if (isAnchor && onHome) {
         e.preventDefault();
-        // Kill active scroll triggers (the hero pin) so anchor scroll isn't fighting it
-        ScrollTrigger.getAll().forEach((t) => t.kill(true));
         const id = href.split("#")[1];
         const target = id ? document.getElementById(id) : null;
-        const lenis = (window as unknown as { __lenis?: Lenis }).__lenis;
-        // Defer one frame so the kill() reflows DOM before we measure scroll position
-        requestAnimationFrame(() => {
-          if (lenis && target) lenis.scrollTo(target, { duration: 1 });
-          else if (target) target.scrollIntoView({ behavior: "smooth" });
-        });
+        if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
       } else if (isAnchor && !onHome) {
-        // Anchor link clicked from another page: navigate home first, then scroll
         e.preventDefault();
         router.push(href);
       }
-      // For non-anchor links, let Next.js Link handle normally
     };
   }
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 bg-black/80 backdrop-blur-md border-b border-divider">
+    <header className="fixed inset-x-0 top-0 z-50 bg-bg border-b border-divider">
       <nav className="flex items-center px-6 md:px-10 h-20">
         <div className="flex-1 flex justify-start">
           <Link href="/" aria-label="SP Automotive home" className="flex items-center">
@@ -80,14 +68,29 @@ export default function Navigation() {
         </ul>
         <div className="flex-1 flex justify-end items-center">
           <div className="hidden md:block"><PhoneCTA /></div>
-          <button className="md:hidden text-accent" onClick={() => setOpen(true)} aria-label="Open menu"><Menu className="h-6 w-6" /></button>
+          <button
+            type="button"
+            className="md:hidden text-accent p-3 -mr-3 inline-flex items-center justify-center"
+            onClick={() => setOpen(true)}
+            aria-label="Open menu"
+            aria-expanded={open}
+          >
+            <Menu className="h-6 w-6" aria-hidden />
+          </button>
         </div>
       </nav>
 
       {open && (
-        <div className="fixed inset-0 z-50 bg-bg flex flex-col">
-          <div className="flex justify-end p-6">
-            <button onClick={() => setOpen(false)} aria-label="Close menu" className="text-accent"><X className="h-7 w-7" /></button>
+        <div className="fixed inset-0 z-50 bg-bg flex flex-col" role="dialog" aria-modal="true" aria-label="Menu">
+          <div className="flex justify-end p-3">
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              aria-label="Close menu"
+              className="text-accent p-3 inline-flex items-center justify-center"
+            >
+              <X className="h-7 w-7" aria-hidden />
+            </button>
           </div>
           <ul className="flex flex-col items-center gap-8 mt-16">
             {links.map((l) => (
@@ -95,7 +98,7 @@ export default function Navigation() {
                 <Link
                   href={l.href}
                   onClick={handleClick(l.href)}
-                  className="font-display text-3xl text-text"
+                  className="font-display text-3xl text-text inline-block py-2"
                 >
                   {l.label}
                 </Link>

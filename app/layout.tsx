@@ -1,6 +1,5 @@
 import { Anton, Manrope } from "next/font/google";
 import { Metadata } from "next";
-import LenisProvider from "@/components/providers/LenisProvider";
 import Navigation from "@/components/nav/Navigation";
 import Footer from "@/components/footer/Footer";
 import Analytics from "@/components/analytics/Analytics";
@@ -12,7 +11,8 @@ import "./globals.css";
 const anton = Anton({ subsets: ["latin"], weight: "400", variable: "--font-anton", display: "swap" });
 const manrope = Manrope({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  // 400 body, 500 eyebrow/labels. 600/700 unused after typography sweep — saves ~36KB.
+  weight: ["400", "500"],
   variable: "--font-manrope",
   display: "swap",
 });
@@ -37,8 +37,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${anton.variable} ${manrope.variable}`}>
       <head>
         <LocalBusinessJsonLd />
+        {/* Preload the poster only — it's the LCP candidate. The video element streams on its own; explicit video preload was tanking LCP at 9.8MB. */}
         <link rel="preload" as="image" href="/hero-clips/cinematic-poster.webp" fetchPriority="high" />
-        <link rel="preload" as="video" href="/hero-clips/cinematic.mp4" type="video/mp4" />
       </head>
       <body className="bg-bg text-text font-body antialiased">
         <a
@@ -47,11 +47,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           Skip to content
         </a>
-        <LenisProvider>
-          <Navigation />
-          <main id="main">{children}</main>
-          <Footer />
-        </LenisProvider>
+        <Navigation />
+        <main id="main">{children}</main>
+        <Footer />
         <CustomCursor />
         <Analytics />
       </body>

@@ -7,6 +7,7 @@
   --color-text: #F5F5F5;
   --color-muted: #737373;
   --color-divider: #1A1A1A;
+  --color-hairline: rgba(255, 255, 255, 0.10);
   --color-accent: #FFFFFF;
 
   /* Type families — Anton for display, Manrope (variable 400-700) for body */
@@ -31,6 +32,23 @@
 
   /* Leading system */
   --leading-display: 0.95;
+
+  /* Z-index scale — define the layering once so additions don't collide */
+  --z-base: 0;
+  --z-overlay: 10;
+  --z-section: 30;
+  --z-nav: 50;
+  --z-cursor: 70;
+  --z-modal: 80;
+  --z-toast: 90;
+  --z-skip: 100;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
 }
 
 html, body {
