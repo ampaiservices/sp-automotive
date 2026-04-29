@@ -68,7 +68,10 @@ export default function HeroScrollSequence() {
       setFramesReady(true);
       const duration = video.duration || 30;
 
-      // Single play-through pin: scrub video.currentTime as user scrolls through the section.
+      // Single play-through pin: scrub video.currentTime as user scrolls through the pin distance.
+      // Pin distance is set explicitly via `end: "+=Npx"` so there's no leftover empty space
+      // between the last video frame and the next section.
+      const PIN_DISTANCE_VH = 350; // total scroll length (in vh) for the full hero play-through
       const obj = { progress: 0 };
       gsap.to(obj, {
         progress: 1,
@@ -76,7 +79,7 @@ export default function HeroScrollSequence() {
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",
-          end: "bottom bottom",
+          end: () => `+=${window.innerHeight * (PIN_DISTANCE_VH / 100)}`,
           scrub: true,
           pin: true,
           onRefreshInit: (self) => { triggerRef.current = self; },
@@ -125,8 +128,8 @@ export default function HeroScrollSequence() {
   if (isMobile) return <HeroMobileFallback />;
 
   return (
-    <section ref={containerRef} className="relative h-[400vh] bg-bg">
-      <div className="sticky top-0 h-screen w-full overflow-hidden">
+    <section ref={containerRef} className="relative h-screen bg-bg">
+      <div className="h-screen w-full overflow-hidden relative">
         <video
           ref={videoRef}
           src={VIDEO_SRC}
