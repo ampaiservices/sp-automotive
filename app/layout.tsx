@@ -6,7 +6,7 @@ import Footer from "@/components/footer/Footer";
 import Analytics from "@/components/analytics/Analytics";
 import LocalBusinessJsonLd from "@/components/seo/LocalBusinessJsonLd";
 import CustomCursor from "@/components/effects/CustomCursor";
-import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { SITE_NAME, SITE_URL, TAGLINE } from "@/lib/site";
 import "./globals.css";
 
 const anton = Anton({ subsets: ["latin"], weight: "400", variable: "--font-anton", display: "swap" });
@@ -14,16 +14,16 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "sw
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: { default: SITE_NAME, template: `%s — ${SITE_NAME}` },
-  description: "Factory-grade collision repair for exotic cars. Lamborghini, McLaren, Audi R8, BMW. Sarasota, FL.",
+  title: { default: `${SITE_NAME} — ${TAGLINE}`, template: `%s — ${SITE_NAME}` },
+  description: `${TAGLINE} Factory-correct collision repair for Lamborghini, McLaren, Audi R8, and BMW M. Sarasota, FL.`,
   openGraph: {
-    title: SITE_NAME,
-    description: "Factory-grade collision repair for exotic cars. Sarasota, FL.",
+    title: `${SITE_NAME} — ${TAGLINE}`,
+    description: `${TAGLINE} Factory-correct collision repair for exotic cars. Sarasota, FL.`,
     url: SITE_URL,
     siteName: SITE_NAME,
     type: "website",
   },
-  twitter: { card: "summary_large_image", title: SITE_NAME, description: "Factory-grade collision repair for exotic cars." },
+  twitter: { card: "summary_large_image", title: `${SITE_NAME} — ${TAGLINE}`, description: `${TAGLINE} Factory-correct collision repair for exotic cars.` },
   robots: { index: true, follow: true },
 };
 

@@ -5,3 +5,4 @@ export const SITE_URL = "https://sp-automotive.vercel.app";
 export const SITE_NAME = "SP Automotive Collision & Repair";
 export const CITY = "Sarasota";
 export const REGION = "FL";
+export const TAGLINE = "Built where it broke.";
