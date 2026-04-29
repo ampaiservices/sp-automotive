@@ -14,6 +14,9 @@ gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 const MIN_LOAD_MS = 4000;
 // pixels of scroll required to play the video once front-to-back
 const PIXELS_PER_LOOP = 6000;
+// fraction of each cycle that holds the FIRST frame on-screen before scrubbing begins
+// (gives the user a moment to register the wreck before motion starts)
+const HOLD_FRACTION = 0.12;
 const VIDEO_SRC = "/hero-clips/sequence.mp4";
 
 export default function HeroScrollSequence() {
@@ -85,7 +88,10 @@ export default function HeroScrollSequence() {
         onUpdate: (self) => {
           const scrolled = self.scroll() - self.start;
           const cycleProgress = scrolled / PIXELS_PER_LOOP;
-          const wrapped = ((cycleProgress % 1) + 1) % 1; // 0..1
+          const cyclePos = ((cycleProgress % 1) + 1) % 1; // 0..1 within current cycle
+          // Hold frame 0 for the first HOLD_FRACTION of each cycle, then scrub through the rest
+          const wrapped =
+            cyclePos < HOLD_FRACTION ? 0 : (cyclePos - HOLD_FRACTION) / (1 - HOLD_FRACTION);
           video.currentTime = wrapped * duration;
 
           // Beat math (mapped onto the 0..1 wrapped progress)
