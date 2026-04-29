@@ -3,11 +3,11 @@ import { motion } from "framer-motion";
 import { BEATS, type Beat, type Overlay } from "@/lib/process-narrative";
 import PhoneCTA from "@/components/ui/PhoneCTA";
 
-export default function ProcessNarrativeMobile() {
+export default function ProcessNarrativeMobile({ as: Heading = "h1" }: { as?: "h1" | "h2" } = {}) {
   return (
     <section id="process" className="bg-bg">
       <div className="px-6 pt-28 pb-0 text-center">
-        <h1 className="display-md uppercase">The Process</h1>
+        <Heading className="display-md uppercase">The Process</Heading>
         <p className="mt-2 lead text-muted">Six steps. One signature.</p>
       </div>
       {BEATS.map((b) => (

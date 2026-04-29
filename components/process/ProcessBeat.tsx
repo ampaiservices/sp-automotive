@@ -69,7 +69,7 @@ export default function ProcessBeat({ beat }: { beat: Beat }) {
       tween.scrollTrigger?.kill(true);
       tween.kill();
     };
-  }, []);
+  }, [hasPin]);
 
   return (
     <section ref={containerRef} className="relative h-screen w-full overflow-hidden bg-bg">
