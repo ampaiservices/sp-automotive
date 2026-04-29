@@ -1,10 +1,11 @@
-import { ReactNode } from "react";
+import { MouseEvent, ReactNode } from "react";
 
 type Props = {
   variant?: "primary" | "ghost";
   href?: string;
-  onClick?: () => void;
+  onClick?: (e: MouseEvent<HTMLAnchorElement | HTMLButtonElement>) => void;
   className?: string;
+  ariaLabel?: string;
   children: ReactNode;
 };
 
@@ -15,8 +16,8 @@ const styles = {
   ghost: "text-accent hover:underline underline-offset-4",
 };
 
-export default function Button({ variant = "primary", href, onClick, className = "", children }: Props) {
+export default function Button({ variant = "primary", href, onClick, className = "", ariaLabel, children }: Props) {
   const cls = `${base} ${styles[variant]} ${className}`;
-  if (href) return <a href={href} onClick={onClick} className={cls}>{children}</a>;
-  return <button onClick={onClick} className={cls}>{children}</button>;
+  if (href) return <a href={href} onClick={onClick} aria-label={ariaLabel} className={cls}>{children}</a>;
+  return <button type="button" onClick={onClick} aria-label={ariaLabel} className={cls}>{children}</button>;
 }

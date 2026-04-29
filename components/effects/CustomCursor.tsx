@@ -38,11 +38,28 @@ export default function CustomCursor() {
     let ringX = targetX;
     let ringY = targetY;
 
-    function onMove(e: MouseEvent) {
+    function setVisible(visible: boolean) {
+      const o = visible ? "1" : "0";
+      dot!.style.opacity = o;
+      ring!.style.opacity = o;
+      spotlight!.style.opacity = o;
+    }
+
+    function onMove(e: PointerEvent) {
       targetX = e.clientX;
       targetY = e.clientY;
       dot!.style.transform = `translate3d(${targetX}px, ${targetY}px, 0)`;
       spotlight!.style.transform = `translate3d(${targetX}px, ${targetY}px, 0)`;
+      setVisible(true);
+      // When the window isn't focused, Chrome throttles requestAnimationFrame
+      // to ~1Hz, so the lerped ring tick can't keep up and the ring "skips".
+      // Snap the ring directly to the cursor in that case — we lose the
+      // smooth follow but it tracks cleanly while the user is in another app.
+      if (!document.hasFocus()) {
+        ringX = targetX;
+        ringY = targetY;
+        ring!.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
+      }
     }
 
     function tick() {
@@ -52,7 +69,7 @@ export default function CustomCursor() {
       raf = requestAnimationFrame(tick);
     }
 
-    function onOver(e: MouseEvent) {
+    function onOver(e: PointerEvent) {
       const t = e.target as HTMLElement | null;
       if (!t) return;
       // First check for an explicit cursor label
@@ -67,14 +84,25 @@ export default function CustomCursor() {
       setHover(!!interactive);
     }
 
+    // Hide while the page is hidden so the cursor doesn't flash at a stale
+    // position when the user switches back. The next pointermove/pointerenter
+    // re-snaps it to the real cursor position.
+    function onVisibility() {
+      if (document.visibilityState === "hidden") setVisible(false);
+    }
+
     let raf = requestAnimationFrame(tick);
-    window.addEventListener("mousemove", onMove);
-    window.addEventListener("mouseover", onOver);
+    document.addEventListener("pointermove", onMove);
+    document.addEventListener("pointerover", onOver);
+    document.addEventListener("pointerenter", onMove);
+    document.addEventListener("visibilitychange", onVisibility);
 
     return () => {
       cancelAnimationFrame(raf);
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("mouseover", onOver);
+      document.removeEventListener("pointermove", onMove);
+      document.removeEventListener("pointerover", onOver);
+      document.removeEventListener("pointerenter", onMove);
+      document.removeEventListener("visibilitychange", onVisibility);
     };
   }, [enabled]);
 
