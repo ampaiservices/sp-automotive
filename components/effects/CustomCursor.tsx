@@ -72,30 +72,39 @@ export default function CustomCursor() {
         aria-hidden
         className="pointer-events-none fixed top-0 left-0 z-[60]"
         style={{
-          width: "640px",
-          height: "640px",
-          marginLeft: "-320px",
-          marginTop: "-320px",
-          background: "radial-gradient(circle, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0) 60%)",
+          width: "720px",
+          height: "720px",
+          marginLeft: "-360px",
+          marginTop: "-360px",
+          background: "radial-gradient(circle, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0) 60%)",
           mixBlendMode: "screen",
         }}
       />
       <div
         ref={ringRef}
         aria-hidden
-        className="pointer-events-none fixed top-0 left-0 z-[70] rounded-full border border-accent/70 transition-[width,height,margin,opacity] duration-200"
+        className="pointer-events-none fixed top-0 left-0 z-[70] rounded-full border-2 border-accent transition-[width,height,margin,background-color] duration-200"
         style={{
-          width: hover ? "44px" : "28px",
-          height: hover ? "44px" : "28px",
-          marginLeft: hover ? "-22px" : "-14px",
-          marginTop: hover ? "-22px" : "-14px",
-          opacity: hover ? 0.95 : 0.5,
+          width: hover ? "56px" : "36px",
+          height: hover ? "56px" : "36px",
+          marginLeft: hover ? "-28px" : "-18px",
+          marginTop: hover ? "-28px" : "-18px",
+          backgroundColor: hover ? "rgba(255,255,255,0.10)" : "transparent",
+          boxShadow: "0 0 12px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(0,0,0,0.4)",
         }}
       />
       <div
         ref={dotRef}
         aria-hidden
-        className="pointer-events-none fixed top-0 left-0 z-[71] w-1 h-1 -ml-0.5 -mt-0.5 rounded-full bg-accent"
+        className="pointer-events-none fixed top-0 left-0 z-[71] rounded-full bg-accent"
+        style={{
+          width: hover ? "4px" : "6px",
+          height: hover ? "4px" : "6px",
+          marginLeft: hover ? "-2px" : "-3px",
+          marginTop: hover ? "-2px" : "-3px",
+          boxShadow: "0 0 8px rgba(255,255,255,0.8)",
+          transition: "width 200ms, height 200ms, margin 200ms",
+        }}
       />
       <style>{`@media (pointer: fine) { html, body { cursor: none; } html, body * { cursor: none !important; } }`}</style>
     </>

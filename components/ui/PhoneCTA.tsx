@@ -8,7 +8,7 @@ type Props = { size?: "default" | "lg"; className?: string };
 export default function PhoneCTA({ size = "default", className = "" }: Props) {
   const sizing = size === "lg" ? "px-10 py-5 text-base" : "";
   return (
-    <Magnetic radius={120} strength={0.4}>
+    <Magnetic radius={80} strength={0.15}>
       <Button variant="primary" href={PHONE_HREF} className={`${sizing} ${className}`}>
         <Phone className="h-4 w-4" aria-hidden /> {PHONE}
       </Button>

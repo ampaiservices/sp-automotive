@@ -1,4 +1,4 @@
-import HeroScrollSequence from "@/components/hero/HeroScrollSequence";
+import HeroVideo from "@/components/hero/HeroVideo";
 import ProcessNarrative from "@/components/process/ProcessNarrative";
 import BeforeAfterGallery from "@/components/gallery/BeforeAfterGallery";
 import ShowroomSection from "@/components/showroom/ShowroomSection";
@@ -10,10 +10,10 @@ export default function Home() {
   return (
     <>
       <h1 className="sr-only">SP Automotive Collision &amp; Repair — factory-grade collision repair for exotic cars in Sarasota, FL</h1>
-      <HeroScrollSequence />
+      <HeroVideo />
+      <ShowroomSection />
       <ProcessNarrative />
       <BeforeAfterGallery />
-      <ShowroomSection />
       <TestimonialsSection />
       <AboutStrip />
       <FinalCTA />
