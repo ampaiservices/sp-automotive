@@ -1,36 +1,35 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SP Automotive
+
+A premium marketing site for SP Automotive (exotic car collision repair, Sarasota, FL), built on Next.js 16 with the App Router, React 19, Tailwind CSS v4, Framer Motion, and GSAP.
+
+## Requirements
+
+- [Bun](https://bun.sh) `>=1.3.0` (this project uses Bun as its package manager — `bun.lock` is committed)
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+bun install     # install dependencies from bun.lock
+bun dev         # start dev server at http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Scripts
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+bun dev         # next dev (Turbopack)
+bun run build   # next build
+bun start       # next start
+bun run lint    # eslint
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project layout
 
-## Learn More
+- `app/` — App Router routes (home, about, contact, three brand landers, robots/sitemap/og)
+- `components/` — UI primitives, nav/footer, effects (custom cursor, reveals, magnetic), hero video, process narrative, brand pages, gallery, etc.
+- `lib/` — site config and the process-narrative content
+- `public/` — hero video + frames, before/after imagery, brand logos
+- `app/globals.css` — Tailwind v4 `@theme` tokens (colors, fluid type scale, motion timings)
 
-To learn more about Next.js, take a look at the following resources:
+## Deploy
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Optimized for [Vercel](https://vercel.com/new). See the [Next.js deployment docs](https://nextjs.org/docs/app/building-your-application/deploying) for details.
