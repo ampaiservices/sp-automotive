@@ -2,6 +2,10 @@
   "name": "sp-automotive",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "bun@1.3.6",
+  "engines": {
+    "bun": ">=1.3.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
