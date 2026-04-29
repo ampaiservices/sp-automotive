@@ -47,11 +47,9 @@ export default function ProcessBeat({ beat }: { beat: Beat }) {
     <section ref={containerRef} className="relative h-screen w-full overflow-hidden bg-bg">
       <div className="relative z-10 h-full grid grid-cols-1 md:grid-cols-12 gap-6 px-6 md:px-10 py-16">
         <div className="md:col-span-4 flex flex-col justify-center">
-          <p className="text-xs uppercase tracking-[0.3em] text-muted">{beat.eyebrow}</p>
-          <h3 className="mt-3 font-display text-5xl md:text-7xl text-accent tracking-wide leading-[0.95]">
-            {beat.title}
-          </h3>
-          <p className="mt-6 text-text/85 text-lg max-w-md">{beat.copy}</p>
+          <p className="eyebrow">{beat.eyebrow}</p>
+          <h3 className="mt-4 display-lg">{beat.title}</h3>
+          <p className="mt-6 lead max-w-md">{beat.copy}</p>
           {beat.showCta && (
             <div
               className="mt-8"

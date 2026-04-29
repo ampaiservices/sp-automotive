@@ -7,10 +7,8 @@ export default function ProcessNarrativeMobile() {
   return (
     <section id="process" className="bg-bg">
       <div className="px-6 pt-24 pb-8">
-        <p className="text-xs uppercase tracking-[0.3em] text-muted">The Process</p>
-        <h2 className="mt-3 font-display text-5xl text-accent tracking-wide leading-[0.95]">
-          Six steps. One signature.
-        </h2>
+        <p className="eyebrow">The Process</p>
+        <h2 className="mt-4 display-md">Six steps. One signature.</h2>
       </div>
       {BEATS.map((b) => (
         <BeatBlock key={b.id} beat={b} />
@@ -29,9 +27,9 @@ function BeatBlock({ beat }: { beat: Beat }) {
       transition={{ duration: 0.6 }}
     >
       <div className="px-6">
-        <p className="text-xs uppercase tracking-[0.3em] text-muted">{beat.eyebrow}</p>
-        <h3 className="mt-3 font-display text-4xl text-accent tracking-wide leading-[0.95]">{beat.title}</h3>
-        <p className="mt-5 text-text/85 text-base">{beat.copy}</p>
+        <p className="eyebrow">{beat.eyebrow}</p>
+        <h3 className="mt-4 display-md">{beat.title}</h3>
+        <p className="mt-5 lead">{beat.copy}</p>
 
         {beat.overlays.length > 0 && <CalloutList overlays={beat.overlays} />}
 

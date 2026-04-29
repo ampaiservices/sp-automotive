@@ -60,13 +60,9 @@ export default function HeroVideo() {
         className="relative z-10 h-full flex flex-col justify-end items-start px-6 md:px-10 pb-24 md:pb-32 transition-opacity duration-700"
         style={{ opacity: revealed ? 1 : 0 }}
       >
-        <p className="text-xs md:text-sm uppercase tracking-[0.32em] text-muted">
-          Sarasota, FL · Exotic Collision
-        </p>
-        <h2 className="mt-4 font-display text-6xl md:text-9xl text-accent tracking-tight leading-[0.88] max-w-[12ch]">
-          Where exotics come home.
-        </h2>
-        <p className="mt-6 max-w-xl text-lg md:text-xl text-text/85">
+        <p className="eyebrow">Sarasota, FL · Exotic Collision</p>
+        <h2 className="mt-5 display-xl max-w-[12ch]">Where exotics come home.</h2>
+        <p className="mt-7 max-w-xl lead">
           Factory-correct collision repair for Lamborghini, McLaren, Audi R8, and BMW M.
           Forensic intake. Torque-spec rebuild. One signature on the work.
         </p>

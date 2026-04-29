@@ -21,8 +21,8 @@ export default function ShowroomSection() {
   return (
     <section className="relative py-12 md:py-16 bg-bg border-y border-divider overflow-hidden" aria-label="Brands we work on">
       <div className="px-6 md:px-10 mb-6 md:mb-8 flex items-baseline justify-between max-w-7xl mx-auto">
-        <p className="text-xs uppercase tracking-[0.3em] text-muted">We work on</p>
-        <p className="text-[10px] uppercase tracking-[0.3em] text-muted/70 hidden md:block">
+        <p className="eyebrow">We work on</p>
+        <p className="eyebrow opacity-70 hidden md:block">
           and the cars older than this list
         </p>
       </div>

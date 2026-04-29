@@ -4,8 +4,8 @@ export default function BrandModels({ brand }: { brand: Brand }) {
   return (
     <section className="bg-bg px-6 md:px-10 py-24 md:py-32 border-t border-divider">
       <div className="max-w-6xl mx-auto">
-        <p className="text-xs uppercase tracking-[0.3em] text-muted">Models we work on</p>
-        <h2 className="mt-3 font-display text-4xl md:text-6xl text-accent tracking-wide leading-[0.95]">
+        <p className="eyebrow">Models we work on</p>
+        <h2 className="mt-4 display-md">
           {brand.name}&rsquo;s full lineup. Most years.
         </h2>
 

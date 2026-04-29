@@ -23,7 +23,8 @@ export default function ContactPage() {
   return (
     <section className="bg-bg px-6 md:px-10 py-32 pt-40">
       <div className="max-w-3xl mx-auto">
-        <h1 className="font-display text-5xl md:text-7xl text-accent tracking-wide">Talk to Serge directly.</h1>
+        <p className="eyebrow">Contact</p>
+        <h1 className="mt-4 display-lg">Talk to Serge directly.</h1>
         <div className="mt-8"><PhoneCTA size="lg" /></div>
 
         {!sent ? (

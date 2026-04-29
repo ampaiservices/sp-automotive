@@ -5,10 +5,8 @@ export default function AboutStory() {
   return (
     <section className="bg-bg px-6 md:px-10 py-24 md:py-32 border-t border-divider">
       <div className="max-w-3xl mx-auto">
-        <p className="text-xs uppercase tracking-[0.3em] text-muted">A note from Serge</p>
-        <h2 className="mt-3 font-display text-4xl md:text-6xl text-accent tracking-wide leading-[0.95]">
-          You called the right shop.
-        </h2>
+        <p className="eyebrow">A note from Serge</p>
+        <h2 className="mt-4 display-md">You called the right shop.</h2>
 
         <div className="mt-12 space-y-7 text-lg text-text/90 max-w-[65ch]">
           <p>

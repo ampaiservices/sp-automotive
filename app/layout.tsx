@@ -1,4 +1,4 @@
-import { Anton, Inter } from "next/font/google";
+import { Anton, Manrope } from "next/font/google";
 import { Metadata } from "next";
 import LenisProvider from "@/components/providers/LenisProvider";
 import Navigation from "@/components/nav/Navigation";
@@ -10,7 +10,12 @@ import { SITE_NAME, SITE_URL, TAGLINE } from "@/lib/site";
 import "./globals.css";
 
 const anton = Anton({ subsets: ["latin"], weight: "400", variable: "--font-anton", display: "swap" });
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
+const manrope = Manrope({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-manrope",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -29,7 +34,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${anton.variable} ${inter.variable}`}>
+    <html lang="en" className={`${anton.variable} ${manrope.variable}`}>
       <head>
         <LocalBusinessJsonLd />
         <link rel="preload" as="image" href="/hero-clips/cinematic-poster.webp" fetchPriority="high" />

@@ -28,10 +28,8 @@ export default function ProcessNarrative() {
   return (
     <section id="process" className="bg-bg">
       <div className="px-6 md:px-10 pt-24 pb-12">
-        <p className="text-xs uppercase tracking-[0.3em] text-muted">The Process</p>
-        <h2 className="mt-3 font-display text-5xl md:text-7xl text-accent tracking-wide leading-[0.95]">
-          Six steps. One signature.
-        </h2>
+        <p className="eyebrow">The Process</p>
+        <h2 className="mt-4 display-lg">Six steps. One signature.</h2>
       </div>
       {BEATS.map((b) => (
         <ProcessBeat key={b.id} beat={b} />

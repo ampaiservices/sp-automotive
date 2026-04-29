@@ -4,8 +4,8 @@ export default function BrandServices({ brand }: { brand: Brand }) {
   return (
     <section className="bg-bg px-6 md:px-10 py-24 md:py-32 border-t border-divider">
       <div className="max-w-6xl mx-auto">
-        <p className="text-xs uppercase tracking-[0.3em] text-muted">What we do for {brand.name}</p>
-        <h2 className="mt-3 font-display text-4xl md:text-6xl text-accent tracking-wide leading-[0.95]">
+        <p className="eyebrow">What we do for {brand.name}</p>
+        <h2 className="mt-4 display-md">
           Six capabilities most shops won&apos;t budget for.
         </h2>
 

@@ -17,10 +17,8 @@ export default function TestimonialsSection({ brand, heading = "From the owners.
   return (
     <section id="testimonials" className="bg-bg px-6 md:px-10 py-32 border-t border-divider">
       <div className="max-w-3xl mx-auto">
-        <p className="text-xs uppercase tracking-[0.3em] text-muted">Trust</p>
-        <h2 className="mt-3 font-display text-5xl md:text-7xl text-accent tracking-wide leading-[0.95]">
-          {heading}
-        </h2>
+        <p className="eyebrow">Trust</p>
+        <h2 className="mt-4 display-lg">{heading}</h2>
 
         <ul className="mt-16 space-y-16">
           {items.map((t, i) => (

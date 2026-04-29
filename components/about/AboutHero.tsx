@@ -25,11 +25,9 @@ export default function AboutHero() {
     <section className="relative bg-bg pt-32 md:pt-40 pb-20 px-6 md:px-10">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-16">
         <div className="md:col-span-7 flex flex-col justify-center">
-          <p className="text-xs uppercase tracking-[0.32em] text-muted">Founder · Sarasota, FL</p>
-          <h1 className="mt-4 font-display text-7xl md:text-[10rem] text-accent tracking-tight leading-[0.85]">
-            Serge
-          </h1>
-          <p className="mt-8 max-w-xl text-lg md:text-xl text-text/85">
+          <p className="eyebrow">Founder · Sarasota, FL</p>
+          <h1 className="mt-5 display-xl">Serge</h1>
+          <p className="mt-8 max-w-xl lead">
             The man on every job. The signature on every weld.
             The reason your car comes home looking like the day it left the factory.
           </p>
