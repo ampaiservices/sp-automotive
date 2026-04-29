@@ -56,7 +56,12 @@ export default function HeroScrollSequence() {
         setLoadProgress(Math.min(1, buffered / video.duration));
       }
     };
-    const onLoadedMetadata = () => setLoadProgress((p) => Math.max(p, 0.1));
+    const onLoadedMetadata = () => {
+      setLoadProgress((p) => Math.max(p, 0.1));
+      // Force a seek to frame 0 so the video element actually renders its first frame
+      // (some browsers leave it blank until currentTime is explicitly set)
+      try { video.currentTime = 0; } catch {}
+    };
     const onCanPlayThrough = () => setLoadProgress(1);
 
     video.addEventListener("progress", onProgress);
@@ -159,6 +164,7 @@ export default function HeroScrollSequence() {
         <video
           ref={videoRef}
           src={VIDEO_SRC}
+          poster="/hero-frames/01-wreck.webp"
           muted
           playsInline
           preload="auto"

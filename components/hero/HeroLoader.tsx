@@ -17,7 +17,17 @@ export default function HeroLoader({ progress }: Props) {
   }, []);
 
   return (
-    <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-bg gap-10 px-6">
+    <div className="absolute inset-0 z-30 flex flex-col items-center justify-center px-6">
+      {/* Wreck still as backdrop — establishes the first frame immediately on page load */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/hero-frames/01-wreck.webp"
+        alt=""
+        className="absolute inset-0 w-full h-full object-cover"
+      />
+      {/* Dim overlay to keep the red SVG draw legible over the photo */}
+      <div className="absolute inset-0 bg-black/65" />
+
       <div className="relative max-h-[55vh] w-auto">
         {hasSvg ? (
           <object
@@ -36,14 +46,14 @@ export default function HeroLoader({ progress }: Props) {
         )}
       </div>
 
-      <div className="w-56 h-px bg-divider relative overflow-hidden">
+      <div className="relative w-56 h-px bg-divider mt-10 overflow-hidden">
         <div
           className="absolute inset-y-0 left-0 bg-accent transition-[width] duration-200"
           style={{ width: `${Math.round(progress * 100)}%` }}
         />
       </div>
 
-      <p className="text-muted text-[10px] uppercase tracking-[0.4em]">Loading</p>
+      <p className="relative text-muted text-[10px] uppercase tracking-[0.4em] mt-4">Loading</p>
 
       <style>{`
         /* PNG fallback: animated mask sweep that fades the logo in left-to-right repeatedly. */
