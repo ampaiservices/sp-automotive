@@ -86,7 +86,10 @@ export default function HeroScrollSequence() {
           // Hold frame 0 for the first HOLD_FRACTION, then scrub through video for the rest
           const wrapped =
             cyclePos < HOLD_FRACTION ? 0 : (cyclePos - HOLD_FRACTION) / (1 - HOLD_FRACTION);
-          video.currentTime = wrapped * duration;
+          // Clamp away from the very end — some browsers (and certain MP4 encodes) flash black
+          // when currentTime exactly equals duration. Holding the last meaningful frame instead.
+          const target = Math.min(wrapped * duration, duration - 0.1);
+          video.currentTime = target;
 
           const segment = 1 / BEAT_COUNT;
           const seg = Math.min(BEAT_COUNT - 1, Math.floor(wrapped / segment));
@@ -122,7 +125,7 @@ export default function HeroScrollSequence() {
   if (isMobile) return <HeroMobileFallback />;
 
   return (
-    <section ref={containerRef} className="relative h-[700vh] bg-bg">
+    <section ref={containerRef} className="relative h-[500vh] bg-bg">
       <div className="sticky top-0 h-screen w-full overflow-hidden">
         <video
           ref={videoRef}
