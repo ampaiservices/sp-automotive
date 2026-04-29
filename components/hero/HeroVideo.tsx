@@ -21,7 +21,10 @@ export default function HeroVideo() {
       v.play().catch(() => {/* swallow autoplay rejection */});
     }
     const t = setTimeout(() => setRevealed(true), 250);
-    return () => clearTimeout(t);
+    return () => {
+      clearTimeout(t);
+      v?.pause();
+    };
   }, [reduced]);
 
   return (
