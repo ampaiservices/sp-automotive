@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import PhoneCTA from "@/components/ui/PhoneCTA";
+import SmsCTA from "@/components/ui/SmsCTA";
 import ContactForm from "./ContactForm";
 
 export const metadata: Metadata = {
@@ -14,7 +15,10 @@ export default function ContactPage() {
       <div className="max-w-3xl mx-auto">
         <p className="eyebrow">Contact</p>
         <h1 className="mt-4 display-lg">Talk to Serge directly.</h1>
-        <div className="mt-8"><PhoneCTA size="lg" location="contact" /></div>
+        <div className="mt-8 flex flex-wrap items-center gap-4">
+          <PhoneCTA size="lg" location="contact" />
+          <SmsCTA location="contact" />
+        </div>
 
         <ContactForm />
       </div>

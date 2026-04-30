@@ -2,6 +2,7 @@ import Image from "next/image";
 import { existsSync } from "fs";
 import { join } from "path";
 import PhoneCTA from "@/components/ui/PhoneCTA";
+import SmsCTA from "@/components/ui/SmsCTA";
 
 const PORTRAIT_PATH = "/about/serge-portrait.webp";
 
@@ -31,8 +32,9 @@ export default function AboutHero() {
             The man on every job. The signature on every weld.
             The reason your car comes home looking like the day it left the factory.
           </p>
-          <div className="mt-10">
+          <div className="mt-10 flex flex-wrap items-center gap-4">
             <PhoneCTA size="lg" location="about-hero" />
+            <SmsCTA location="about-hero" />
           </div>
         </div>
 

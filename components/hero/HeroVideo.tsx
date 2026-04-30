@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import PhoneCTA from "@/components/ui/PhoneCTA";
+import SmsCTA from "@/components/ui/SmsCTA";
 import RevealWords from "@/components/effects/RevealWords";
 import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
 
@@ -79,8 +80,9 @@ export default function HeroVideo() {
           Factory-correct collision repair for Lamborghini, McLaren, Audi R8, and BMW M.
           Forensic intake. Torque-spec rebuild. One signature on the work.
         </p>
-        <div className="mt-10">
+        <div className="mt-10 flex flex-wrap items-center gap-4">
           <PhoneCTA size="lg" location="hero" />
+          <SmsCTA location="hero" />
         </div>
       </div>
 

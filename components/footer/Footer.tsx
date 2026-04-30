@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import PhoneCTA from "@/components/ui/PhoneCTA";
+import SmsCTA from "@/components/ui/SmsCTA";
 import { CITY, REGION, HOURS_LABEL, BY_APPOINTMENT } from "@/lib/site";
 
 export default function Footer() {
@@ -20,7 +21,10 @@ export default function Footer() {
         </div>
 
         <div className="flex flex-col items-start md:items-center gap-3">
-          <PhoneCTA location="footer" />
+          <div className="flex flex-wrap items-center gap-3">
+            <PhoneCTA location="footer" />
+            <SmsCTA location="footer" />
+          </div>
           <p className="text-muted text-xs uppercase tracking-[0.22em]">
             {BY_APPOINTMENT ? "By appointment only" : "Walk-ins welcome"} <span className="text-accent">·</span> {HOURS_LABEL}
           </p>

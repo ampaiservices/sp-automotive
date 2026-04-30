@@ -1,4 +1,5 @@
 import PhoneCTA from "@/components/ui/PhoneCTA";
+import SmsCTA from "@/components/ui/SmsCTA";
 import type { Brand } from "./brands-data";
 
 export default function BrandHero({ brand }: { brand: Brand }) {
@@ -8,8 +9,9 @@ export default function BrandHero({ brand }: { brand: Brand }) {
         <p className="eyebrow">{brand.eyebrow}</p>
         <h1 className="mt-5 display-lg">{brand.headline}</h1>
         <p className="mt-8 max-w-3xl lead">{brand.intro}</p>
-        <div className="mt-10">
+        <div className="mt-10 flex flex-wrap items-center gap-4">
           <PhoneCTA size="lg" location="brand-hero" />
+          <SmsCTA location="brand-hero" />
         </div>
       </div>
     </section>
