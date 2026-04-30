@@ -10,9 +10,15 @@
   --color-hairline: rgba(255, 255, 255, 0.10);
   --color-accent: #FFFFFF;
 
-  /* Type families — Anton for display, Manrope (variable 400-700) for body */
+  /* Type families:
+     - display: Anton (headlines)
+     - body:    Manrope (UI / default body)
+     - spec:    Geist Mono (technical numbers — torque, gap, paint depth, ΔE)
+     - serif:   Newsreader (long-form editorial — /about, /faq, explainers) */
   --font-display: var(--font-anton), "Anton", "Impact", sans-serif;
   --font-body: var(--font-manrope), "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-spec: var(--font-mono), ui-monospace, "SF Mono", "Cascadia Mono", "Consolas", monospace;
+  --font-editorial: var(--font-serif), "Newsreader", Georgia, "Times New Roman", serif;
 
   /* Modular type scale (1.333 perfect-fourth ratio, fluid via clamp).
      Use these for headlines instead of arbitrary text-[3.25rem]/[7.5rem]/[10rem] one-offs. */
@@ -93,6 +99,28 @@ html, body {
   font-size: var(--text-lead);
   line-height: 1.55;
   color: rgba(245, 245, 245, 0.85);
+}
+
+/* Spec: monospaced technical numbers. Used for torque values, gap measurements,
+   paint thicknesses, ΔE, and any forensic figure. Tabular-nums keeps columns
+   aligned when stacked (e.g., the paint-layer thickness list on /process). */
+.spec {
+  font-family: var(--font-spec);
+  font-feature-settings: "tnum", "ss01";
+  letter-spacing: 0;
+}
+
+/* Editorial: long-form body face. Serif, generous leading, wider measure than
+   the default body. Apply on long-reads (/about, /faq entries, /explainers). */
+.editorial {
+  font-family: var(--font-editorial);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  color: rgba(245, 245, 245, 0.92);
+  font-feature-settings: "kern", "liga";
+}
+.editorial p + p {
+  margin-top: 1.25em;
 }
 
 /* Animated underline — left-to-right wipe on hover. Apply to text links. */

@@ -8,7 +8,7 @@ export default function AboutStory() {
         <p className="eyebrow">A note from Serge</p>
         <h2 className="mt-4 display-md">You called the right shop.</h2>
 
-        <div className="mt-12 space-y-7 text-lg text-text/90 max-w-[65ch]">
+        <div className="editorial mt-12 space-y-7 max-w-[65ch] text-lg">
           <p>
             Your insurance company is going to push you toward the cheapest body shop on their
             list. I&apos;m not on that list. There&apos;s a reason for that — and it&apos;s the

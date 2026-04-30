@@ -130,7 +130,7 @@ function OverlayLayer({ beat }: { beat: Beat }) {
               style={{ opacity: 0, transform: "translateY(12px)" }}
             >
               <span className="font-display text-3xl md:text-4xl text-accent tracking-wide">{ov.label}</span>
-              <span className="text-sm uppercase tracking-[0.18em] text-muted">{ov.thickness}</span>
+              <span className="spec text-sm uppercase tracking-[0.18em] text-muted">{ov.thickness}</span>
             </div>
           );
         })}
@@ -163,7 +163,7 @@ function OverlayItem({ overlay }: { overlay: Overlay }) {
       >
         <Marker />
         <div className="ml-8 -mt-3">
-          <div className="font-display text-3xl md:text-4xl text-accent tracking-wide leading-none">
+          <div className="spec text-2xl md:text-3xl text-accent leading-none">
             {overlay.text}
           </div>
           {overlay.sub && (
@@ -212,7 +212,7 @@ function OverlayItem({ overlay }: { overlay: Overlay }) {
       >
         <Marker />
         <div className="ml-8 -mt-3">
-          <div className="font-display text-2xl md:text-3xl text-accent tracking-wide leading-none">
+          <div className="spec text-xl md:text-2xl text-accent leading-none">
             {overlay.spec}
           </div>
           <div className="mt-1 text-[10px] uppercase tracking-[0.22em] text-muted">torque-spec</div>
@@ -236,7 +236,7 @@ function OverlayItem({ overlay }: { overlay: Overlay }) {
       >
         <div className="flex items-center gap-2">
           <div className="h-px w-12 bg-accent" />
-          <div className="font-display text-xl text-accent tracking-wide whitespace-nowrap">
+          <div className="spec text-base md:text-lg text-accent whitespace-nowrap">
             {overlay.measurement}
           </div>
           <div className="h-px w-12 bg-accent" />
