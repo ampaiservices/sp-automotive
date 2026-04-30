@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import AboutHero from "@/components/about/AboutHero";
 import AboutStory from "@/components/about/AboutStory";
+import PositioningTable from "@/components/positioning/PositioningTable";
 import FinalCTA from "@/components/cta/FinalCTA";
 
 export const metadata: Metadata = {
@@ -14,6 +15,7 @@ export default function AboutPage() {
     <>
       <AboutHero />
       <AboutStory />
+      <PositioningTable />
       <FinalCTA />
     </>
   );
