@@ -14,5 +14,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE_URL}/about`, lastModified, priority: 0.8 },
     { url: `${SITE_URL}/process`, lastModified, priority: 0.8 },
     { url: `${SITE_URL}/contact`, lastModified, priority: 0.8 },
+    { url: `${SITE_URL}/faq`, lastModified, priority: 0.7 },
+    { url: `${SITE_URL}/explainers/adas`, lastModified, priority: 0.6 },
+    { url: `${SITE_URL}/explainers/paint-match`, lastModified, priority: 0.6 },
+    { url: `${SITE_URL}/explainers/oem-parts`, lastModified, priority: 0.6 },
   ];
 }

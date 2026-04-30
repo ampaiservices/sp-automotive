@@ -11,6 +11,7 @@ const links = [
   { href: "/process", label: "Process" },
   { href: "/#work", label: "Work" },
   { href: "/about", label: "About" },
+  { href: "/faq", label: "FAQ" },
   { href: "/contact", label: "Contact" },
 ];
 
