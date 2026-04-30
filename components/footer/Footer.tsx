@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import PhoneCTA from "@/components/ui/PhoneCTA";
-import { CITY, REGION } from "@/lib/site";
+import { CITY, REGION, HOURS_LABEL, BY_APPOINTMENT } from "@/lib/site";
 
 export default function Footer() {
   return (
@@ -19,7 +19,12 @@ export default function Footer() {
           <p className="mt-1 text-muted text-xs">Exotic collision &amp; restoration</p>
         </div>
 
-        <div className="flex md:justify-center"><PhoneCTA /></div>
+        <div className="flex flex-col items-start md:items-center gap-3">
+          <PhoneCTA />
+          <p className="text-muted text-xs uppercase tracking-[0.22em]">
+            {BY_APPOINTMENT ? "By appointment only" : "Walk-ins welcome"} <span className="text-accent">·</span> {HOURS_LABEL}
+          </p>
+        </div>
 
         <nav aria-label="Footer" className="flex flex-col gap-2 text-sm text-muted md:items-end">
           <Link href="/about" className="link-underline hover:text-accent transition-colors">About Serge</Link>
