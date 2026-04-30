@@ -9,7 +9,7 @@ export default function BrandHero({ brand }: { brand: Brand }) {
         <h1 className="mt-5 display-lg">{brand.headline}</h1>
         <p className="mt-8 max-w-3xl lead">{brand.intro}</p>
         <div className="mt-10">
-          <PhoneCTA size="lg" />
+          <PhoneCTA size="lg" location="brand-hero" />
         </div>
       </div>
     </section>

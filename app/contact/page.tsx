@@ -25,7 +25,7 @@ export default function ContactPage() {
       <div className="max-w-3xl mx-auto">
         <p className="eyebrow">Contact</p>
         <h1 className="mt-4 display-lg">Talk to Serge directly.</h1>
-        <div className="mt-8"><PhoneCTA size="lg" /></div>
+        <div className="mt-8"><PhoneCTA size="lg" location="contact" /></div>
 
         {!sent ? (
           <div className="mt-16 space-y-6">

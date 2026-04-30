@@ -32,7 +32,7 @@ export default function AboutHero() {
             The reason your car comes home looking like the day it left the factory.
           </p>
           <div className="mt-10">
-            <PhoneCTA size="lg" />
+            <PhoneCTA size="lg" location="about-hero" />
           </div>
         </div>
 

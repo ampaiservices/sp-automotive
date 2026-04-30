@@ -35,7 +35,7 @@ function BeatBlock({ beat }: { beat: Beat }) {
 
         {beat.showCta && (
           <div className="mt-8">
-            <PhoneCTA size="lg" />
+            <PhoneCTA size="lg" location="process-mobile" />
           </div>
         )}
       </div>

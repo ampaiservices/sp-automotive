@@ -4,6 +4,9 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { Beat, Overlay } from "@/lib/process-narrative";
 import PhoneCTA from "@/components/ui/PhoneCTA";
+import { track } from "@/lib/analytics";
+
+const SCROLL_DEPTH_THRESHOLDS = [25, 50, 75, 100] as const;
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -34,6 +37,7 @@ export default function ProcessBeat({ beat }: { beat: Beat }) {
       kind: el.dataset.kind || "",
     }));
     const scrollEl = container.querySelector<HTMLElement>("[data-scroll-indicator]");
+    const emitted = new Set<number>();
 
     function apply(p: number) {
       for (const o of overlays) {
@@ -46,6 +50,13 @@ export default function ProcessBeat({ beat }: { beat: Beat }) {
         }
       }
       if (scrollEl) scrollEl.style.opacity = String(Math.max(0, 1 - p));
+      const pct = p * 100;
+      for (const depth of SCROLL_DEPTH_THRESHOLDS) {
+        if (pct >= depth && !emitted.has(depth)) {
+          emitted.add(depth);
+          track("process_scroll_depth", { depth, beat: beat.id });
+        }
+      }
     }
 
     const obj = { p: 0 };
@@ -69,7 +80,7 @@ export default function ProcessBeat({ beat }: { beat: Beat }) {
       tween.scrollTrigger?.kill(true);
       tween.kill();
     };
-  }, [hasPin]);
+  }, [hasPin, beat.id]);
 
   return (
     <section ref={containerRef} className="relative h-screen w-full overflow-hidden bg-bg">
@@ -80,7 +91,7 @@ export default function ProcessBeat({ beat }: { beat: Beat }) {
           <p className="mt-6 lead max-w-md">{beat.copy}</p>
           {beat.showCta && (
             <div className="mt-8">
-              <PhoneCTA size="lg" />
+              <PhoneCTA size="lg" location={`process-${beat.id}`} />
             </div>
           )}
         </div>

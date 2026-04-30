@@ -20,7 +20,7 @@ export default function Footer() {
         </div>
 
         <div className="flex flex-col items-start md:items-center gap-3">
-          <PhoneCTA />
+          <PhoneCTA location="footer" />
           <p className="text-muted text-xs uppercase tracking-[0.22em]">
             {BY_APPOINTMENT ? "By appointment only" : "Walk-ins welcome"} <span className="text-accent">·</span> {HOURS_LABEL}
           </p>

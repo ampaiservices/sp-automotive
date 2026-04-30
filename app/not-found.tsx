@@ -22,7 +22,7 @@ export default function NotFound() {
           >
             Home
           </Link>
-          <PhoneCTA />
+          <PhoneCTA location="404" />
         </div>
       </div>
     </section>

@@ -80,7 +80,7 @@ export default function HeroVideo() {
           Forensic intake. Torque-spec rebuild. One signature on the work.
         </p>
         <div className="mt-10">
-          <PhoneCTA size="lg" />
+          <PhoneCTA size="lg" location="hero" />
         </div>
       </div>
 

@@ -68,7 +68,7 @@ export default function Navigation() {
           ))}
         </ul>
         <div className="flex-1 flex justify-end items-center">
-          <div className="hidden md:block"><PhoneCTA /></div>
+          <div className="hidden md:block"><PhoneCTA location="nav" /></div>
           <button
             type="button"
             className="md:hidden text-accent p-3 -mr-3 inline-flex items-center justify-center"
@@ -105,7 +105,7 @@ export default function Navigation() {
                 </Link>
               </li>
             ))}
-            <li className="mt-8"><PhoneCTA /></li>
+            <li className="mt-8"><PhoneCTA location="nav-mobile" /></li>
           </ul>
         </div>
       )}

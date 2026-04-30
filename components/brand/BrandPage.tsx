@@ -3,6 +3,7 @@ import BrandServices from "./BrandServices";
 import BrandModels from "./BrandModels";
 import TestimonialsSection from "@/components/testimonials/TestimonialsSection";
 import FinalCTA from "@/components/cta/FinalCTA";
+import BrandPageView from "@/components/analytics/BrandPageView";
 import { PUBLISHED_TESTIMONIALS } from "@/components/testimonials/testimonials-data";
 import { SITE_NAME, SITE_URL, PHONE, CITY, REGION } from "@/lib/site";
 import type { Brand } from "./brands-data";
@@ -43,6 +44,7 @@ export default function BrandPage({ brand }: { brand: Brand }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }}
       />
+      <BrandPageView brand={brand.brandKey} />
       <BrandHero brand={brand} />
       <BrandServices brand={brand} />
       <BrandModels brand={brand} />
