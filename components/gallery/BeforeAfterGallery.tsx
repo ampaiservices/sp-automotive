@@ -1,5 +1,6 @@
 import Image from "next/image";
 import RevealWords from "@/components/effects/RevealWords";
+import Magnetic from "@/components/effects/Magnetic";
 
 const pairs = [
   { id: 1, caption: "Lamborghini Huracán — front-end collision" },
@@ -18,30 +19,32 @@ export default function BeforeAfterGallery() {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           {pairs.map((p) => (
-            <figure key={p.id} data-cursor="View">
-              <div className="grid grid-cols-[1fr_auto_1fr] gap-4 items-stretch">
-                <div className="relative aspect-[4/3] border border-white/10 hover:border-accent transition-colors">
-                  <Image
-                    src={`/before-after/0${p.id}-before.jpg`}
-                    alt={`${p.caption} — before repair`}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                  />
+            <Magnetic key={p.id} radius={120} strength={0.12} display="block" className="w-full">
+              <figure data-cursor="View">
+                <div className="grid grid-cols-[1fr_auto_1fr] gap-4 items-stretch">
+                  <div className="relative aspect-[4/3] border border-white/10 hover:border-accent transition-colors">
+                    <Image
+                      src={`/before-after/0${p.id}-before.jpg`}
+                      alt={`${p.caption} — before repair`}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                    />
+                  </div>
+                  <div aria-hidden className="flex items-center justify-center text-accent font-display text-lg">VS</div>
+                  <div className="relative aspect-[4/3] border border-white/10 hover:border-accent transition-colors">
+                    <Image
+                      src={`/before-after/0${p.id}-after.jpg`}
+                      alt={`${p.caption} — after repair`}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                    />
+                  </div>
                 </div>
-                <div aria-hidden className="flex items-center justify-center text-accent font-display text-lg">VS</div>
-                <div className="relative aspect-[4/3] border border-white/10 hover:border-accent transition-colors">
-                  <Image
-                    src={`/before-after/0${p.id}-after.jpg`}
-                    alt={`${p.caption} — after repair`}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                  />
-                </div>
-              </div>
-              <figcaption className="mt-4 text-sm text-muted">{p.caption}</figcaption>
-            </figure>
+                <figcaption className="mt-4 text-sm text-muted">{p.caption}</figcaption>
+              </figure>
+            </Magnetic>
           ))}
         </div>
       </div>

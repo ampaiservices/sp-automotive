@@ -11,10 +11,12 @@ type Props = {
   radius?: number;
   /** How far the element travels (0..1 of the cursor offset). Default 0.35. */
   strength?: number;
+  /** Wrapper display mode. Use "block" inside a grid/flex item. Default "inline-block". */
+  display?: "inline-block" | "block";
   className?: string;
 };
 
-export default function Magnetic({ children, radius = 100, strength = 0.35, className = "" }: Props) {
+export default function Magnetic({ children, radius = 100, strength = 0.35, display = "inline-block", className = "" }: Props) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -63,7 +65,7 @@ export default function Magnetic({ children, radius = 100, strength = 0.35, clas
   }, [radius, strength]);
 
   return (
-    <div ref={ref} className={`inline-block will-change-transform ${className}`}>
+    <div ref={ref} className={`${display} will-change-transform ${className}`}>
       {children}
     </div>
   );
