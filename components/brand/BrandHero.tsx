@@ -1,3 +1,4 @@
+import Link from "next/link";
 import PhoneCTA from "@/components/ui/PhoneCTA";
 import SmsCTA from "@/components/ui/SmsCTA";
 import type { Brand } from "./brands-data";
@@ -13,6 +14,15 @@ export default function BrandHero({ brand }: { brand: Brand }) {
           <PhoneCTA size="lg" location="brand-hero" />
           <SmsCTA location="brand-hero" />
         </div>
+        <p className="mt-5 text-xs uppercase tracking-[0.22em] text-muted">
+          Or{" "}
+          <Link
+            href="/estimate"
+            className="link-underline text-text hover:text-accent transition-colors"
+          >
+            send 3 photos for a callback
+          </Link>
+        </p>
       </div>
     </section>
   );

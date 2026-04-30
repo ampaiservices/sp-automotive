@@ -15,6 +15,9 @@ type EventMap = {
   process_scroll_depth: { depth: 25 | 50 | 75 | 100; beat?: string };
   before_after_interact: { pair_id?: string };
   sms_cta_click: { location?: string };
+  estimate_submit_attempt: Record<string, never>;
+  estimate_submit_success: Record<string, never>;
+  estimate_submit_error: { reason?: string };
 };
 
 export function track<K extends keyof EventMap>(

@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import PhoneCTA from "@/components/ui/PhoneCTA";
 import SmsCTA from "@/components/ui/SmsCTA";
 import RevealWords from "@/components/effects/RevealWords";
@@ -84,6 +85,15 @@ export default function HeroVideo() {
           <PhoneCTA size="lg" location="hero" />
           <SmsCTA location="hero" />
         </div>
+        <p className="mt-5 text-xs uppercase tracking-[0.22em] text-muted">
+          Or{" "}
+          <Link
+            href="/estimate"
+            className="link-underline text-text hover:text-accent transition-colors"
+          >
+            send 3 photos for a callback
+          </Link>
+        </p>
       </div>
 
       <div

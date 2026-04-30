@@ -11,5 +11,7 @@ initBotId({
   protect: [
     { path: "/api/contact", method: "POST" },
     { path: "/api/contact/upload", method: "POST" },
+    { path: "/api/estimate", method: "POST" },
+    { path: "/api/estimate/upload", method: "POST" },
   ],
 });

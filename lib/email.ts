@@ -19,6 +19,15 @@ export type ContactLead = {
   photoUrls: string[];
 };
 
+// Estimate is the lighter funnel — phone + vehicle + photos only. No email, no
+// description. Distinct shape so misuse fails type-check.
+export type EstimateLead = {
+  name: string;
+  phone: string;
+  vehicle: string;
+  photoUrls: string[];
+};
+
 export async function sendContactEmail(
   to: string,
   lead: ContactLead,
@@ -48,6 +57,41 @@ export async function sendContactEmail(
       to,
       replyTo: lead.email,
       subject: `New lead — ${lead.name} (${lead.vehicle})`,
+      html,
+    });
+    if (error) return { ok: false, error: error.message };
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: e instanceof Error ? e.message : "unknown" };
+  }
+}
+
+export async function sendEstimateEmail(
+  to: string,
+  lead: EstimateLead,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  if (!resend) return { ok: false, error: "RESEND_API_KEY missing" };
+  if (!CONTACT_FROM_EMAIL) return { ok: false, error: "CONTACT_FROM_EMAIL missing" };
+
+  const photoList = lead.photoUrls.length
+    ? lead.photoUrls.map((url, i) => `<li><a href="${escapeHtml(url)}">Photo ${i + 1}</a></li>`).join("")
+    : "<li>No photos attached.</li>";
+
+  const html = `
+    <h2 style="font-family: Georgia, serif;">New estimate request</h2>
+    <p><strong>Name:</strong> ${escapeHtml(lead.name)}</p>
+    <p><strong>Phone:</strong> <a href="tel:${escapeHtml(lead.phone)}">${escapeHtml(lead.phone)}</a></p>
+    <p><strong>Vehicle:</strong> ${escapeHtml(lead.vehicle)}</p>
+    <p><strong>Photos:</strong></p>
+    <ul>${photoList}</ul>
+    <p style="color:#666;font-size:12px;">Lighter funnel — no email or description. Call back to scope the repair.</p>
+  `;
+
+  try {
+    const { error } = await resend.emails.send({
+      from: CONTACT_FROM_EMAIL,
+      to,
+      subject: `Estimate request — ${lead.name} (${lead.vehicle})`,
       html,
     });
     if (error) return { ok: false, error: error.message };
