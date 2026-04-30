@@ -4,6 +4,7 @@ import BeforeAfterGallery from "@/components/gallery/BeforeAfterGallery";
 import ShowroomSection from "@/components/showroom/ShowroomSection";
 import StatReveal from "@/components/home/StatReveal";
 import TestimonialsSection from "@/components/testimonials/TestimonialsSection";
+import VideoTestimonials from "@/components/testimonials/VideoTestimonials";
 import AboutStrip from "@/components/about/AboutStrip";
 import FinalCTA from "@/components/cta/FinalCTA";
 
@@ -18,6 +19,7 @@ export default function Home() {
       <BeforeAfterGallery />
       <TestimonialsSection />
       <AboutStrip />
+      <VideoTestimonials />
       <FinalCTA />
     </>
   );
