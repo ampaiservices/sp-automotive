@@ -1,4 +1,4 @@
-import { Anton, Manrope } from "next/font/google";
+import { Anton, Manrope, Geist_Mono, Newsreader } from "next/font/google";
 import { Metadata } from "next";
 import Navigation from "@/components/nav/Navigation";
 import Footer from "@/components/footer/Footer";
@@ -14,6 +14,16 @@ const manrope = Manrope({
   // 400 body, 500 eyebrow/labels. 600/700 unused after typography sweep — saves ~36KB.
   weight: ["400", "500"],
   variable: "--font-manrope",
+  display: "swap",
+});
+// Mono: technical numbers (specs, torques, gaps, paint depths). 400 only.
+const geistMono = Geist_Mono({ subsets: ["latin"], weight: "400", variable: "--font-mono", display: "swap" });
+// Serif: long-form editorial body (about, FAQ, explainers). 400 + 500.
+const newsreader = Newsreader({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  style: ["normal", "italic"],
+  variable: "--font-serif",
   display: "swap",
 });
 
@@ -34,7 +44,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${anton.variable} ${manrope.variable}`}>
+    <html lang="en" className={`${anton.variable} ${manrope.variable} ${geistMono.variable} ${newsreader.variable}`}>
       <head>
         <LocalBusinessJsonLd />
         {/* Preload the poster only — it's the LCP candidate. The video element streams on its own; explicit video preload was tanking LCP at 9.8MB. */}

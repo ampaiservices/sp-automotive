@@ -4,6 +4,9 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { Beat, Overlay } from "@/lib/process-narrative";
 import PhoneCTA from "@/components/ui/PhoneCTA";
+import { track } from "@/lib/analytics";
+
+const SCROLL_DEPTH_THRESHOLDS = [25, 50, 75, 100] as const;
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -34,6 +37,7 @@ export default function ProcessBeat({ beat }: { beat: Beat }) {
       kind: el.dataset.kind || "",
     }));
     const scrollEl = container.querySelector<HTMLElement>("[data-scroll-indicator]");
+    const emitted = new Set<number>();
 
     function apply(p: number) {
       for (const o of overlays) {
@@ -46,6 +50,13 @@ export default function ProcessBeat({ beat }: { beat: Beat }) {
         }
       }
       if (scrollEl) scrollEl.style.opacity = String(Math.max(0, 1 - p));
+      const pct = p * 100;
+      for (const depth of SCROLL_DEPTH_THRESHOLDS) {
+        if (pct >= depth && !emitted.has(depth)) {
+          emitted.add(depth);
+          track("process_scroll_depth", { depth, beat: beat.id });
+        }
+      }
     }
 
     const obj = { p: 0 };
@@ -69,7 +80,7 @@ export default function ProcessBeat({ beat }: { beat: Beat }) {
       tween.scrollTrigger?.kill(true);
       tween.kill();
     };
-  }, [hasPin]);
+  }, [hasPin, beat.id]);
 
   return (
     <section ref={containerRef} className="relative h-screen w-full overflow-hidden bg-bg">
@@ -80,7 +91,7 @@ export default function ProcessBeat({ beat }: { beat: Beat }) {
           <p className="mt-6 lead max-w-md">{beat.copy}</p>
           {beat.showCta && (
             <div className="mt-8">
-              <PhoneCTA size="lg" />
+              <PhoneCTA size="lg" location={`process-${beat.id}`} />
             </div>
           )}
         </div>
@@ -119,7 +130,7 @@ function OverlayLayer({ beat }: { beat: Beat }) {
               style={{ opacity: 0, transform: "translateY(12px)" }}
             >
               <span className="font-display text-3xl md:text-4xl text-accent tracking-wide">{ov.label}</span>
-              <span className="text-sm uppercase tracking-[0.18em] text-muted">{ov.thickness}</span>
+              <span className="spec text-sm uppercase tracking-[0.18em] text-muted">{ov.thickness}</span>
             </div>
           );
         })}
@@ -152,7 +163,7 @@ function OverlayItem({ overlay }: { overlay: Overlay }) {
       >
         <Marker />
         <div className="ml-8 -mt-3">
-          <div className="font-display text-3xl md:text-4xl text-accent tracking-wide leading-none">
+          <div className="spec text-2xl md:text-3xl text-accent leading-none">
             {overlay.text}
           </div>
           {overlay.sub && (
@@ -201,7 +212,7 @@ function OverlayItem({ overlay }: { overlay: Overlay }) {
       >
         <Marker />
         <div className="ml-8 -mt-3">
-          <div className="font-display text-2xl md:text-3xl text-accent tracking-wide leading-none">
+          <div className="spec text-xl md:text-2xl text-accent leading-none">
             {overlay.spec}
           </div>
           <div className="mt-1 text-[10px] uppercase tracking-[0.22em] text-muted">torque-spec</div>
@@ -225,7 +236,7 @@ function OverlayItem({ overlay }: { overlay: Overlay }) {
       >
         <div className="flex items-center gap-2">
           <div className="h-px w-12 bg-accent" />
-          <div className="font-display text-xl text-accent tracking-wide whitespace-nowrap">
+          <div className="spec text-base md:text-lg text-accent whitespace-nowrap">
             {overlay.measurement}
           </div>
           <div className="h-px w-12 bg-accent" />

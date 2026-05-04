@@ -1,4 +1,5 @@
 import type { Brand } from "./brands-data";
+import Magnetic from "@/components/effects/Magnetic";
 
 export default function BrandModels({ brand }: { brand: Brand }) {
   return (
@@ -11,11 +12,15 @@ export default function BrandModels({ brand }: { brand: Brand }) {
 
         <ul className="mt-12 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
           {brand.models.map((m) => (
-            <li
-              key={m}
-              className="border border-white/10 px-4 py-3 text-sm text-text/90 hover:border-accent hover:text-accent transition-colors"
-            >
-              {m}
+            <li key={m}>
+              <Magnetic radius={60} strength={0.18} display="block" className="w-full">
+                <div
+                  data-cursor="Open"
+                  className="border border-white/10 px-4 py-3 text-sm text-text/90 hover:border-accent hover:text-accent transition-colors"
+                >
+                  {m}
+                </div>
+              </Magnetic>
             </li>
           ))}
         </ul>

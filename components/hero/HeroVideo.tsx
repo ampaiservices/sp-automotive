@@ -80,6 +80,15 @@ export default function HeroVideo() {
             Forensic intake. Torque-spec rebuild. One signature on the work.
           </p>
         </div>
+        <p className="mt-5 text-xs uppercase tracking-[0.22em] text-muted">
+          Or{" "}
+          <Link
+            href="/estimate"
+            className="link-underline text-text hover:text-accent transition-colors"
+          >
+            send 3 photos for a callback
+          </Link>
+        </p>
       </div>
 
       <div

@@ -1,6 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
-import { TESTIMONIALS, type Testimonial } from "./testimonials-data";
+import { PUBLISHED_TESTIMONIALS, type Testimonial } from "./testimonials-data";
 import RevealWords from "@/components/effects/RevealWords";
 
 type Props = {
@@ -10,8 +10,8 @@ type Props = {
 
 export default function TestimonialsSection({ brand, heading = "From the owners." }: Props) {
   const items: Testimonial[] = brand
-    ? TESTIMONIALS.filter((t) => t.brand === brand)
-    : TESTIMONIALS;
+    ? PUBLISHED_TESTIMONIALS.filter((t) => t.brand === brand)
+    : PUBLISHED_TESTIMONIALS;
 
   if (items.length === 0) return null;
 
