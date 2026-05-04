@@ -7,8 +7,8 @@ import RevealWords from "@/components/effects/RevealWords";
 export default function AboutStrip() {
   return (
     <section className="bg-bg px-6 md:px-10 py-32">
-      <div className="max-w-4xl mx-auto">
-        <p className="eyebrow">06 / No subcontractors. No shortcuts.</p>
+      <div className="max-w-7xl mx-auto">
+        <p className="eyebrow">05 / No subcontractors. No shortcuts.</p>
         <h2 className="mt-4 display-md">
           <RevealWords>One shop. One signature. Every weld.</RevealWords>
         </h2>

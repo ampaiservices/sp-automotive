@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import PhoneCTA from "@/components/ui/PhoneCTA";
 import RevealWords from "@/components/effects/RevealWords";
 import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
 
@@ -66,21 +65,20 @@ export default function HeroVideo() {
       />
 
       <div
-        className="relative z-10 h-full flex flex-col justify-end items-start px-6 md:px-10 pb-24 md:pb-32 transition-opacity duration-700"
+        className="relative z-10 h-full flex flex-col justify-end px-6 md:px-10 pb-24 md:pb-32 transition-opacity duration-700"
         style={{ opacity: revealed ? 1 : 0 }}
       >
-        <p className="eyebrow inline-block bg-black/80 rounded px-2 -mx-2">
-          01 / Sarasota, FL · Exotic Collision
-        </p>
-        <h2 className="mt-5 display-xl max-w-[12ch] drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
-          <RevealWords>Where exotics come home.</RevealWords>
-        </h2>
-        <p className="mt-7 max-w-xl lead">
-          Factory-correct collision repair for Lamborghini, McLaren, Audi R8, and BMW M.
-          Forensic intake. Torque-spec rebuild. One signature on the work.
-        </p>
-        <div className="mt-10">
-          <PhoneCTA size="lg" />
+        <div className="max-w-7xl mx-auto w-full">
+          <h2 className="display-xl max-w-[12ch] drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
+            <RevealWords>Where exotics come home.</RevealWords>
+          </h2>
+          <p className="mt-7 eyebrow inline-block bg-black/80 rounded px-2 -mx-2">
+            01 / Sarasota, FL · Exotic Collision
+          </p>
+          <p className="mt-3 max-w-xl lead">
+            Factory-correct collision repair for Lamborghini, McLaren, Audi R8, and BMW M.
+            Forensic intake. Torque-spec rebuild. One signature on the work.
+          </p>
         </div>
       </div>
 

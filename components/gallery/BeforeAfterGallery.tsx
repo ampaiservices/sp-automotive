@@ -12,7 +12,7 @@ export default function BeforeAfterGallery() {
   return (
     <section id="work" className="bg-bg px-6 md:px-10 py-32">
       <div className="max-w-7xl mx-auto">
-        <p className="eyebrow">04 / The Work</p>
+        <p className="eyebrow">03 / The Work</p>
         <h2 className="mt-4 display-lg mb-16">
           <RevealWords>What came back better than new.</RevealWords>
         </h2>

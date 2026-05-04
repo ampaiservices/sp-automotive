@@ -17,11 +17,11 @@ export default function TestimonialsSection({ brand, heading = "From the owners.
 
   return (
     <section id="testimonials" className="bg-bg px-6 md:px-10 py-32 border-t border-divider">
-      <div className="max-w-3xl mx-auto">
-        <p className="eyebrow">05 / Trust</p>
+      <div className="max-w-7xl mx-auto">
+        <p className="eyebrow">04 / Trust</p>
         <h2 className="mt-4 display-lg"><RevealWords>{heading}</RevealWords></h2>
 
-        <ul className="mt-16 space-y-16">
+        <ul className="mt-16 space-y-16 max-w-3xl">
           {items.map((t, i) => (
             <motion.li
               key={i}
