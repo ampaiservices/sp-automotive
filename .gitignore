@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# old-site reference (pre-wipe snapshot for Claude)
+OLD_SITE_REFERENCE.md
