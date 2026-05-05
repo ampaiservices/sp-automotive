@@ -1,1 +1,44 @@
 @import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-inter);
+
+  --color-white: #ffffff;
+  --color-off-white: #f8f8f8;
+  --color-black: #000000;
+  --color-charcoal: #1a1a1a;
+  --color-cool-blue: #e8f4ff;
+}
+
+/* ----------------------------------------------------------------------------
+ * Smoke drift — drives the layered cloud textures in <SmokyTransition>.
+ * Two independent loops at different durations and offsets so the layers
+ * never line up the same way twice; gives the band an organic, non-tiling
+ * feel without any extra DOM. Both loops translate the layer well outside
+ * its bounds; the parent's overflow-hidden and mask-image gradients hide
+ * the seams. Reduced-motion users get static composition (`animation:
+ * none` is set inline).
+ * --------------------------------------------------------------------------*/
+@keyframes smoke-drift-slow {
+  0% {
+    transform: translate3d(-4%, -2%, 0) scale(1.05);
+  }
+  50% {
+    transform: translate3d(3%, 2%, 0) scale(1.08);
+  }
+  100% {
+    transform: translate3d(-4%, -2%, 0) scale(1.05);
+  }
+}
+
+@keyframes smoke-drift-fast {
+  0% {
+    transform: translate3d(2%, 1%, 0) scale(1.1);
+  }
+  50% {
+    transform: translate3d(-3%, -3%, 0) scale(1.04);
+  }
+  100% {
+    transform: translate3d(2%, 1%, 0) scale(1.1);
+  }
+}
