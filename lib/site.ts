@@ -16,13 +16,14 @@ export const TAGLINE = "Built where it broke.";
 // are scheduled, not walk-in hours. The HOURS_LABEL is the display string for
 // the footer and other UI; the structured fields drive JSON-LD.
 export const BY_APPOINTMENT = true;
-export const HOURS_LABEL = "Mon–Fri 9am–5pm";
+export const HOURS_LABEL = "Mon–Sat 9am–5pm";
 export const HOURS_DAYS = [
   "Monday",
   "Tuesday",
   "Wednesday",
   "Thursday",
   "Friday",
+  "Saturday",
 ] as const;
 export const HOURS_OPEN = "09:00";
 export const HOURS_CLOSE = "17:00";
