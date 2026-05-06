@@ -15,7 +15,12 @@ export async function POST(request: Request): Promise<NextResponse> {
     return NextResponse.json({ error: "Access denied" }, { status: 403 });
   }
 
-  const body = (await request.json()) as HandleUploadBody;
+  let body: HandleUploadBody;
+  try {
+    body = (await request.json()) as HandleUploadBody;
+  } catch {
+    return NextResponse.json({ error: "invalid request body" }, { status: 400 });
+  }
 
   try {
     const jsonResponse = await handleUpload({
