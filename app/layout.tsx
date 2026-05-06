@@ -1,4 +1,4 @@
-import { Anton, Manrope, Geist_Mono, Newsreader } from "next/font/google";
+import { Anton, Hanken_Grotesk } from "next/font/google";
 import { Metadata } from "next";
 import Navigation from "@/components/nav/Navigation";
 import Footer from "@/components/footer/Footer";
@@ -8,22 +8,24 @@ import CustomCursor from "@/components/effects/CustomCursor";
 import { SITE_NAME, SITE_URL, TAGLINE } from "@/lib/site";
 import "./globals.css";
 
-const anton = Anton({ subsets: ["latin"], weight: "400", variable: "--font-anton", display: "swap" });
-const manrope = Manrope({
+// Anton is a free near-equivalent to Druk Wide Heavy. Single weight, no
+// italic, no variable axes — globals.css strips italic + opsz/SOFT
+// font-variation-settings to match.
+const anton = Anton({
   subsets: ["latin"],
-  // 400 body, 500 eyebrow/labels. 600/700 unused after typography sweep — saves ~36KB.
-  weight: ["400", "500"],
-  variable: "--font-manrope",
+  weight: "400",
+  variable: "--font-anton",
   display: "swap",
 });
-// Mono: technical numbers (specs, torques, gaps, paint depths). 400 only.
-const geistMono = Geist_Mono({ subsets: ["latin"], weight: "400", variable: "--font-mono", display: "swap" });
-// Serif: long-form editorial body (about, FAQ, explainers). 400 + 500.
-const newsreader = Newsreader({
+
+// Hanken Grotesk — body / editorial / mono surfaces site-wide. Anton stays
+// for display headlines (the cinematic Druk identity). See globals.css
+// "Type Families" comment for the full role split. Three weights: 400 body,
+// 500 labels/medium, 600 emphasis.
+const hanken = Hanken_Grotesk({
   subsets: ["latin"],
-  weight: ["400", "500"],
-  style: ["normal", "italic"],
-  variable: "--font-serif",
+  weight: ["400", "500", "600"],
+  variable: "--font-hanken",
   display: "swap",
 });
 
@@ -44,13 +46,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${anton.variable} ${manrope.variable} ${geistMono.variable} ${newsreader.variable}`}>
+    <html lang="en" className={`${anton.variable} ${hanken.variable}`}>
       <head>
         <LocalBusinessJsonLd />
         {/* Preload the poster only — it's the LCP candidate. The video element streams on its own; explicit video preload was tanking LCP at 9.8MB. */}
-        <link rel="preload" as="image" href="/hero-clips/cinematic-poster.webp" fetchPriority="high" />
+        <link rel="preload" as="image" href="/hero-clips/cinematic-poster.jpg" fetchPriority="high" />
       </head>
-      <body className="bg-bg text-text font-body antialiased film-grain">
+      <body className="text-bone font-body antialiased film-grain">
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-accent focus:text-bg focus:font-body focus:text-sm focus:uppercase focus:tracking-[0.18em] focus:rounded-md"

@@ -35,13 +35,21 @@
   --color-accent:     var(--color-bone);
 
   /* ─── Type Families ──────────────────────────────────────────────
-     Site-wide Druk-alike. Anton (free Google Fonts) — single weight,
-     no italic, condensed display sans. The four roles below collapse to
-     one family; tokens preserved so existing utilities still resolve. */
-  --font-display:   var(--font-anton), "Anton", "Arial Narrow", "Helvetica Condensed", sans-serif;
-  --font-editorial: var(--font-anton), "Anton", "Arial Narrow", "Helvetica Condensed", sans-serif;
-  --font-body:      var(--font-anton), "Anton", "Arial Narrow", "Helvetica Condensed", sans-serif;
-  --font-mono:      var(--font-anton), "Anton", "Arial Narrow", "Helvetica Condensed", sans-serif;
+     Two-family system after Path B audit (2026-05-06):
+       Display → Anton (free Druk-alike — condensed, single weight, used
+                        by .display-* and .display-bleed classes)
+       Body / editorial / labels → Hanken Grotesk (humanist sans, 7
+                        weights — used by .lead, .editorial, default <p>,
+                        .eyebrow, .annotation, .spec)
+     Anton stays for headlines so the cinematic Druk identity holds; body
+     copy moves to Hanken so paragraph copy reads at the proper density.
+     If you want true mono for .spec callouts later (process narrative
+     torque specs / paint depths), add JetBrains Mono and point
+     --font-mono at it — leave --font-body and --font-editorial on Hanken. */
+  --font-display:   var(--font-anton),  "Anton", "Arial Narrow", "Helvetica Condensed", sans-serif;
+  --font-editorial: var(--font-hanken), "Hanken Grotesk", "Inter", "Helvetica Neue", system-ui, sans-serif;
+  --font-body:      var(--font-hanken), "Hanken Grotesk", "Inter", "Helvetica Neue", system-ui, sans-serif;
+  --font-mono:      var(--font-hanken), "Hanken Grotesk", "Inter", "Helvetica Neue", system-ui, sans-serif;
   --font-spec: var(--font-mono);
 
   /* ─── Type Scale (fluid) ─────────────────────────────────────────── */
