@@ -115,7 +115,13 @@ export default function PageScrubVideo() {
         ref={videoRef}
         muted
         playsInline
-        preload="auto"
+        // preload="metadata" downloads only the moov atom (already at the head
+        // via faststart) so duration is known and apply() can seek immediately.
+        // Frames buffer progressively as scroll advances; deep-jump scrubs may
+        // briefly stall while data arrives. Trade-off: ~22 s of bandwidth
+        // reclaimed on a 10 Mbps cold load vs the prior preload="auto" pull
+        // of the full 27 MB clip on every page entry.
+        preload="metadata"
         poster={POSTER}
         className="absolute inset-0 w-full h-full object-cover"
       >

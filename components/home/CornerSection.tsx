@@ -62,8 +62,11 @@ export default function CornerSection({
   headingId,
 }: Props) {
   const reduced = useReducedMotion();
-  // SSR fallback `false` = render mobile shell on server (safe default for slow
-  // hydration on real mobile). Matches the convention in ProcessNarrative.
+  // Layout (padding, positioning, vignette, font sizes, justify) is driven by
+  // Tailwind `md:` responsive classes so server and client paint identically
+  // and CLS stays clean. The hook is retained ONLY to pick framer-motion
+  // variant tracks (slide-in direction differs by breakpoint); variant choice
+  // affects opacity/transform, not layout, so a hydration re-key is invisible.
   const isDesktop = useMediaQuery("(min-width: 768px)", false);
 
   const chapterVariants = isDesktop ? chapterDesktop : chapterMobile;
@@ -81,15 +84,20 @@ export default function CornerSection({
   return (
     <section
       aria-labelledby={headingId}
-      className={`relative min-h-[100svh] w-full ${
-        isDesktop ? "px-10 py-20" : "px-6 py-16"
-      }`}
+      className="relative min-h-[100svh] w-full px-6 py-16 md:px-10 md:py-20"
     >
-      {/* Vignette gradients — pure CSS, no backdrop-filter (cheap on compositor). */}
+      {/* Vignette gradients — pure CSS, no backdrop-filter (cheap on compositor).
+          Two layers toggled by `md:` visibility so the correct gradient paints
+          on first SSR frame without waiting for hydration. */}
       <div
         aria-hidden
-        className="absolute inset-0 pointer-events-none"
-        style={{ background: isDesktop ? VIGNETTE_DESKTOP : VIGNETTE_MOBILE }}
+        className="absolute inset-0 pointer-events-none md:hidden"
+        style={{ background: VIGNETTE_MOBILE }}
+      />
+      <div
+        aria-hidden
+        className="absolute inset-0 pointer-events-none hidden md:block"
+        style={{ background: VIGNETTE_DESKTOP }}
       />
 
       {/* Chapter mark — pinned top-left via section padding (document flow). */}
@@ -98,11 +106,7 @@ export default function CornerSection({
         {...motionProps}
         className="relative z-10"
       >
-        <div
-          className={`font-display text-accent leading-none tracking-[-0.02em] ${
-            isDesktop ? "text-5xl" : "text-3xl"
-          }`}
-        >
+        <div className="font-display text-accent leading-none tracking-[-0.02em] text-3xl md:text-5xl">
           {chapterNumber}
         </div>
         <p className="eyebrow mt-2">
@@ -114,22 +118,14 @@ export default function CornerSection({
       <motion.div
         variants={bodyVariants}
         {...motionProps}
-        className={
-          isDesktop
-            ? "absolute right-10 bottom-20 z-10 max-w-lg text-right"
-            : "relative z-10 mt-12 max-w-none text-left"
-        }
+        className="relative z-10 mt-12 max-w-none text-left md:absolute md:right-10 md:bottom-20 md:mt-0 md:max-w-lg md:text-right"
       >
         <h2 id={headingId} className="display-md text-bone leading-[1.05]">
           {headline}
         </h2>
         <div className="mt-6 lead text-bone/85">{body}</div>
         {cta && (
-          <div
-            className={`mt-10 flex flex-wrap gap-4 ${
-              isDesktop ? "justify-end" : "justify-start"
-            }`}
-          >
+          <div className="mt-10 flex flex-wrap gap-4 justify-start md:justify-end">
             {cta}
           </div>
         )}
