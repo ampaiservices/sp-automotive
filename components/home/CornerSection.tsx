@@ -81,7 +81,7 @@ export default function CornerSection({
   return (
     <section
       aria-labelledby={headingId}
-      className={`relative min-h-[100svh] w-full overflow-hidden ${
+      className={`relative min-h-[100svh] w-full ${
         isDesktop ? "px-10 py-20" : "px-6 py-16"
       }`}
     >
