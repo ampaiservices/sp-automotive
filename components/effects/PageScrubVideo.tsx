@@ -116,7 +116,7 @@ export default function PageScrubVideo() {
       // the leftover footage.
       wps.push({
         scrollY: Math.max(maxScroll, lastWp.scrollY),
-        time: Math.min(dur - 0.05, dur),
+        time: dur - 0.05,
       });
       waypoints = wps;
     }

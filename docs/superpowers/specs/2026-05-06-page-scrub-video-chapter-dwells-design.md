@@ -14,9 +14,9 @@ After the last numbered chapter, the clip should play through to its end as the 
 
 ## Requirements
 
-- Chapter 01 (`TotalLossPlay`) dwells on **t = 11s** (engine bay).
-- Chapter 02 (`InsuranceHandling`) dwells on **t = 18s** (carbon-fiber piece).
-- Chapter 03 (`StorageBlock`) dwells on **t = 27s** (wheel).
+- Chapter 01 (`TotalLossPlay`) dwells on **t = 7s** (engine bay).
+- Chapter 02 (`InsuranceHandling`) dwells on **t = 11s** (carbon-fiber piece).
+- Chapter 03 (`StorageBlock`) dwells on **t = 18s** (wheel).
 - Chapter 04 (`BodyworkAndEstimates`) does **not** dwell — clip scrubs through its scroll range.
 - AboutStrip + FinalCTA (sections 6 & 7) — clip continues scrubbing to its end (~29.35s).
 - The dwell window is centered on the scroll position at which the chapter visually fills the viewport, with a configurable padding before and after ("a little before, a little after").
@@ -100,7 +100,7 @@ Re-discover chapters inside the same callback that already handles resize-driven
 >
 ```
 
-When `scrubTime` is `undefined`, React omits the attribute, so non-dwelling chapters (chapter 04) and other sections aren't picked up. The three dwelling chapters pass `scrubTime={11 | 18 | 27}` respectively.
+When `scrubTime` is `undefined`, React omits the attribute, so non-dwelling chapters (chapter 04) and other sections aren't picked up. The three dwelling chapters pass `scrubTime={7 | 11 | 18}` respectively.
 
 `CornerSection` itself learns nothing about the scrub mechanism — it just forwards a number into the DOM.
 
