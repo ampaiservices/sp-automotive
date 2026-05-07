@@ -276,7 +276,7 @@ export default function CornerSection({
 
       {/* Chapter mark — pinned top-left via section padding (document flow). */}
       <div ref={markRef} className="relative z-10">
-        <div className="font-display text-accent leading-none tracking-[-0.02em] text-3xl md:text-5xl">
+        <div className="font-display text-bone leading-none tracking-[-0.02em] text-3xl md:text-5xl">
           {chapterNumber}
         </div>
         <p className="eyebrow mt-2">
