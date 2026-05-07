@@ -114,20 +114,30 @@ export default function Navigation() {
 
   // Anchor links: native scrollIntoView (smooth via CSS scroll-behavior).
   // Off-home anchor: navigate to /#id; Next.js handles the hash scroll.
+  //
+  // Important: when the dialog is open, <body> is `position: fixed` for
+  // the iOS-safe scroll lock. `scrollIntoView` is a no-op against a fixed
+  // body, and the dialog-close effect cleanup will then run
+  // `window.scrollTo({ top: scrollY })` and bounce the user back to the
+  // pre-open offset. Defer the scroll/route call to a macrotask so it
+  // runs *after* React commits `open: false` and the cleanup restores
+  // body flow + scroll position.
   function handleClick(href: string) {
     return (e: MouseEvent) => {
-      setOpen(false);
       const isAnchor = href.includes("#");
       const onHome = pathname === "/";
 
+      if (isAnchor) e.preventDefault();
+      setOpen(false);
+
       if (isAnchor && onHome) {
-        e.preventDefault();
         const id = href.split("#")[1];
-        const target = id ? document.getElementById(id) : null;
-        if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+        setTimeout(() => {
+          const target = id ? document.getElementById(id) : null;
+          target?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 0);
       } else if (isAnchor && !onHome) {
-        e.preventDefault();
-        router.push(href);
+        setTimeout(() => router.push(href), 0);
       }
     };
   }
