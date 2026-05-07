@@ -175,7 +175,7 @@ export default function ContactForm() {
           disabled={inFlight}
         />
         {fieldErrors.name && (
-          <p id="name-error" className="mt-2 text-xs text-ignite" role="alert">{fieldErrors.name}</p>
+          <p id="name-error" className="mt-2 text-xs text-ignite">{fieldErrors.name}</p>
         )}
       </div>
 
@@ -191,7 +191,7 @@ export default function ContactForm() {
           disabled={inFlight}
         />
         {fieldErrors.phone && (
-          <p id="phone-error" className="mt-2 text-xs text-ignite" role="alert">{fieldErrors.phone}</p>
+          <p id="phone-error" className="mt-2 text-xs text-ignite">{fieldErrors.phone}</p>
         )}
       </div>
 
@@ -207,7 +207,7 @@ export default function ContactForm() {
           disabled={inFlight}
         />
         {fieldErrors.email && (
-          <p id="email-error" className="mt-2 text-xs text-ignite" role="alert">{fieldErrors.email}</p>
+          <p id="email-error" className="mt-2 text-xs text-ignite">{fieldErrors.email}</p>
         )}
       </div>
 
@@ -223,7 +223,7 @@ export default function ContactForm() {
           disabled={inFlight}
         />
         {fieldErrors.vehicle && (
-          <p id="vehicle-error" className="mt-2 text-xs text-ignite" role="alert">{fieldErrors.vehicle}</p>
+          <p id="vehicle-error" className="mt-2 text-xs text-ignite">{fieldErrors.vehicle}</p>
         )}
       </div>
 
@@ -239,7 +239,7 @@ export default function ContactForm() {
           disabled={inFlight}
         />
         {fieldErrors.description && (
-          <p id="description-error" className="mt-2 text-xs text-ignite" role="alert">{fieldErrors.description}</p>
+          <p id="description-error" className="mt-2 text-xs text-ignite">{fieldErrors.description}</p>
         )}
       </div>
 
@@ -255,7 +255,7 @@ export default function ContactForm() {
           disabled={inFlight}
         />
         {fieldErrors.files && (
-          <p id="files-error" className="mt-2 text-xs text-ignite" role="alert">{fieldErrors.files}</p>
+          <p id="files-error" className="mt-2 text-xs text-ignite">{fieldErrors.files}</p>
         )}
         {!fieldErrors.files && files.length > 0 && (
           <p className="mt-2 text-xs text-graphite">

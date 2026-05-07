@@ -167,7 +167,7 @@ export default function EstimateForm() {
           disabled={inFlight}
         />
         {fieldErrors.name && (
-          <p id="name-error" className="mt-2 text-xs text-ignite" role="alert">{fieldErrors.name}</p>
+          <p id="name-error" className="mt-2 text-xs text-ignite">{fieldErrors.name}</p>
         )}
       </div>
 
@@ -183,7 +183,7 @@ export default function EstimateForm() {
           disabled={inFlight}
         />
         {fieldErrors.phone && (
-          <p id="phone-error" className="mt-2 text-xs text-ignite" role="alert">{fieldErrors.phone}</p>
+          <p id="phone-error" className="mt-2 text-xs text-ignite">{fieldErrors.phone}</p>
         )}
       </div>
 
@@ -199,7 +199,7 @@ export default function EstimateForm() {
           disabled={inFlight}
         />
         {fieldErrors.vehicle && (
-          <p id="vehicle-error" className="mt-2 text-xs text-ignite" role="alert">{fieldErrors.vehicle}</p>
+          <p id="vehicle-error" className="mt-2 text-xs text-ignite">{fieldErrors.vehicle}</p>
         )}
       </div>
 
@@ -218,7 +218,7 @@ export default function EstimateForm() {
           Worst angles first. Wide shot, close-up, and one of the panel gaps if you can get it.
         </p>
         {fieldErrors.files && (
-          <p id="files-error" className="mt-2 text-xs text-ignite" role="alert">{fieldErrors.files}</p>
+          <p id="files-error" className="mt-2 text-xs text-ignite">{fieldErrors.files}</p>
         )}
         {!fieldErrors.files && files.length > 0 && (
           <p className="mt-1 text-xs text-graphite">
