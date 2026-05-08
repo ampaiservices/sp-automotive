@@ -23,9 +23,9 @@ const variantClass: Record<Variant, string> = {
   veil: "bg-black/40",
   edge: "bg-gradient-to-b from-black/75 via-black/25 to-black/75",
   glass:
-    "bg-white/[0.04] backdrop-blur-md border border-white/[0.08] " +
-    "ring-1 ring-inset ring-white/[0.04] " +
-    "shadow-[0_24px_60px_-20px_rgba(0,0,0,0.45)]",
+    "bg-black/30 backdrop-blur-md backdrop-saturate-110 " +
+    "border border-white/[0.08] ring-1 ring-inset ring-white/[0.06] " +
+    "shadow-[0_24px_60px_-20px_rgba(0,0,0,0.55)]",
 };
 
 export default function Surface({
