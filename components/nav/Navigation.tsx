@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Menu, X } from "lucide-react";
 import PhoneCTA from "@/components/ui/PhoneCTA";
 
+// /#work scrolls to the BeforeAfterGallery (id="work") on the homepage.
 const links = [
   { href: "/", label: "Home" },
   { href: "/process", label: "Process" },

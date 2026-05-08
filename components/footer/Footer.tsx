@@ -11,8 +11,8 @@ export default function Footer() {
   // viewport. On other routes the html gradient already provides a dark
   // backdrop; the scrim is a near-imperceptible extra darken there.
   return (
-    <footer className="relative border-t border-divider px-6 md:px-10 py-16">
-      <Surface variant="solid" className="max-w-7xl mx-auto rounded-md py-12 px-6 md:px-10 grid grid-cols-1 md:grid-cols-3 gap-12">
+    <footer className="relative px-6 md:px-10 py-16">
+      <Surface variant="glass" className="max-w-7xl mx-auto rounded-2xl py-12 px-6 md:px-10 grid grid-cols-1 md:grid-cols-3 gap-12">
         <div>
           <Image
             src="/logos/sp-mark.png"
@@ -44,6 +44,9 @@ export default function Footer() {
           <Link href="/lamborghini-collision-repair-sarasota" className="link-underline hover:text-bone transition-colors">Lamborghini</Link>
           <Link href="/mclaren-collision-repair-sarasota" className="link-underline hover:text-bone transition-colors">McLaren</Link>
           <Link href="/audi-r8-collision-repair-sarasota" className="link-underline hover:text-bone transition-colors">Audi R8</Link>
+          <Link href="/bmw-m-collision-repair-sarasota" className="link-underline hover:text-bone transition-colors">BMW M</Link>
+          <Link href="/ferrari-collision-repair-sarasota" className="link-underline hover:text-bone transition-colors">Ferrari</Link>
+          <Link href="/porsche-collision-repair-sarasota" className="link-underline hover:text-bone transition-colors">Porsche</Link>
           <span className="mt-2 eyebrow !text-[10px]">Explainers</span>
           <Link href="/explainers/adas" className="link-underline hover:text-bone transition-colors">ADAS recalibration</Link>
           <Link href="/explainers/paint-match" className="link-underline hover:text-bone transition-colors">Paint match</Link>
