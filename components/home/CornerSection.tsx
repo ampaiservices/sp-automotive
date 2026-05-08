@@ -350,7 +350,7 @@ export default function CornerSection({
           >
             {headline}
           </SplitText>
-          <div className="mt-6 lead text-bone/85">{body}</div>
+          <div className="mt-6 lead text-bone">{body}</div>
           {cta && (
             <div className="mt-10 flex flex-wrap gap-4">{cta}</div>
           )}
