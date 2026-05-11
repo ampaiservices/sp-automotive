@@ -114,9 +114,13 @@ export default function SectionParallaxImage({
       else if (progress <= trail + fade) o = 1 - (progress - trail) / fade;
       else o = 0;
 
-      const scale = 1 + scaleAmplitude * o;
+      // Ken-burns scale ramp retired for a calmer feel — keep the brightness
+      // ramp (it reads as ambient, not animated) and pin scale at 1.0 so the
+      // image holds its frame. `scaleAmplitude` left in the API for callers
+      // that opt back in, but the read here is intentionally inert.
+      void scaleAmplitude;
       const brightness = brightnessFloor + (1 - brightnessFloor) * o;
-      wrapper!.style.transform = `scale(${scale.toFixed(4)})`;
+      wrapper!.style.transform = "scale(1)";
       wrapper!.style.filter = `brightness(${brightness.toFixed(3)})`;
     }
 
