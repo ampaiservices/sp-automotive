@@ -67,9 +67,15 @@ export default function SectionParallaxImage({
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
 
-    // Find the nearest section ancestor (the chapter wrapper). We measure
-    // visibility relative to that, not the wrapperRef element, because the
-    // wrapper is absolute-positioned and its own offsetTop is misleading.
+    // Find the chapter wrapper to measure visibility against. Prefer a
+    // <section> or [data-section-host] ancestor (e.g. FinalCTA's <section>);
+    // fall back to parentElement for chapters wrapped in a plain <div>
+    // (CustomWork, InsuranceHandling, StorageBlock — there CornerSection's
+    // <section> is a sibling, not an ancestor, so closest() won't find it).
+    // compute() reads getBoundingClientRect() so the measurement is
+    // page-space-correct regardless of which element we land on or how its
+    // offsetParent chain resolves — offsetTop alone is 0 for absolute-
+    // positioned fallback elements and silently breaks the curve.
     const section = wrapper.closest<HTMLElement>("section, [data-section-host]")
       ?? wrapper.parentElement;
     if (!section) return;
@@ -80,7 +86,8 @@ export default function SectionParallaxImage({
       rafId = 0;
       const el = section!;
       const vh = window.innerHeight;
-      const center = el.offsetTop + el.offsetHeight / 2 - vh / 2;
+      const top = el.getBoundingClientRect().top + window.scrollY;
+      const center = top + el.offsetHeight / 2 - vh / 2;
       const progress = window.scrollY - center;
 
       const lead = LEAD_VH * vh;

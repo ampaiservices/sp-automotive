@@ -106,7 +106,7 @@ The Cinema/Owner's-Manual aesthetic intentionally pulls toward greyscale, but th
 
 **[MEDIUM] `components/nav/Navigation.tsx:54`** — `<Image className="invert">` flips a black logo to white via CSS filter. Works but breaks if the source SVG is later updated to a non-black asset. **Fix:** ship a white-on-transparent variant (e.g. `/logos/sp-mark-light.png` or SVG with `currentColor` fill) instead of relying on `filter: invert`.
 
-**[MEDIUM] `components/about/AboutStrip.tsx:11`** — `Surface variant="solid"` wraps content with `bg-black/65 backdrop-blur-sm`. Inside, body text is `lead` (Hanken on bone). Bone on `rgba(0,0,0,0.65)` over the html gradient is fine. However if the page-wide `PageScrubVideo` is mounted *and* the home video is paused on a bright frame, that 65% scrim may dip below 4.5:1 for a moment. AboutStrip isn't on the home route, so the gradient is the backdrop and the scrim is solid enough. Worth verifying once `PageScrubVideo` is mounted on more routes.
+**[MEDIUM] `components/about/AboutStrip.tsx:11`** — `Surface variant="solid"` wraps content with `bg-black/65 backdrop-blur-sm`. Inside, body text is `lead` (Hanken on bone). Bone on `rgba(0,0,0,0.65)` over the html gradient is fine. AboutStrip isn't on the home route, so the gradient is the backdrop and the scrim is solid enough. (Section-scoped `SectionScrubVideo` only mounts under hero + ch01, so AboutStrip never overlays a video frame.)
 
 **[MEDIUM] `components/process/ProcessBeat.tsx:99`** — `<div className="md:col-span-8 relative hidden md:block">` — the entire overlay column is hidden on mobile. Fine because `ProcessNarrativeMobile` covers mobile separately, but worth flagging that desktop-tablet (md breakpoint at 768px) shows the overlay column while phones don't. iPad mini (744px) still falls into mobile; iPad regular (810px) falls into desktop ProcessBeat. The cinematic overlay was tuned for ≥1024px viewports; iPad-portrait may render the overlays awkwardly. **Fix:** consider gating ProcessBeat to `lg:` (1024px+) and routing iPad-portrait to the mobile shell.
 
@@ -128,7 +128,7 @@ The Cinema/Owner's-Manual aesthetic intentionally pulls toward greyscale, but th
 
 **[LOW] `app/about/page.tsx`, `/process/page.tsx`** — No `Open Graph` image override per page; OG image is the default from `app/layout.tsx`. The brand pages override `metaDescription` but not `images`. Editorial pages get a generic share preview. Minor SEO/social polish.
 
-**[LOW] `components/effects/PageScrubVideo.tsx:124`** — `preload="metadata"` is a smart bandwidth optimization, but a very slow first scroll may stall briefly while data arrives. The comment acknowledges this. No fix needed; just confirm with QA that the first scroll on a 3G profile feels acceptable.
+**[LOW] `components/effects/SectionScrubVideo.tsx:154`** — `preload="metadata"` is a smart bandwidth optimization, but a very slow first scroll may stall briefly while data arrives. The comment acknowledges this. No fix needed; just confirm with QA that the first scroll on a 3G profile feels acceptable.
 
 **[LOW] `components/editorial/EditorialImageSlot.tsx:51`** — Placeholder label uses `text-muted/60` (graphite × 60% on steel) — extremely low contrast (~1.9:1). Intentional softness for a "pending" indicator, but borderline invisible. **Fix:** raise to `text-muted/80` or accept that pending placeholders should read as ghosts.
 
@@ -276,7 +276,7 @@ Every file in the original audit scope was opened and assessed:
 - Forms: `app/contact/page.tsx`, `app/contact/ContactForm.tsx`, `app/estimate/page.tsx`, `app/estimate/EstimateForm.tsx`, `app/api/contact/route.ts`, `app/api/contact/upload/route.ts`, `app/api/estimate/route.ts`, `app/api/estimate/upload/route.ts` ✓
 - Editorial: `app/about/page.tsx`, `components/about/{AboutHero,AboutStory,AboutStrip}.tsx`, `app/process/page.tsx`, `components/process/{ProcessNarrative,CraftCanvas,ProcessBeat,ProcessNarrativeMobile}.tsx`, `app/faq/page.tsx`, `app/explainers/{adas,oem-parts,paint-match}/page.tsx` ✓
 - Brand: `app/{audi-r8,mclaren,lamborghini}-collision-repair-sarasota/page.tsx`, `components/brand/{BrandPage,BrandHero,BrandServices,BrandModels}.tsx` ✓
-- System: `app/globals.css`, `app/layout.tsx`, `components/effects/{CustomCursor,Magnetic,PageScrubVideo,ParticleField,RevealWords}.tsx`, `components/ui/{Button,Surface,PhoneCTA,SmsCTA}.tsx`, `components/nav/Navigation.tsx`, `components/footer/Footer.tsx`, plus `components/cta/FinalCTA.tsx`, `components/editorial/{PullQuote,EditorialImageSlot,SceneDivider}.tsx`, `components/positioning/PositioningTable.tsx` ✓
+- System: `app/globals.css`, `app/layout.tsx`, `components/effects/{CustomCursor,Magnetic,ParticleField,RevealWords,SectionScrubVideo,SectionParallaxImage}.tsx`, `components/ui/{Button,Surface,PhoneCTA,SmsCTA}.tsx`, `components/nav/Navigation.tsx`, `components/footer/Footer.tsx`, plus `components/cta/FinalCTA.tsx`, `components/editorial/{PullQuote,EditorialImageSlot,SceneDivider}.tsx`, `components/positioning/PositioningTable.tsx` ✓
 
 The token-migration list was built from a grep of `text-accent|bg-accent|border-accent|text-bg|bg-bg|text-text|bg-text|text-surface|bg-surface|text-muted|bg-muted|border-divider|border-hairline|var\(--color-(accent|surface|bg|text|muted|divider|hairline)\)` across `app/` and `components/`.
 
