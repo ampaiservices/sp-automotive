@@ -44,6 +44,10 @@ type Props = {
   /** Brightness floor — the image starts darker (multiplied by this
    *  factor) and fades to full brightness as it enters the viewport. */
   brightnessFloor?: number;
+  /** CSS `object-position` for the underlying <Image>. Use to bias the
+   *  crop when the subject doesn't sit at the source's center (e.g. a
+   *  car parked low in a tall portrait shot). Defaults to "center". */
+  objectPosition?: string;
 };
 
 // Same fade-shape constants CornerSection uses for chapter copy, so the
@@ -58,6 +62,7 @@ export default function SectionParallaxImage({
   scrimOpacity = 0.4,
   scaleAmplitude = 0.05,
   brightnessFloor = 0.7,
+  objectPosition = "center",
 }: Props) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
@@ -152,6 +157,7 @@ export default function SectionParallaxImage({
           sizes="100vw"
           priority={false}
           className="object-cover"
+          style={{ objectPosition }}
         />
       </div>
       {/* Dark scrim above the image so glass cards always have a contrast
