@@ -19,7 +19,7 @@ import { useReducedMotion } from "framer-motion";
 // height, and clips the zoom so it never escapes its band.
 //
 // Behavior
-// - Image renders via Next.js <Image fill> with sizes="100vw"; non-priority
+// - Image renders via Next.js <Image fill> with sizes="100vw"; not preloaded
 //   so it streams after the LCP poster.
 // - rAF-throttled scroll handler computes a 0→1 visibility curve from the
 //   nearest ancestor section's offsetTop + window.scrollY (mirrors the
@@ -164,7 +164,6 @@ export default function SectionParallaxImage({
           alt={alt}
           fill
           sizes="100vw"
-          priority={false}
           className="object-cover"
           style={{ objectPosition }}
         />

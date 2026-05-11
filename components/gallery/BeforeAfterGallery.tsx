@@ -58,6 +58,7 @@ export default function BeforeAfterGallery() {
               src="/sections/ch06-urus-pair.jpg"
               alt="Black Lamborghini Urus collision-to-restored pair outside SP Automotive's Sarasota shop"
               fill
+              preload
               className="object-cover"
               style={{ objectPosition: "center 65%" }}
               sizes="(max-width: 1280px) 100vw, 1200px"

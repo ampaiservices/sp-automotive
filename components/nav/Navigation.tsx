@@ -158,7 +158,7 @@ export default function Navigation() {
             alt="SP Automotive"
             width={654}
             height={241}
-            priority
+            preload
             className="h-10 w-auto invert"
           />
         </Link>

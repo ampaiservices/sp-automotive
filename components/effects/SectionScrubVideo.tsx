@@ -147,7 +147,7 @@ export default function SectionScrubVideo({ src, poster }: Props) {
             src={poster}
             alt=""
             fill
-            priority
+            preload
             sizes="100vw"
             className="object-cover"
           />
