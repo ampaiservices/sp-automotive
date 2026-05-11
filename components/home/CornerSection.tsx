@@ -229,9 +229,14 @@ export default function CornerSection({
       rafId = 0;
       const vh = window.innerHeight;
       // Section center → scrollY at which this section's center aligns with
-      // viewport center. For 100svh sections that's section.offsetTop, but
-      // the formula stays correct if a chapter grows taller than the viewport.
-      const center = el!.offsetTop + el!.offsetHeight / 2 - vh / 2;
+      // viewport center. getBoundingClientRect().top + scrollY is page-space
+      // correct regardless of offsetParent. offsetTop alone reads as 0 for
+      // chapters where the <section> is a child of a relative wrapper div
+      // (InsuranceHandling, StorageBlock, CustomWork — see the matching note
+      // in SectionParallaxImage.compute), which silently zeros out `progress`
+      // and collapses the visibility curve.
+      const top = el!.getBoundingClientRect().top + window.scrollY;
+      const center = top + el!.offsetHeight / 2 - vh / 2;
       const progress = window.scrollY - center;
 
       const lead = DWELL_LEAD_VH * vh;

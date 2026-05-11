@@ -18,6 +18,7 @@ export default function CustomWork() {
       <SectionParallaxImage
         src="/sections/ch05-custom-shelby.jpg"
         alt="Custom-painted red Ford F-150 Shelby in SP Automotive's Sarasota detail bay"
+        objectPosition="center 65%"
       />
       <CornerSection
         chapterNumber="05"

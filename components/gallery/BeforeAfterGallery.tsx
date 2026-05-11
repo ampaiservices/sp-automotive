@@ -1,5 +1,4 @@
 import Image from "next/image";
-import RevealWords from "@/components/effects/RevealWords";
 import Magnetic from "@/components/effects/Magnetic";
 import Surface from "@/components/ui/Surface";
 
@@ -37,8 +36,8 @@ const singles = [
 // outer <section> so the navbar's /#work anchor lands here.
 export default function BeforeAfterGallery() {
   return (
-    <section id="work" className="relative px-6 md:px-10 py-32 scroll-mt-32">
-      <div className="relative z-10 mb-16">
+    <section id="work" className="relative px-6 md:px-10 py-16 md:py-20 scroll-mt-32">
+      <div className="relative z-10 mb-8 md:mb-10">
         <div className="font-display text-bone leading-none tracking-[-0.02em] text-3xl md:text-5xl">
           06
         </div>
@@ -48,8 +47,8 @@ export default function BeforeAfterGallery() {
         variant="glass"
         className="relative z-10 max-w-7xl mx-auto rounded-2xl py-12 px-6 md:py-16 md:px-10"
       >
-        <h2 className="display-lg mb-12 md:mb-16">
-          <RevealWords>What came back better than new.</RevealWords>
+        <h2 className="display-lg mb-8 md:mb-10">
+          What came back better than new.
         </h2>
 
         {/* Featured composite — single frame already shows wrecked + restored
@@ -62,6 +61,7 @@ export default function BeforeAfterGallery() {
               alt="Black Lamborghini Urus collision-to-restored pair outside SP Automotive's Sarasota shop"
               fill
               className="object-cover"
+              style={{ objectPosition: "center 65%" }}
               sizes="(max-width: 1280px) 100vw, 1200px"
             />
           </div>

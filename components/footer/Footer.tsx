@@ -41,12 +41,6 @@ export default function Footer() {
           <Link href="/faq" className="link-underline hover:text-bone transition-colors">FAQ</Link>
           <Link href="/estimate" className="link-underline hover:text-bone transition-colors">Send 3 photos</Link>
           <Link href="/contact" className="link-underline hover:text-bone transition-colors">Contact</Link>
-          <Link href="/lamborghini-collision-repair-sarasota" className="link-underline hover:text-bone transition-colors">Lamborghini</Link>
-          <Link href="/mclaren-collision-repair-sarasota" className="link-underline hover:text-bone transition-colors">McLaren</Link>
-          <Link href="/audi-r8-collision-repair-sarasota" className="link-underline hover:text-bone transition-colors">Audi R8</Link>
-          <Link href="/bmw-m-collision-repair-sarasota" className="link-underline hover:text-bone transition-colors">BMW M</Link>
-          <Link href="/ferrari-collision-repair-sarasota" className="link-underline hover:text-bone transition-colors">Ferrari</Link>
-          <Link href="/porsche-collision-repair-sarasota" className="link-underline hover:text-bone transition-colors">Porsche</Link>
           <span className="mt-2 eyebrow !text-[10px]">Explainers</span>
           <Link href="/explainers/adas" className="link-underline hover:text-bone transition-colors">ADAS recalibration</Link>
           <Link href="/explainers/paint-match" className="link-underline hover:text-bone transition-colors">Paint match</Link>

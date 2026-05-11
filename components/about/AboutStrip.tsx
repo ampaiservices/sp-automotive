@@ -1,6 +1,6 @@
 import Link from "next/link";
-import RevealWords from "@/components/effects/RevealWords";
 import Surface from "@/components/ui/Surface";
+import AboutBackdropVideo from "./AboutBackdropVideo";
 
 // Pivot from "you found the right shop" (already covered in hero + AboutStory)
 // to the proof-of-craft angle: what the shop is, what it isn't, what it
@@ -9,12 +9,13 @@ import Surface from "@/components/ui/Surface";
 // Carries chapter mark "07 / The signature" to read as the about beat
 // after the process chapters (01–05) and the proof gallery (06). Body
 // sits in a liquid-glass tab so it's clearly a defined section rather
-// than text floating on the cinematic backdrop. Intentionally text-only
-// — no background imagery — to give the reader a rest beat between the
-// gallery and the closing CTA.
+// than text floating on the cinematic backdrop. A slow-looping ambient
+// clip (AboutBackdropVideo) glows softly behind the card; the chapter
+// itself stays text-forward — the glow is decoration, not a photo.
 export default function AboutStrip() {
   return (
-    <section className="relative px-6 md:px-10 py-32">
+    <section className="relative overflow-hidden px-6 md:px-10 py-32">
+      <AboutBackdropVideo />
       <div className="relative z-10 mb-16">
         <div className="font-display text-bone leading-none tracking-[-0.02em] text-3xl md:text-5xl">
           07
@@ -26,10 +27,10 @@ export default function AboutStrip() {
         className="relative z-10 max-w-4xl mx-auto rounded-2xl p-8 md:p-12"
       >
         <p className="eyebrow">No subcontractors. No shortcuts.</p>
-        <h2 className="mt-4 display-md">
-          <RevealWords>One shop. One signature. Every weld.</RevealWords>
+        <h2 className="mt-2 display-md">
+          One shop. One signature. Every weld.
         </h2>
-        <p className="mt-8 lead max-w-[65ch]">
+        <p className="mt-4 lead max-w-[65ch]">
           SP Automotive is Serge — start to finish. He documents the intake himself.
           He runs the booth. He measures the gaps. The cars he&apos;s built his name on —{" "}
           <Link href="/lamborghini-collision-repair-sarasota" className="link-underline text-bone transition-colors">Lamborghinis</Link>,{" "}

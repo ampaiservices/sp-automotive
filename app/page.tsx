@@ -10,10 +10,10 @@ import AboutStrip from "@/components/about/AboutStrip";
 import FinalCTA from "@/components/cta/FinalCTA";
 
 // Hero + chapter 01 share a scroll-scrub video region (SectionScrubVideo).
-// Chapters 02, 03, 05, and 08 each carry their own full-bleed background
-// image via SectionParallaxImage. Chapters 04 and 07 are intentional rest
-// beats — text-only — so the image-backed chapters land harder. Chapter
-// 06 (BeforeAfterGallery) keeps its own gallery composition.
+// Chapters 02, 03, 04, 05, and 08 each carry their own full-bleed background
+// image via SectionParallaxImage. Chapter 07 is the intentional rest beat —
+// text-only — so the image-backed chapters land harder. Chapter 06
+// (BeforeAfterGallery) keeps its own gallery composition.
 export default function Home() {
   return (
     <>

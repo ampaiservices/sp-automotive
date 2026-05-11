@@ -7,6 +7,7 @@ export default function InsuranceHandling() {
       <SectionParallaxImage
         src="/sections/ch02-insurance-urus-arrival.jpg"
         alt="Black Lamborghini Urus mid-collision-repair, freshly arrived at SP Automotive in Sarasota"
+        objectPosition="center 75%"
       />
       <CornerSection
         chapterNumber="02"
