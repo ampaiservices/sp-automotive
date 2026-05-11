@@ -29,7 +29,13 @@ type Props = {
 export default function SectionScrubVideo({ src, poster }: Props) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const reduced = useMediaQuery("(prefers-reduced-motion: reduce)");
+  // serverDefault: true — SSR + first hydration render the static poster
+  // branch. After hydration commits, useSyncExternalStore re-snapshots and
+  // non-reduced users swap to <video>. Reduced-motion users (the ones who
+  // would notice an unwanted video element) see no swap. Non-reduced users
+  // see a brief Image→video swap, but the video's poster is the same image,
+  // so it's visually near-imperceptible.
+  const reduced = useMediaQuery("(prefers-reduced-motion: reduce)", true);
 
   useEffect(() => {
     if (reduced) return;

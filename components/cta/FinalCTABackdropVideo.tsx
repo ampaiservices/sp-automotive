@@ -70,6 +70,7 @@ export default function FinalCTABackdropVideo() {
     };
 
     function compute() {
+      if (rafId) cancelAnimationFrame(rafId);
       rafId = 0;
       const vh = window.innerHeight;
       const top = section!.getBoundingClientRect().top + window.scrollY;
