@@ -1,16 +1,27 @@
 import PhoneCTA from "@/components/ui/PhoneCTA";
 import SmsCTA from "@/components/ui/SmsCTA";
 import Surface from "@/components/ui/Surface";
+import FinalCTABackdropVideo from "./FinalCTABackdropVideo";
 
-// Closing chapter ("07 / Next move"). Glass tab contains the action
+// Closing chapter ("06 / Next move"). Glass tab contains the action
 // triangle (phone, SMS, supporting copy) so the CTAs sit on a clearly
-// defined surface instead of floating on the road footage behind them.
+// defined surface instead of floating directly on the looping backdrop
+// video behind. The section's CSS background (`ink → ink-deep`) is the
+// reduced-motion fallback: when `FinalCTABackdropVideo` returns null,
+// the gradient still gives the CTA a contrast floor.
 export default function FinalCTA() {
   return (
-    <section className="relative w-full overflow-hidden px-6 md:px-10 pt-32 pb-32">
+    <section
+      className="relative isolate w-full overflow-hidden px-6 md:px-10 pt-32 pb-32"
+      style={{
+        background:
+          "linear-gradient(to bottom, var(--color-ink), var(--color-ink-deep))",
+      }}
+    >
+      <FinalCTABackdropVideo />
       <div className="relative z-10 mb-16">
         <div className="font-display text-bone leading-none tracking-[-0.02em] text-3xl md:text-5xl">
-          07
+          06
         </div>
         <p className="eyebrow mt-2">/ Next move</p>
       </div>

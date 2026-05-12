@@ -1,31 +1,34 @@
-import PageScrubVideo from "@/components/effects/PageScrubVideo";
+import SectionScrubVideo from "@/components/effects/SectionScrubVideo";
 import HeroVideo from "@/components/hero/HeroVideo";
 import TotalLossPlay from "@/components/home/TotalLossPlay";
 import InsuranceHandling from "@/components/home/InsuranceHandling";
+import BrandShowcaseStrip from "@/components/showroom/BrandShowcaseStrip";
 import StorageBlock from "@/components/home/StorageBlock";
 import BodyworkAndEstimates from "@/components/home/BodyworkAndEstimates";
-import BeforeAfterGallery from "@/components/gallery/BeforeAfterGallery";
-import AboutStrip from "@/components/about/AboutStrip";
+import CustomWork from "@/components/home/CustomWork";
 import FinalCTA from "@/components/cta/FinalCTA";
 
-// PageScrubVideo is a fixed-position background layer; document scroll progress
-// drives video.currentTime. Sections render above it via position: relative.
-// Section sequence: hero (Totaled / Paid in Full) -> 01 total-loss play ->
-// 02 carrier handling -> 03 indoor storage -> 04 mobile estimate ->
-// 05 selected work (before/after gallery) -> 06 the signature (about) ->
-// 07 next move (final CTA). The combined heights provide the scroll
-// runway PageScrubVideo needs to play end-to-end.
+// Hero + chapter 01 share a scroll-scrub video region (SectionScrubVideo).
+// Chapters 02–05 each paint their own per-section gradient atmosphere
+// (no full-bleed photos). Chapter 06 closes on a looping backdrop video.
+// The selected-work gallery has moved to its own route at /gallery and is
+// linked from the nav.
 export default function Home() {
   return (
     <>
-      <PageScrubVideo />
-      <HeroVideo />
-      <TotalLossPlay />
+      <section data-scrub-region className="relative">
+        <SectionScrubVideo
+          src="/hero-clips/total-loss.mp4"
+          poster="/hero-clips/total-loss-poster.jpg"
+        />
+        <HeroVideo />
+        <TotalLossPlay />
+      </section>
       <InsuranceHandling />
+      <BrandShowcaseStrip />
       <StorageBlock />
       <BodyworkAndEstimates />
-      <BeforeAfterGallery />
-      <AboutStrip />
+      <CustomWork />
       <FinalCTA />
     </>
   );
