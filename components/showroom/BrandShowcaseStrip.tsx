@@ -30,6 +30,44 @@ const BRAND_EMBLEMS: Record<string, Emblem> = {
   porsche: siPorsche,
 };
 
+// Per-brand visual treatment for the marquee. Each label is pre-cased to the
+// brand's actual wordmark casing (Audi is lowercase, BMW is all-caps, etc.)
+// and the fontVar points at a CSS variable declared via next/font in
+// app/layout.tsx. Ferrari renders italic to evoke the badge script.
+//
+// `mclaren` overrides emblemSize (~1.6× the others, anchoring the row) and
+// scales its wordmark down a step since Michroma reads visually heavier than
+// the other faces. `audi` scales its wordmark up a step — Outfit at default
+// size reads quieter than the condensed faces around it.
+type BrandStyle = {
+  label: string;
+  fontVar: string;
+  italic?: boolean;
+  emblemSize?: string;
+  textSize?: string;
+};
+
+const BRAND_STYLES: Record<string, BrandStyle> = {
+  lamborghini: { label: "Lamborghini", fontVar: "--font-lambo" },
+  mclaren: {
+    label: "McLaren",
+    fontVar: "--font-mclaren",
+    emblemSize: "h-12 w-12 md:h-20 md:w-20",
+    textSize: "text-2xl md:text-4xl",
+  },
+  audi: {
+    label: "audi",
+    fontVar: "--font-audi",
+    textSize: "text-4xl md:text-6xl",
+  },
+  "bmw-m": { label: "BMW", fontVar: "--font-bmw" },
+  ferrari: { label: "Ferrari", fontVar: "--font-ferrari", italic: true },
+  porsche: { label: "Porsche", fontVar: "--font-porsche" },
+};
+
+const DEFAULT_EMBLEM_SIZE = "h-8 w-8 md:h-12 md:w-12";
+const DEFAULT_TEXT_SIZE = "text-3xl md:text-5xl";
+
 export default function BrandShowcaseStrip() {
   const items = [...BRANDS, ...BRANDS];
 
@@ -52,21 +90,32 @@ export default function BrandShowcaseStrip() {
         >
           {items.map((b, i) => {
             const emblem = BRAND_EMBLEMS[b.brandKey];
+            const style = BRAND_STYLES[b.brandKey];
+            const emblemSize = style?.emblemSize ?? DEFAULT_EMBLEM_SIZE;
+            const textSize = style?.textSize ?? DEFAULT_TEXT_SIZE;
             return (
               <div
                 key={`${b.slug}-${i}`}
-                className="flex items-center gap-4 md:gap-6 px-8 md:px-14 text-3xl md:text-5xl font-display tracking-wide text-bone uppercase"
+                className={`flex items-center gap-4 md:gap-6 px-8 md:px-14 ${textSize} tracking-wide text-bone`}
+                style={
+                  style
+                    ? {
+                        fontFamily: `var(${style.fontVar})`,
+                        fontStyle: style.italic ? "italic" : undefined,
+                      }
+                    : undefined
+                }
               >
                 {emblem && (
                   <svg
                     viewBox="0 0 24 24"
-                    className="h-8 w-8 md:h-12 md:w-12 shrink-0 fill-current"
+                    className={`${emblemSize} shrink-0 fill-current`}
                     aria-hidden="true"
                   >
                     <path d={emblem.path} />
                   </svg>
                 )}
-                <span>{b.name}</span>
+                <span>{style?.label ?? b.name}</span>
               </div>
             );
           })}

@@ -1,4 +1,13 @@
-import { Anton, Hanken_Grotesk } from "next/font/google";
+import {
+  Anton,
+  Big_Shoulders,
+  Hanken_Grotesk,
+  Michroma,
+  Outfit,
+  Saira_Extra_Condensed,
+  Saira_Semi_Condensed,
+  Yellowtail,
+} from "next/font/google";
 import { Metadata } from "next";
 import Navigation from "@/components/nav/Navigation";
 import Footer from "@/components/footer/Footer";
@@ -29,6 +38,47 @@ const hanken = Hanken_Grotesk({
   display: "swap",
 });
 
+// Per-brand wordmark approximations for BrandShowcaseStrip. Each font is a
+// free Google Fonts stand-in for that brand's proprietary identity face —
+// nothing else in the site uses these, so single-weight + display:swap keeps
+// the marginal payload small.
+const lamboFont = Big_Shoulders({
+  subsets: ["latin"],
+  weight: "700",
+  variable: "--font-lambo",
+  display: "swap",
+});
+const mclarenFont = Michroma({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-mclaren",
+  display: "swap",
+});
+const audiFont = Outfit({
+  subsets: ["latin"],
+  weight: "600",
+  variable: "--font-audi",
+  display: "swap",
+});
+const bmwFont = Saira_Semi_Condensed({
+  subsets: ["latin"],
+  weight: "700",
+  variable: "--font-bmw",
+  display: "swap",
+});
+const ferrariFont = Yellowtail({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-ferrari",
+  display: "swap",
+});
+const porscheFont = Saira_Extra_Condensed({
+  subsets: ["latin"],
+  weight: "700",
+  variable: "--font-porsche",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { default: `${SITE_NAME} — ${TAGLINE}`, template: `%s — ${SITE_NAME}` },
@@ -46,7 +96,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${anton.variable} ${hanken.variable}`}>
+    <html
+      lang="en"
+      className={`${anton.variable} ${hanken.variable} ${lamboFont.variable} ${mclarenFont.variable} ${audiFont.variable} ${bmwFont.variable} ${ferrariFont.variable} ${porscheFont.variable}`}
+    >
       <head>
         <LocalBusinessJsonLd />
         {/* Preload the home-page hero poster — it's the LCP candidate behind
