@@ -13,6 +13,7 @@ const builds: CardStackItem[] = BUILDS.map((b, i) => ({
   description: b.kit,
   imageSrc: b.kitImage,
   href: `/builds/${b.slug}`,
+  accentColor: b.accentColor,
 }));
 
 export default function BeforeAfterGallery() {

@@ -36,6 +36,10 @@ export type Build = {
   metaTitle: string;
   /** SEO description (under 160 chars). */
   metaDescription: string;
+  /** Per-card accent for the ShineBorder ring on the featured-builds
+   *  carousel. Hex string, or a 2-color array for a richer mid-sweep
+   *  transition. See components/gallery/CardStack.tsx. */
+  accentColor: string | string[];
 };
 
 export const BUILDS: Build[] = [
@@ -60,6 +64,7 @@ export const BUILDS: Build[] = [
     metaTitle: "1016 Industries Urus Widebody — SP Automotive",
     metaDescription:
       "Lamborghini Urus widebody build by SP Automotive in Sarasota, FL. 1016 Industries forged-carbon kit, factory paint match, full install.",
+    accentColor: ["#000000", "#FFFFFF"],
   },
   {
     slug: "urus-mansory",
@@ -82,6 +87,7 @@ export const BUILDS: Build[] = [
     metaTitle: "Mansory Venatus Urus — SP Automotive",
     metaDescription:
       "Mansory Venatus full body conversion for the Lamborghini Urus. Carbon panels, paint match, interior coordination. SP Automotive Sarasota.",
+    accentColor: ["#000000", "#FFFFFF"],
   },
   {
     slug: "huracan-mansory",
@@ -104,6 +110,7 @@ export const BUILDS: Build[] = [
     metaTitle: "Mansory Huracán Widebody — SP Automotive",
     metaDescription:
       "Mansory full body conversion for the Lamborghini Huracán. Forged carbon panels, paint match, install. SP Automotive in Sarasota, FL.",
+    accentColor: ["#00B86B", "#FFFFFF"],
   },
   {
     slug: "huracan-sto",
@@ -126,6 +133,7 @@ export const BUILDS: Build[] = [
     metaTitle: "Lamborghini Huracán STO Conversion — SP Automotive",
     metaDescription:
       "Full Huracán EVO to STO body conversion. Cofango, wing, NACA scoop, paint match. SP Automotive Sarasota, FL.",
+    accentColor: ["#FF6B00", "#FFFFFF"],
   },
   {
     slug: "g-wagon-brabus",
@@ -148,6 +156,7 @@ export const BUILDS: Build[] = [
     metaTitle: "Brabus G63 Widebody Build — SP Automotive",
     metaDescription:
       "Mercedes G63 Brabus widebody build by SP Automotive. Flares, hood scoops, exhaust, Monoblock wheels. Sarasota, FL.",
+    accentColor: ["#000000", "#FFFFFF"],
   },
   {
     slug: "g-wagon-mansory",
@@ -170,6 +179,7 @@ export const BUILDS: Build[] = [
     metaTitle: "Mansory Gronos G-Wagon Build — SP Automotive",
     metaDescription:
       "Mansory Gronos full carbon widebody for the Mercedes G63. Hand-laid panels, paint, install. SP Automotive Sarasota, FL.",
+    accentColor: ["#000000", "#FFFFFF"],
   },
 ];
 
