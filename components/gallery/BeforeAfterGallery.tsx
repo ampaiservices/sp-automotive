@@ -3,15 +3,15 @@ import { CardStack, type CardStackItem } from "./CardStack";
 import { BUILDS } from "@/components/builds/builds-data";
 
 // Section 06 — Featured builds. A 3D fan-stack carousel of body-kit
-// transformations. Each card links to /builds/{slug} where the user can
-// drag a before/after slider between the stock car and the kit-installed
-// version. Data lives in components/builds/builds-data.ts.
+// transformations. Each card teases the STOCK car so the click reveals
+// the transformation on the sub-page (`/builds/{slug}`), where stock
+// and kit sit side-by-side. Data lives in components/builds/builds-data.ts.
 
 const builds: CardStackItem[] = BUILDS.map((b, i) => ({
   id: i + 1,
   title: b.car,
   description: b.kit,
-  imageSrc: b.kitImage,
+  imageSrc: b.stockImage,
   href: `/builds/${b.slug}`,
 }));
 
