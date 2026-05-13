@@ -86,7 +86,7 @@ export default function SmoothScroll() {
       if (rafId) window.cancelAnimationFrame(rafId);
       lenis?.destroy();
       lenis = null;
-      if (typeof window !== "undefined") delete window.__lenis;
+      delete window.__lenis;
     };
   }, [reduced]);
 

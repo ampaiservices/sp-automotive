@@ -112,12 +112,15 @@ export default function FAQAccordionList({ faqs }: Props) {
           <ul className="flex flex-wrap gap-2">
             {faqs.map((f) => (
               <li key={f.id}>
+                {/* Strip trailing "?" so chip widths follow the original
+                    design — the pill row is sized for the question text
+                    without punctuation. */}
                 <button
                   type="button"
                   onClick={() => openAndScroll(f.id)}
                   className="inline-block rounded-full border border-white/10 px-3 py-1.5 text-xs text-bone/80 hover:text-bone hover:border-white/30 hover:bg-white/[0.02] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-bone focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
                 >
-                  {f.question}
+                  {f.question.replace(/\?$/, "")}
                 </button>
               </li>
             ))}
@@ -157,6 +160,10 @@ type RowProps = {
 
 function FAQRow({ faq, index, open, onToggle, reduced }: RowProps) {
   const panelId = `${faq.id}-panel`;
+  // The trigger button owns the row's accessible name. The panel's
+  // aria-labelledby points here (not at the <li>) so the a11y label stays
+  // intact even if the decorative number / "+" siblings are restructured.
+  const buttonId = `${faq.id}-btn`;
   const number = String(index + 1).padStart(2, "0");
 
   return (
@@ -169,6 +176,7 @@ function FAQRow({ faq, index, open, onToggle, reduced }: RowProps) {
       transition={{ duration: 0.6, ease: ENTRY_EASE }}
     >
       <button
+        id={buttonId}
         type="button"
         onClick={onToggle}
         aria-expanded={open}
@@ -206,7 +214,7 @@ function FAQRow({ faq, index, open, onToggle, reduced }: RowProps) {
             key="panel"
             id={panelId}
             role="region"
-            aria-labelledby={faq.id}
+            aria-labelledby={buttonId}
             initial={reduced ? false : { height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
