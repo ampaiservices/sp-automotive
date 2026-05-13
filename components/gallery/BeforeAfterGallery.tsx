@@ -1,65 +1,143 @@
-import Image from "next/image";
 import RevealWords from "@/components/effects/RevealWords";
-import Magnetic from "@/components/effects/Magnetic";
-import Surface from "@/components/ui/Surface";
+import { CardStack, type CardStackItem } from "./CardStack";
 
-const pairs = [
-  { id: 1, caption: "Lamborghini Huracán — front-end collision" },
-  { id: 2, caption: "McLaren 720S — rear quarter rebuild" },
-  { id: 3, caption: "Audi R8 — full repaint to spec" },
-  { id: 4, caption: "BMW M4 — frame correction" },
+// Section 06 — Selected work. A 3D fan-stack carousel of completed exotic
+// repairs. All photos shot in the SP detail bays. Brand-page links match
+// the existing /{brand}-collision-repair-sarasota routes.
+
+const works: CardStackItem[] = [
+  {
+    id: 1,
+    title: "Lamborghini Huracán EVO Spyder",
+    description: "Showroom-prep finish",
+    imageSrc: "/work-gallery/01-huracan-evo-spyder.jpg",
+    href: "/lamborghini-collision-repair-sarasota",
+  },
+  {
+    id: 2,
+    title: "Lamborghini Urus",
+    description: "Carbon-fiber matte refinish",
+    imageSrc: "/work-gallery/02-urus-matte-side.jpg",
+    href: "/lamborghini-collision-repair-sarasota",
+  },
+  {
+    id: 3,
+    title: "Porsche Cayman GT4",
+    description: "Paint correction + ceramic",
+    imageSrc: "/work-gallery/03-cayman-gt4-studio.jpg",
+    href: "/porsche-collision-repair-sarasota",
+  },
+  {
+    id: 4,
+    title: "Ford F-150 Shelby",
+    description: "Custom paint & detailing",
+    imageSrc: "/work-gallery/04-f150-shelby.jpg",
+  },
+  {
+    id: 5,
+    title: "Lamborghini Urus",
+    description: "Front-end collision intake",
+    imageSrc: "/work-gallery/05-urus-damaged-outside.jpg",
+    href: "/lamborghini-collision-repair-sarasota",
+  },
+  {
+    id: 6,
+    title: "Porsche Cayman GT4",
+    description: "Track-day reset",
+    imageSrc: "/work-gallery/06-cayman-gt4-shop.jpg",
+    href: "/porsche-collision-repair-sarasota",
+  },
+  {
+    id: 7,
+    title: "Lamborghini Urus",
+    description: "Mid-rebuild — body in",
+    imageSrc: "/work-gallery/07-urus-damaged-shop.jpg",
+    href: "/lamborghini-collision-repair-sarasota",
+  },
+  {
+    id: 8,
+    title: "Lamborghini Urus",
+    description: "Detail bay portrait",
+    imageSrc: "/work-gallery/08-urus-matte-front.png",
+    href: "/lamborghini-collision-repair-sarasota",
+  },
+  {
+    id: 9,
+    title: "Twin Uruses",
+    description: "Same car — before and after",
+    imageSrc: "/work-gallery/09-uruses-outside.jpg",
+    href: "/lamborghini-collision-repair-sarasota",
+  },
+  {
+    id: 10,
+    title: "Porsche Cayman GT4",
+    description: "Paint match + clear coat",
+    imageSrc: "/work-gallery/10-cayman-gt4-small.png",
+    href: "/porsche-collision-repair-sarasota",
+  },
 ];
 
-// Free-floating chapter mark + glass-tab gallery, matching the homepage
-// chapter pattern (AboutStrip / FinalCTA). The id="work" stays on the
-// outer <section> so the navbar's /#work anchor lands here.
 export default function BeforeAfterGallery() {
   return (
-    <section id="work" className="relative px-6 md:px-10 py-32 scroll-mt-32">
-      <div className="relative z-10 mb-16">
+    <section
+      id="work"
+      className="bag-section relative overflow-hidden px-6 md:px-10 pt-16 pb-20 md:pt-20 md:pb-24 scroll-mt-32"
+    >
+      {/* Subtle red breathing glow behind the carousel. Two stacked
+          radial-gradient layers: a wide warm bed + a tighter ember core
+          that pulses via opacity over ~8s. Pure CSS, no Three.js — pauses
+          via prefers-reduced-motion. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-0"
+        style={{
+          background:
+            "radial-gradient(ellipse 80% 70% at 50% 50%, rgba(200, 40, 29, 0.16) 0%, rgba(200, 40, 29, 0.08) 40%, rgba(200, 40, 29, 0) 75%)",
+        }}
+      />
+      <div
+        aria-hidden
+        className="bag-pulse pointer-events-none absolute inset-0 -z-0"
+        style={{
+          background:
+            "radial-gradient(ellipse 45% 40% at 50% 50%, rgba(200, 40, 29, 0.35) 0%, rgba(200, 40, 29, 0.18) 35%, rgba(200, 40, 29, 0) 70%)",
+        }}
+      />
+      <style>{`
+        @keyframes bag-breathing {
+          0%, 100% { opacity: 0.45; transform: scale(1); }
+          50%      { opacity: 0.85; transform: scale(1.08); }
+        }
+        .bag-pulse {
+          animation: bag-breathing 8s ease-in-out infinite;
+          transform-origin: 50% 50%;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .bag-pulse { animation: none; opacity: 0.6; }
+        }
+      `}</style>
+      <div className="relative z-10 mb-8 md:mb-10">
         <div className="font-display text-bone leading-none tracking-[-0.02em] text-3xl md:text-5xl">
-          05
+          06
         </div>
         <p className="eyebrow mt-2">/ Selected work</p>
       </div>
-      <Surface
-        variant="glass"
-        className="relative z-10 max-w-7xl mx-auto rounded-2xl py-12 px-6 md:py-16 md:px-10"
-      >
-        <h2 className="display-lg mb-12 md:mb-16">
+      <div className="relative z-10 max-w-7xl mx-auto">
+        <h2 className="display-lg mb-6 md:mb-8 text-center">
           <RevealWords>What came back better than new.</RevealWords>
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          {pairs.map((p) => (
-            <Magnetic key={p.id} radius={120} strength={0.12} display="block" className="w-full">
-              <figure data-cursor="View">
-                <div className="grid grid-cols-[1fr_auto_1fr] gap-4 items-stretch">
-                  <div className="relative aspect-[4/3] border border-white/10 hover:border-bone transition-colors">
-                    <Image
-                      src={`/before-after/0${p.id}-before.jpg`}
-                      alt={`${p.caption} — before repair`}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                    />
-                  </div>
-                  <div aria-hidden className="flex items-center justify-center text-bone font-display text-lg">VS</div>
-                  <div className="relative aspect-[4/3] border border-white/10 hover:border-bone transition-colors">
-                    <Image
-                      src={`/before-after/0${p.id}-after.jpg`}
-                      alt={`${p.caption} — after repair`}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                    />
-                  </div>
-                </div>
-                <figcaption className="mt-4 text-sm text-graphite">{p.caption}</figcaption>
-              </figure>
-            </Magnetic>
-          ))}
-        </div>
-      </Surface>
+        <CardStack
+          items={works}
+          maxVisible={7}
+          cardWidth={760}
+          cardHeight={480}
+          loop
+          autoAdvance
+          intervalMs={4200}
+          pauseOnHover
+          showDots
+        />
+      </div>
     </section>
   );
 }

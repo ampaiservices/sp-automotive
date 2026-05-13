@@ -4,6 +4,7 @@ import { useReducedMotion } from "framer-motion";
 import { DWELL_LEAD_VH, DWELL_TRAIL_VH } from "@/lib/scrub-config";
 import SplitText from "@/components/effects/SplitText";
 import Surface from "@/components/ui/Surface";
+import SectionScrubVideo from "@/components/effects/SectionScrubVideo";
 
 // Corner-anchored cinematic section primitive used by the four home-page copy
 // blocks. Chapter mark pins to the top-left; body lives in a liquid-glass tab
@@ -69,6 +70,19 @@ type Props = {
    * options.
    */
   animation?: AnimationType;
+  /**
+   * Optional per-section scroll-scrub video. When provided, a SectionScrubVideo
+   * renders absolutely-positioned behind the chapter content, occluding the
+   * global PageScrubVideo while this section is in view. Use for chapters
+   * with their own dedicated atmospheric footage (e.g. paperwork-being-filed
+   * for ch02). Omit to let PageScrubVideo show through.
+   */
+  videoSrc?: string;
+  /**
+   * Poster image for the per-section video — shown before the video loads
+   * and in reduced-motion mode. Required if `videoSrc` is provided.
+   */
+  videoPoster?: string;
 };
 
 // Resolve a motion preset → the style values we should write for a given
@@ -169,6 +183,8 @@ export default function CornerSection({
   scrubTime,
   scrubTrailVh,
   animation = "fade",
+  videoSrc,
+  videoPoster,
 }: Props) {
   const reduced = useReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
@@ -313,8 +329,14 @@ export default function CornerSection({
       aria-labelledby={headingId}
       data-scrub-time={scrubTime}
       data-scrub-trail={scrubTrailVh}
-      className="relative min-h-[100svh] w-full px-6 py-28 md:px-10 md:py-36"
+      className="relative min-h-[100svh] w-full overflow-hidden px-6 py-28 md:px-10 md:py-36"
     >
+      {/* Optional per-section atmospheric video. Sits behind chapter content
+          in the section's stacking context (no z-index needed — document
+          order paints it first, content paints over). */}
+      {videoSrc && videoPoster && (
+        <SectionScrubVideo src={videoSrc} poster={videoPoster} />
+      )}
       {/* Chapter mark — pinned top-left via section padding (document flow). */}
       <div ref={markRef} className="relative z-10">
         <div className="font-display text-bone leading-none tracking-[-0.02em] text-3xl md:text-5xl">

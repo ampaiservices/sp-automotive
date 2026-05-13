@@ -4,12 +4,17 @@ import Link from "next/link";
 import PhoneCTA from "@/components/ui/PhoneCTA";
 import SmsCTA from "@/components/ui/SmsCTA";
 import SplitText from "@/components/effects/SplitText";
+import SectionScrubVideo from "@/components/effects/SectionScrubVideo";
 
-// Atmospheric video lives on PageScrubVideo at the page root. This
-// component owns the foreground composition: a kinetic two-phrase
-// headline with staggered character reveals, a glass lead card that
-// lifts in afterward, and a hero-only parallax that drifts the text
-// upward as the user starts scrolling.
+// Atmospheric video is now scoped to the hero region only — rendered via a
+// SectionScrubVideo behind the foreground composition. The legacy PageScrubVideo
+// was removed because per-chapter clips (ch02-05) clashed with a single
+// page-wide ambient layer. Each downstream chapter now owns its own footage.
+//
+// This component owns the foreground composition: a kinetic two-phrase
+// headline with staggered character reveals, a glass lead card that lifts in
+// afterward, and a hero-only parallax that drifts the text upward as the
+// user starts scrolling.
 //
 // Entry choreography (mount sequence):
 //   200 ms — "Totaled." characters stagger in
@@ -67,6 +72,13 @@ export default function HeroVideo() {
       className="relative min-h-[100svh] w-full overflow-hidden"
       aria-label="Exotic collision — totaled, paid in full."
     >
+      {/* Hero-scoped atmospheric video. As you scroll through the hero, the
+          clip scrubs from frame 0 toward the end and rests there as ch01
+          takes over. Replaces the prior page-wide PageScrubVideo. */}
+      <SectionScrubVideo
+        src="/hero-clips/cinematic.mp4"
+        poster="/hero-clips/cinematic-poster.jpg"
+      />
       <h1 className="sr-only">
         Totaled. Paid in Full. — SP Automotive exotic collision repair in Sarasota, FL.
       </h1>
@@ -78,7 +90,7 @@ export default function HeroVideo() {
       >
         <SplitText
           as="span"
-          className="display-bleed"
+          className="display-bleed display-bleed--shine"
           mountDelayMs={200}
           staggerMs={28}
           durationMs={420}
@@ -87,7 +99,7 @@ export default function HeroVideo() {
         </SplitText>
         <SplitText
           as="span"
-          className="display-bleed"
+          className="display-bleed display-bleed--shine"
           mountDelayMs={600}
           staggerMs={26}
           durationMs={420}
@@ -132,7 +144,7 @@ export default function HeroVideo() {
       >
         <SplitText
           as="span"
-          className="display-bleed absolute top-[14%] left-[3vw] z-[5]"
+          className="display-bleed display-bleed--shine absolute top-[14%] left-[3vw] z-[5]"
           mountDelayMs={200}
           staggerMs={32}
           durationMs={460}
@@ -141,7 +153,7 @@ export default function HeroVideo() {
         </SplitText>
         <SplitText
           as="span"
-          className="display-bleed absolute bottom-[22%] right-[3vw] z-[5] text-right"
+          className="display-bleed display-bleed--shine absolute bottom-[22%] right-[3vw] z-[5] text-right"
           mountDelayMs={600}
           staggerMs={26}
           durationMs={460}

@@ -6,13 +6,27 @@ import Surface from "@/components/ui/Surface";
 import { CITY, REGION, HOURS_LABEL, BY_APPOINTMENT } from "@/lib/site";
 
 export default function Footer() {
-  // Surface scrim keeps footer copy legible on the home route where the
-  // page-wide PageScrubVideo can be playing a bright frame behind the
-  // viewport. On other routes the html gradient already provides a dark
-  // backdrop; the scrim is a near-imperceptible extra darken there.
+  // Surface glass scrim sits on top of the autoplay ambient video,
+  // keeping footer copy legible while the loop plays behind.
   return (
-    <footer className="relative px-6 md:px-10 py-16">
-      <Surface variant="glass" className="max-w-7xl mx-auto rounded-2xl py-12 px-6 md:px-10 grid grid-cols-1 md:grid-cols-3 gap-12">
+    <footer className="relative overflow-hidden px-6 md:px-10 py-16">
+      {/* Ambient autoplay loop behind the footer card. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 overflow-hidden"
+      >
+        <video
+          src="/footer-ambient.mp4"
+          poster="/footer-ambient-poster.jpg"
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+      </div>
+      <Surface variant="glass" className="relative z-10 max-w-7xl mx-auto rounded-2xl py-12 px-6 md:px-10 grid grid-cols-1 md:grid-cols-3 gap-12">
         <div>
           <Image
             src="/logos/sp-mark.png"
