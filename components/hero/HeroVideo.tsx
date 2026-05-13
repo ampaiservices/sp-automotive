@@ -4,38 +4,37 @@ import Link from "next/link";
 import PhoneCTA from "@/components/ui/PhoneCTA";
 import SmsCTA from "@/components/ui/SmsCTA";
 import SplitText from "@/components/effects/SplitText";
+import SectionScrubVideo from "@/components/effects/SectionScrubVideo";
 
-// Atmospheric video is provided by SectionScrubVideo behind the hero +
-// chapter 01 region on the home page. This component owns the foreground
-// composition only: a "Totaled." kinetic reveal followed by "Paid in
-// Full." fading in as a block, a glass lead card that lifts in afterward,
-// and a hero-only parallax that drifts the text upward as the user starts
-// scrolling.
+// Atmospheric video is now scoped to the hero region only — rendered via a
+// SectionScrubVideo behind the foreground composition. The legacy PageScrubVideo
+// was removed because per-chapter clips (ch02-05) clashed with a single
+// page-wide ambient layer. Each downstream chapter now owns its own footage.
+//
+// This component owns the foreground composition: a kinetic two-phrase
+// headline with staggered character reveals, a glass lead card that lifts in
+// afterward, and a hero-only parallax that drifts the text upward as the
+// user starts scrolling.
 //
 // Entry choreography (mount sequence):
 //   200 ms — "Totaled." characters stagger in
-//   600 ms — "Paid in Full." fades in as a single block
+//   600 ms — "Paid in Full." characters stagger in
 //   950 ms — glass lead card translates up + fades in
 //  1100 ms — phone + SMS CTAs fade up
 //
-// Parallax: text drifts at 0.10x scroll, card at 0.08x. CSS variables on
+// Parallax: text drifts at 0.22x scroll, card at 0.16x. CSS variables on
 // the section element propagate to mobile + desktop subtrees so a single
 // rAF writer drives both breakpoints without a ref-collision bug.
-// Coefficients were toned down from the original 0.22 / 0.16 — page now
-// reads as a normal site with a hint of drift rather than a kinetic edit.
 
 export default function HeroVideo() {
-  const [secondPhraseReady, setSecondPhraseReady] = useState(false);
   const [cardReady, setCardReady] = useState(false);
   const [ctasReady, setCtasReady] = useState(false);
   const heroRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const p = window.setTimeout(() => setSecondPhraseReady(true), 600);
     const a = window.setTimeout(() => setCardReady(true), 950);
     const b = window.setTimeout(() => setCtasReady(true), 1100);
     return () => {
-      window.clearTimeout(p);
       window.clearTimeout(a);
       window.clearTimeout(b);
     };
@@ -52,8 +51,8 @@ export default function HeroVideo() {
       if (!hero) return;
       const heroH = hero.offsetHeight || window.innerHeight;
       const y = Math.min(window.scrollY, heroH);
-      hero.style.setProperty("--hero-y-text", `${-y * 0.10}px`);
-      hero.style.setProperty("--hero-y-card", `${-y * 0.08}px`);
+      hero.style.setProperty("--hero-y-text", `${-y * 0.22}px`);
+      hero.style.setProperty("--hero-y-card", `${-y * 0.16}px`);
     };
     const onScroll = () => {
       if (rafId) return;
@@ -73,6 +72,13 @@ export default function HeroVideo() {
       className="relative min-h-[100svh] w-full overflow-hidden"
       aria-label="Exotic collision — totaled, paid in full."
     >
+      {/* Hero-scoped atmospheric video. As you scroll through the hero, the
+          clip scrubs from frame 0 toward the end and rests there as ch01
+          takes over. Replaces the prior page-wide PageScrubVideo. */}
+      <SectionScrubVideo
+        src="/hero-clips/cinematic.mp4"
+        poster="/hero-clips/cinematic-poster.jpg"
+      />
       <h1 className="sr-only">
         Totaled. Paid in Full. — SP Automotive exotic collision repair in Sarasota, FL.
       </h1>
@@ -84,27 +90,28 @@ export default function HeroVideo() {
       >
         <SplitText
           as="span"
-          className="display-bleed"
+          className="display-bleed display-bleed--shine"
           mountDelayMs={200}
           staggerMs={28}
           durationMs={420}
         >
           Totaled.
         </SplitText>
-        <span
-          className={`display-bleed transition-opacity duration-[420ms] ease-out ${
-            secondPhraseReady ? "opacity-100" : "opacity-0"
-          }`}
+        <SplitText
+          as="span"
+          className="display-bleed display-bleed--shine"
+          mountDelayMs={600}
+          staggerMs={26}
+          durationMs={420}
         >
           Paid in Full.
-        </span>
+        </SplitText>
         <p
           className={`lead text-bone/85 max-w-md mt-4 transition-[opacity,transform] duration-[420ms] ease-out ${
             cardReady ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
           }`}
         >
-          We deal with the insurance. You walk away whole — sometimes tens of
-          thousands ahead.
+          We deal with the insurance. You walk away whole — sometimes ahead.
         </p>
         <div
           className={`flex flex-wrap gap-4 justify-center transition-opacity duration-300 ease-out ${
@@ -137,20 +144,22 @@ export default function HeroVideo() {
       >
         <SplitText
           as="span"
-          className="display-bleed absolute top-[14%] left-[3vw] z-[5]"
+          className="display-bleed display-bleed--shine absolute top-[14%] left-[3vw] z-[5]"
           mountDelayMs={200}
           staggerMs={32}
           durationMs={460}
         >
           Totaled.
         </SplitText>
-        <span
-          className={`display-bleed absolute bottom-[22%] right-[3vw] z-[5] text-right transition-opacity duration-[420ms] ease-out ${
-            secondPhraseReady ? "opacity-100" : "opacity-0"
-          }`}
+        <SplitText
+          as="span"
+          className="display-bleed display-bleed--shine absolute bottom-[22%] right-[3vw] z-[5] text-right"
+          mountDelayMs={600}
+          staggerMs={26}
+          durationMs={460}
         >
           Paid in Full.
-        </span>
+        </SplitText>
       </div>
 
       {/* Desktop: liquid-glass lead card — bottom-left, off-axis from "Paid in Full." */}
@@ -176,8 +185,7 @@ export default function HeroVideo() {
           "
         >
           <p className="lead text-bone/90">
-            We deal with the insurance. You walk away whole — sometimes tens
-            of thousands ahead.
+            We deal with the insurance. You walk away whole — sometimes ahead.
           </p>
           <div
             className={`mt-6 flex flex-wrap gap-3 transition-opacity duration-300 ease-out ${
