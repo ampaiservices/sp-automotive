@@ -9,14 +9,15 @@ import SectionScrubVideo from "@/components/effects/SectionScrubVideo";
 // Corner-anchored cinematic section primitive used by the four home-page copy
 // blocks. Chapter mark pins to the top-left; body lives in a liquid-glass tab
 // anchored bottom-right on desktop / stacked below the mark on mobile. The
-// full section is uninterrupted PageScrubVideo bleed behind the glass card.
+// full section can host a per-chapter SectionScrubVideo (via videoSrc /
+// videoPoster) or sit on the html canvas background if no video is provided.
 //
 // Visibility (scroll-driven): chapter mark + glass card reveal as the section
 // approaches its "fills viewport" position, hold at full visibility through
-// the PageScrubVideo dwell window, and recede as the video starts moving
-// toward the next chapter. The fade thresholds are derived from the same
-// geometry PageScrubVideo uses (section center + scrubTrailVh), so the text
-// and the video pause stay aligned. Honors prefers-reduced-motion.
+// the dwell window, and recede as the section's scrub video starts moving
+// toward the next chapter. The fade thresholds are derived from the section's
+// own geometry (center + scrubTrailVh), so the text and the video pause stay
+// aligned. Honors prefers-reduced-motion.
 //
 // Each chapter can pick a distinct motion preset via the `animation` prop:
 //

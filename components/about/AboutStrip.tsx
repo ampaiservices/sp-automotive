@@ -6,9 +6,9 @@ import Surface from "@/components/ui/Surface";
 // to the proof-of-craft angle: what the shop is, what it isn't, what it
 // touches. Earns the "Read more" click instead of restating the welcome.
 //
-// Carries chapter mark "05 / The signature" to read as a continuation of
-// the four numbered process chapters above it. Body sits in a liquid-glass
-// tab so it's clearly a defined section rather than text floating on the
+// Carries chapter mark "07 / The signature" to read as a continuation of
+// the gallery chapter (06) above it. Body sits in a liquid-glass tab so
+// it's clearly a defined section rather than text floating on the
 // cinematic backdrop.
 export default function AboutStrip() {
   return (

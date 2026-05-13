@@ -142,6 +142,21 @@ export function CardStack<T extends CardStackItem>({
   const cardSpacing = Math.max(10, Math.round(cardWidth * (1 - overlap)));
   const stepDeg = maxOffset > 0 ? spreadDeg / maxOffset : 0;
 
+  // Fan geometry — the outermost cards rotate by ±spreadDeg and their
+  // corners extend above AND below the unrotated bounding box. Without
+  // accounting for both, the section's overflow-hidden clips the corners.
+  const maxAngleRad = (spreadDeg * Math.PI) / 180;
+  const rotatedHalfHeight =
+    (cardWidth * Math.sin(maxAngleRad) +
+      cardHeight * Math.cos(maxAngleRad)) /
+    2;
+  const cornerExtension = Math.max(0, rotatedHalfHeight - cardHeight / 2);
+  const stageHeight = Math.round(cardHeight + 2 * cornerExtension + activeLiftPx);
+  // Centering offset: cards are anchored bottom-0 by default, so they sit
+  // at the BOTTOM of the stage. Pull them up by the bottom corner-clearance
+  // so the fan extends symmetrically above and below the active card.
+  const yCenterOffset = -Math.round(cornerExtension + activeLiftPx / 2);
+
   const canGoPrev = loop || active > 0;
   const canGoNext = loop || active < len - 1;
 
@@ -198,19 +213,17 @@ export function CardStack<T extends CardStackItem>({
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
     >
-      {/* Stage — height accounts for the fan-stack geometry: inactive
-          cards rotate up to ±spreadDeg/2 and their corners extend above
-          the unrotated bounding box. Without headroom the section's
-          overflow-hidden clips the tops of the outermost cards. Formula:
-          card height + active lift + sin(maxRotate) * cardWidth / 2. */}
+      {/* Stage — height is the cardHeight plus the corner extension on
+          BOTH sides of the rotated outer cards (computed in
+          cornerExtension) plus the active-card lift. Cards are visually
+          centered in this stage via yCenterOffset so neither top nor
+          bottom corner gets clipped by the section's overflow-hidden. */}
       <div
+        role="region"
+        aria-label="Featured builds"
+        aria-roledescription="carousel"
         className="relative w-full"
-        style={{
-          height:
-            cardHeight +
-            activeLiftPx +
-            Math.ceil(Math.sin((spreadDeg * Math.PI) / 180 / 2) * cardWidth),
-        }}
+        style={{ height: stageHeight }}
         tabIndex={0}
         onKeyDown={onKeyDown}
       >
@@ -293,7 +306,7 @@ export function CardStack<T extends CardStackItem>({
                       ? false
                       : {
                           opacity: 0,
-                          y: y + 40,
+                          y: y + 40 + yCenterOffset,
                           x,
                           rotateZ,
                           rotateX,
@@ -303,7 +316,7 @@ export function CardStack<T extends CardStackItem>({
                   animate={{
                     opacity: 1,
                     x,
-                    y: y + lift,
+                    y: y + lift + yCenterOffset,
                     rotateZ,
                     rotateX,
                     scale,
