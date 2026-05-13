@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import AmbientVideo from "@/components/effects/AmbientVideo";
 import PhoneCTA from "@/components/ui/PhoneCTA";
 import SmsCTA from "@/components/ui/SmsCTA";
 import Surface from "@/components/ui/Surface";
@@ -10,22 +11,12 @@ export default function Footer() {
   // keeping footer copy legible while the loop plays behind.
   return (
     <footer className="relative overflow-hidden px-6 md:px-10 py-16">
-      {/* Ambient autoplay loop behind the footer card. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 overflow-hidden"
-      >
-        <video
-          src="/footer-ambient.mp4"
-          poster="/footer-ambient-poster.jpg"
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="auto"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-      </div>
+      {/* Ambient autoplay loop behind the footer card. AmbientVideo
+          swaps to a static poster for prefers-reduced-motion users. */}
+      <AmbientVideo
+        src="/footer-ambient.mp4"
+        poster="/footer-ambient-poster.jpg"
+      />
       <Surface variant="glass" className="relative z-10 max-w-7xl mx-auto rounded-2xl py-12 px-6 md:px-10 grid grid-cols-1 md:grid-cols-3 gap-12">
         <div>
           <Image

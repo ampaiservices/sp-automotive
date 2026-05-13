@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef } from "react";
 import { useReducedMotion } from "framer-motion";
+import AmbientVideo from "@/components/effects/AmbientVideo";
 import SplitText from "@/components/effects/SplitText";
 import Surface from "@/components/ui/Surface";
 
@@ -73,22 +74,12 @@ export default function HowItWorks() {
     >
       {/* Workshop OOF backdrop — autoplay loop, no scroll scrub. The clip
           is intentionally out-of-focus so a continuous loop reads as
-          ambient atmosphere rather than literal action. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 overflow-hidden"
-      >
-        <video
-          src="/chapter-clips/05-workshop.mp4"
-          poster="/chapter-clips/05-workshop-poster.jpg"
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="auto"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-      </div>
+          ambient atmosphere rather than literal action. AmbientVideo
+          swaps to a static poster for prefers-reduced-motion users. */}
+      <AmbientVideo
+        src="/chapter-clips/05-workshop.mp4"
+        poster="/chapter-clips/05-workshop-poster.jpg"
+      />
 
       {/* Chapter mark — same convention as CornerSection. */}
       <div className="relative z-10">
