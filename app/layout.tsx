@@ -47,6 +47,10 @@ const lamboFont = Big_Shoulders({
   weight: "700",
   variable: "--font-lambo",
   display: "swap",
+  // Big Shoulders isn't in @next/font's metrics table, so Next can't generate
+  // a CLS-matched fallback. Opt out to silence the build-time warning; the
+  // browser's default fallback chain is fine for the Lamborghini wordmark.
+  adjustFontFallback: false,
 });
 const mclarenFont = Michroma({
   subsets: ["latin"],
