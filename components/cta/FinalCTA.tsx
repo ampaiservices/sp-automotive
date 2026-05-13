@@ -2,18 +2,27 @@ import PhoneCTA from "@/components/ui/PhoneCTA";
 import SmsCTA from "@/components/ui/SmsCTA";
 import Surface from "@/components/ui/Surface";
 
-// Closing chapter ("07 / Next move"). Glass tab contains the action
+// Closing chapter ("09 / Next move"). Glass tab contains the action
 // triangle (phone, SMS, supporting copy) so the CTAs sit on a clearly
 // defined surface instead of floating on the road footage behind them.
-export default function FinalCTA() {
+// The chapter marker only makes sense on the home page (chapter 09 in
+// the cinematic sequence). Other surfaces pass no prop and get no marker.
+type Props = {
+  /** Show the "09 / Next move" chapter marker. Only set true on the home page. */
+  chapterMarker?: boolean;
+};
+
+export default function FinalCTA({ chapterMarker = false }: Props) {
   return (
     <section className="relative w-full overflow-hidden px-6 md:px-10 pt-32 pb-32">
-      <div className="relative z-10 mb-16">
-        <div className="font-display text-bone leading-none tracking-[-0.02em] text-3xl md:text-5xl">
-          09
+      {chapterMarker && (
+        <div className="relative z-10 mb-16">
+          <div className="font-display text-bone leading-none tracking-[-0.02em] text-3xl md:text-5xl">
+            09
+          </div>
+          <p className="eyebrow mt-2">/ Next move</p>
         </div>
-        <p className="eyebrow mt-2">/ Next move</p>
-      </div>
+      )}
       <Surface
         variant="glass"
         className="relative z-10 max-w-3xl mx-auto rounded-2xl p-8 md:p-12 flex flex-col items-center text-center"

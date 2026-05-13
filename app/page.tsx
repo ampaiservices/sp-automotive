@@ -33,7 +33,7 @@ export default function Home() {
       <BeforeAfterGallery />
       <AboutStrip />
       <HomeFAQ />
-      <FinalCTA />
+      <FinalCTA chapterMarker />
     </>
   );
 }
