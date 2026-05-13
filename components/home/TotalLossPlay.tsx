@@ -4,21 +4,22 @@ export default function TotalLossPlay() {
   return (
     <CornerSection
       chapterNumber="01"
-      eyebrow="Built for exotics and rental fleets"
+      eyebrow="The total-loss play"
       headingId="total-loss-heading"
+      scrubTime={7}
       animation="lift"
-      layout="card"
       headline={"70% of value.\nThe math turns."}
       body={
         <>
           <p>
-            Repair past seventy percent of value and totaling pays better than
-            fixing. The carrier writes a check for the whole car — sometimes
-            five figures over what you paid, depending on how the market
-            moved.
+            When the cost to repair crosses 70% of what the car is worth, the
+            carrier owes you the car — not a patched copy of it. Settled in
+            full. And on cars that have appreciated since you bought them,
+            often $10–20k above what you paid.
           </p>
           <p className="mt-6 text-graphite">
-            We document the damage. We make the case. We close the file.
+            We document the damage. We make the case. The carrier writes the
+            check.
           </p>
         </>
       }

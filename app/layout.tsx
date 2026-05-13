@@ -1,18 +1,10 @@
-import {
-  Anton,
-  Big_Shoulders,
-  Hanken_Grotesk,
-  Michroma,
-  Outfit,
-  Saira_Extra_Condensed,
-  Saira_Semi_Condensed,
-  Yellowtail,
-} from "next/font/google";
+import { Anton, Hanken_Grotesk } from "next/font/google";
 import { Metadata } from "next";
 import Navigation from "@/components/nav/Navigation";
 import Footer from "@/components/footer/Footer";
 import Analytics from "@/components/analytics/Analytics";
 import LocalBusinessJsonLd from "@/components/seo/LocalBusinessJsonLd";
+import CustomCursor from "@/components/effects/CustomCursor";
 import SmoothScroll from "@/components/effects/SmoothScroll";
 import { SITE_NAME, SITE_URL, TAGLINE } from "@/lib/site";
 import "./globals.css";
@@ -38,51 +30,6 @@ const hanken = Hanken_Grotesk({
   display: "swap",
 });
 
-// Per-brand wordmark approximations for BrandShowcaseStrip. Each font is a
-// free Google Fonts stand-in for that brand's proprietary identity face —
-// nothing else in the site uses these, so single-weight + display:swap keeps
-// the marginal payload small.
-const lamboFont = Big_Shoulders({
-  subsets: ["latin"],
-  weight: "700",
-  variable: "--font-lambo",
-  display: "swap",
-  // Big Shoulders isn't in @next/font's metrics table, so Next can't generate
-  // a CLS-matched fallback. Opt out to silence the build-time warning; the
-  // browser's default fallback chain is fine for the Lamborghini wordmark.
-  adjustFontFallback: false,
-});
-const mclarenFont = Michroma({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-mclaren",
-  display: "swap",
-});
-const audiFont = Outfit({
-  subsets: ["latin"],
-  weight: "600",
-  variable: "--font-audi",
-  display: "swap",
-});
-const bmwFont = Saira_Semi_Condensed({
-  subsets: ["latin"],
-  weight: "700",
-  variable: "--font-bmw",
-  display: "swap",
-});
-const ferrariFont = Yellowtail({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-ferrari",
-  display: "swap",
-});
-const porscheFont = Saira_Extra_Condensed({
-  subsets: ["latin"],
-  weight: "700",
-  variable: "--font-porsche",
-  display: "swap",
-});
-
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { default: `${SITE_NAME} — ${TAGLINE}`, template: `%s — ${SITE_NAME}` },
@@ -100,15 +47,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="en"
-      className={`${anton.variable} ${hanken.variable} ${lamboFont.variable} ${mclarenFont.variable} ${audiFont.variable} ${bmwFont.variable} ${ferrariFont.variable} ${porscheFont.variable}`}
-    >
+    <html lang="en" className={`${anton.variable} ${hanken.variable}`}>
       <head>
         <LocalBusinessJsonLd />
-        {/* Preload the home-page hero poster — it's the LCP candidate behind
-            hero + chapter 01. The video element streams on its own. */}
-        <link rel="preload" as="image" href="/hero-clips/total-loss-poster.jpg" fetchPriority="high" />
+        {/* Preload the poster only — it's the LCP candidate. The video element streams on its own; explicit video preload was tanking LCP at 9.8MB. */}
+        <link rel="preload" as="image" href="/hero-clips/cinematic-poster.jpg" fetchPriority="high" />
       </head>
       <body className="text-bone font-body antialiased film-grain">
         <a
@@ -121,6 +64,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Navigation />
         <main id="main">{children}</main>
         <Footer />
+        <CustomCursor />
         <Analytics />
       </body>
     </html>

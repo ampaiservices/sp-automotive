@@ -179,6 +179,56 @@ body {
   white-space: nowrap;
 }
 
+/* Shine variant — a bright diagonal band sweeps across each word every
+   ~5 seconds. Each SplitText character gets its own clipped gradient with
+   a staggered animation-delay (driven by --st-i, the SplitText per-char
+   index). Adjacent chars hit the bright phase one after another, so the
+   bright stripe appears to travel continuously across the whole word.
+   This works around SplitText's per-char transforms that broke a single
+   wrapper-level background-clip: text approach.
+
+   Pair with `.display-bleed` (e.g. `display-bleed display-bleed--shine`).
+   Honors prefers-reduced-motion by holding the gradient static. */
+.display-bleed--shine .st-char {
+  /* Gradient: subtle dim, gentle peak. The dim color sits just under
+     bone so the dark phase feels like "shadow side" rather than gray.
+     Bright peak is a warm off-white rather than pure white — keeps the
+     headline on-brand with the bone/ink palette. */
+  background-image: linear-gradient(
+    110deg,
+    #b3ada2 0%,
+    #b3ada2 22%,
+    var(--color-bone) 38%,
+    #ede8de 48%,
+    #f7f3e9 50%,
+    #ede8de 52%,
+    var(--color-bone) 62%,
+    #b3ada2 78%,
+    #b3ada2 100%
+  );
+  background-size: 400% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  /* Tighter per-char stagger (-60ms) + slightly longer duration smooths
+     adjacent chars into a continuous wave instead of a flicker. */
+  animation: display-bleed-shine-char 4.5s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  animation-delay: calc(var(--st-i, 0) * -60ms);
+}
+
+@keyframes display-bleed-shine-char {
+  0%   { background-position: 220% 0; }
+  100% { background-position: -120% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .display-bleed--shine .st-char {
+    animation: none;
+    background-position: 50% 0;
+  }
+}
+
 /* Lead — opening paragraph after a display headline */
 .lead {
   font-family: var(--font-editorial);

@@ -1,121 +1,81 @@
-import Image from "next/image";
-import Surface from "@/components/ui/Surface";
+import RevealWords from "@/components/effects/RevealWords";
+import { CardStack, type CardStackItem } from "./CardStack";
+import { BUILDS } from "@/components/builds/builds-data";
 
-const pairs = [
-  { id: 1, caption: "Lamborghini Huracán — front-end collision" },
-  { id: 2, caption: "McLaren 720S — rear quarter rebuild" },
-  { id: 3, caption: "Audi R8 — full repaint to spec" },
-  { id: 4, caption: "BMW M4 — frame correction" },
-];
+// Section 06 — Featured builds. A 3D fan-stack carousel of body-kit
+// transformations. Each card links to /builds/{slug} where the user can
+// drag a before/after slider between the stock car and the kit-installed
+// version. Data lives in components/builds/builds-data.ts.
 
-// Supporting tiles — single-frame work shots that aren't strict
-// before/after pairs. Sit below the pair grid so the page reads
-// "documented restorations + selected work-in-progress / finished
-// detail" without forcing every entry into a two-image layout.
-const singles = [
-  {
-    src: "/sections/ch06-urus-stripped.jpg",
-    alt: "Black Lamborghini Urus mid-restoration in SP Automotive's hex-neon detail bay, Sarasota",
-    caption: "Urus — mid-restoration teardown",
-  },
-  {
-    src: "/sections/ch06-gt4-pristine.jpg",
-    alt: "White Porsche Cayman GT4 in SP Automotive's detail bay, Sarasota",
-    caption: "Cayman GT4 — detail finish",
-  },
-  {
-    src: "/sections/ch06-gt4-bay.jpg",
-    alt: "White Porsche Cayman GT4 in SP Automotive's daylight workshop bay, Sarasota",
-    caption: "Daylight bay",
-  },
-];
+const builds: CardStackItem[] = BUILDS.map((b, i) => ({
+  id: i + 1,
+  title: b.car,
+  description: b.kit,
+  imageSrc: b.kitImage,
+  href: `/builds/${b.slug}`,
+}));
 
-// Standalone gallery body — rendered on its own /gallery route, no longer
-// part of the home-page chapter flow. The chapter-number mark has been
-// dropped; the eyebrow + display headline now function as the page's
-// title block. Top padding clears the floating nav comfortably.
 export default function BeforeAfterGallery() {
   return (
-    <section className="relative px-6 md:px-10 pt-32 pb-20 md:pt-40 md:pb-28">
+    <section
+      id="work"
+      className="bag-section relative overflow-hidden px-6 md:px-10 pt-16 pb-20 md:pt-20 md:pb-24 scroll-mt-32"
+    >
+      {/* Subtle red breathing glow behind the carousel. Two stacked
+          radial-gradient layers: a wide warm bed + a tighter ember core
+          that pulses via opacity over ~8s. Pure CSS, no Three.js — pauses
+          via prefers-reduced-motion. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-0"
+        style={{
+          background:
+            "radial-gradient(ellipse 80% 70% at 50% 50%, rgba(200, 40, 29, 0.16) 0%, rgba(200, 40, 29, 0.08) 40%, rgba(200, 40, 29, 0) 75%)",
+        }}
+      />
+      <div
+        aria-hidden
+        className="bag-pulse pointer-events-none absolute inset-0 -z-0"
+        style={{
+          background:
+            "radial-gradient(ellipse 45% 40% at 50% 50%, rgba(200, 40, 29, 0.35) 0%, rgba(200, 40, 29, 0.18) 35%, rgba(200, 40, 29, 0) 70%)",
+        }}
+      />
+      <style>{`
+        @keyframes bag-breathing {
+          0%, 100% { opacity: 0.45; transform: scale(1); }
+          50%      { opacity: 0.85; transform: scale(1.08); }
+        }
+        .bag-pulse {
+          animation: bag-breathing 8s ease-in-out infinite;
+          transform-origin: 50% 50%;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .bag-pulse { animation: none; opacity: 0.6; }
+        }
+      `}</style>
       <div className="relative z-10 mb-8 md:mb-10">
-        <p className="eyebrow">/ Selected work</p>
+        <div className="font-display text-bone leading-none tracking-[-0.02em] text-3xl md:text-5xl">
+          06
+        </div>
+        <p className="eyebrow mt-2">/ Featured builds</p>
       </div>
-      <Surface
-        variant="glass"
-        className="relative z-10 max-w-7xl mx-auto rounded-2xl py-12 px-6 md:py-16 md:px-10"
-      >
-        <h2 className="display-lg mb-8 md:mb-10">
-          What came back better than new.
+      <div className="relative z-10 max-w-7xl mx-auto">
+        <h2 className="display-lg mb-6 md:mb-8 text-center">
+          <RevealWords>Built to a higher spec.</RevealWords>
         </h2>
-
-        {/* Featured composite — single frame already shows wrecked + restored
-            side-by-side, so it gets a full-width hero slot above the pair grid
-            instead of being split into two tiles. */}
-        <figure className="mb-12 md:mb-16">
-          <div className="relative aspect-[16/9] border border-white/10">
-            <Image
-              src="/sections/ch06-urus-pair.jpg"
-              alt="Black Lamborghini Urus collision-to-restored pair outside SP Automotive's Sarasota shop"
-              fill
-              preload
-              className="object-cover"
-              style={{ objectPosition: "center 65%" }}
-              sizes="(max-width: 1280px) 100vw, 1200px"
-            />
-          </div>
-          <figcaption className="mt-4 text-sm text-graphite">
-            Lamborghini Urus — collision to restored, side by side
-          </figcaption>
-        </figure>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          {pairs.map((p) => (
-            <figure key={p.id}>
-              <div className="grid grid-cols-[1fr_auto_1fr] gap-4 items-stretch">
-                <div className="relative aspect-[4/3] border border-white/10 hover:border-bone transition-colors">
-                  <Image
-                    src={`/before-after/0${p.id}-before.jpg`}
-                    alt={`${p.caption} — before repair`}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                  />
-                </div>
-                <div aria-hidden className="flex items-center justify-center text-bone font-display text-lg">VS</div>
-                <div className="relative aspect-[4/3] border border-white/10 hover:border-bone transition-colors">
-                  <Image
-                    src={`/before-after/0${p.id}-after.jpg`}
-                    alt={`${p.caption} — after repair`}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                  />
-                </div>
-              </div>
-              <figcaption className="mt-4 text-sm text-graphite">{p.caption}</figcaption>
-            </figure>
-          ))}
-        </div>
-
-        {/* Supporting tiles — single-frame shop shots for additional
-            visual variety without forcing pair structure. */}
-        <div className="mt-12 md:mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {singles.map((s) => (
-            <figure key={s.src}>
-              <div className="relative aspect-[3/4] border border-white/10 hover:border-bone transition-colors">
-                <Image
-                  src={s.src}
-                  alt={s.alt}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                />
-              </div>
-              <figcaption className="mt-4 text-sm text-graphite">{s.caption}</figcaption>
-            </figure>
-          ))}
-        </div>
-      </Surface>
+        <CardStack
+          items={builds}
+          maxVisible={7}
+          cardWidth={760}
+          cardHeight={480}
+          loop
+          autoAdvance
+          intervalMs={4200}
+          pauseOnHover
+          showDots
+        />
+      </div>
     </section>
   );
 }

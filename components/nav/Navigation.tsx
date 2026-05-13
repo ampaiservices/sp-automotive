@@ -6,15 +6,13 @@ import Image from "next/image";
 import { Menu, X } from "lucide-react";
 import PhoneCTA from "@/components/ui/PhoneCTA";
 
-// Gallery sits second-from-right so Contact remains the rightmost
-// CTA-weight link. The selected-work proof formerly lived as a section
-// on the home page (anchored from a "/#work" link); it now has its own
-// route at /gallery.
+// /#work scrolls to the BeforeAfterGallery (id="work") on the homepage.
 const links = [
   { href: "/", label: "Home" },
+  { href: "/process", label: "Process" },
+  { href: "/#work", label: "Work" },
   { href: "/about", label: "About" },
   { href: "/faq", label: "FAQ" },
-  { href: "/gallery", label: "Gallery" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -158,8 +156,7 @@ export default function Navigation() {
             alt="SP Automotive"
             width={654}
             height={241}
-            // `preload` replaces deprecated `priority` in Next 16+; above-the-fold on every page.
-            preload
+            priority
             className="h-10 w-auto invert"
           />
         </Link>

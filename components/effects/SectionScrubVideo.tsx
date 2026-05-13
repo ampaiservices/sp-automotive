@@ -3,56 +3,64 @@ import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
 
-// Region-bound scroll-scrub video. Sticks at the top of its parent
-// `[data-scrub-region]` ancestor; scroll progress through that region drives
-// `video.currentTime` linearly. Sibling sections render above (their own
-// `position: relative`) and overlay this layer.
+// Per-section scroll-scrub video. Renders an absolute-fill layer inside its
+// parent section (which must be `position: relative`). As the user scrolls
+// through the parent section's visibility range, the video's currentTime is
+// driven 0 -> duration. Below the section, the video rests at frame 0; above,
+// it rests at the final frame.
 //
-// Pattern notes:
-// - Mute + playsInline + no autoplay; we seek manually each frame.
-// - Source clip should be re-encoded with dense keyframes (gop=1 for
-//   frame-accurate scrub) and `+faststart` so seeks work mid-load.
-// - rAF-throttled scroll handler with a 0.016s seek-threshold gate (~60Hz,
-//   one display refresh) so we don't burn cycles on seeks the user can't see.
-// - ResizeObserver on the *region* (not documentElement) keeps the cached
-//   region geometry current as fonts/images settle and on viewport rotation.
+// Sibling to PageScrubVideo. The two coexist: PageScrubVideo provides the
+// fixed atmospheric backdrop for the rest of the page, and SectionScrubVideo
+// occludes it locally with section-specific footage while the parent section
+// is in view.
+//
+// Pattern notes match PageScrubVideo:
+// - Mute + playsInline + no autoplay; manual seek per frame.
+// - Source clips are encoded at 120fps with dense keyframes (gop=30 = 0.25s
+//   at 120fps) so seeks land on a real frame at any scroll position.
+//   faststart puts moov at the head so seeks work mid-load.
+// - rAF-throttled scroll handler with a 0.016s seek-threshold gate (~one
+//   120fps frame) so we don't write currentTime more often than the decoder
+//   can render.
 // - iOS Safari quirk: setting currentTime on a paused video doesn't render
-//   new frames until play() then pause() once — we prime on first scroll.
-// - Reduced motion: render only the static poster, no scroll listener,
-//   no <video> element at all.
+//   new frames until play() then pause() once -- we prime on first scroll.
+// - ResizeObserver on the section keeps the cached bounds current when
+//   neighboring content settles or fonts load.
+// - Reduced motion: render only the static poster, no scroll listener.
 
 type Props = {
+  /** Path under /public, e.g. "/chapter-clips/02-paperwork.mp4". */
   src: string;
+  /** Poster image (first frame), shown before the video loads and in
+   *  reduced-motion mode. */
   poster: string;
 };
 
 export default function SectionScrubVideo({ src, poster }: Props) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  // serverDefault: true — SSR + first hydration render the static poster
-  // branch. After hydration commits, useSyncExternalStore re-snapshots and
-  // non-reduced users swap to <video>. Reduced-motion users (the ones who
-  // would notice an unwanted video element) see no swap. Non-reduced users
-  // see a brief Image→video swap, but the video's poster is the same image,
-  // so it's visually near-imperceptible.
-  const reduced = useMediaQuery("(prefers-reduced-motion: reduce)", true);
+  // serverDefault: false matches PageScrubVideo. SSR ships the video element;
+  // reduced-motion users swap to the static poster after hydration.
+  const reduced = useMediaQuery("(prefers-reduced-motion: reduce)");
 
   useEffect(() => {
     if (reduced) return;
     const wrapper = wrapperRef.current;
     const video = videoRef.current;
     if (!wrapper || !video) return;
-
-    const region = wrapper.closest<HTMLElement>("[data-scrub-region]");
-    if (!region) return;
+    const section = wrapper.parentElement;
+    if (!section) return;
 
     let rafId = 0;
     let lastTarget = -1;
     let primed = false;
-    let dur = 0;
-    let regionTop = 0;
-    let scrollSpan = 0;
 
+    // Prime: play() then pause() once so subsequent currentTime seeks render
+    // frames. Without this, Safari / WebKit shows the poster forever on a
+    // never-played paused video, even after setting currentTime — which
+    // looks identical to a frozen still image. We try to prime as early as
+    // possible (on loadedmetadata / canplay), and again as a fallback on
+    // the first scroll event.
     function prime() {
       if (primed) return;
       primed = true;
@@ -64,36 +72,40 @@ export default function SectionScrubVideo({ src, poster }: Props) {
       }
     }
 
-    // Cache region geometry. `regionTop` is the document-space scrollY at
-    // which the region's top reaches the viewport's top; `scrollSpan` is the
-    // additional scroll required for the region's bottom to reach the
-    // viewport's bottom (i.e. for the sticky child to release).
-    function recacheLayout() {
-      const r = region!;
-      const rect = r.getBoundingClientRect();
-      regionTop = rect.top + window.scrollY;
-      const vh = window.innerHeight;
-      scrollSpan = Math.max(1, r.offsetHeight - vh);
-      dur = video!.duration || 0;
-      apply();
-    }
-
     function apply() {
-      // Cancel any pending rAF so a synchronous call (resize → recacheLayout,
-      // RO, initial, loadedmetadata) doesn't leave an already-queued frame in
-      // flight to re-seek the video. On the rAF-dispatch path this is a no-op.
-      if (rafId) cancelAnimationFrame(rafId);
       rafId = 0;
-      if (!dur) return;
-      const scrolled = window.scrollY - regionTop;
-      const t = Math.max(0, Math.min(1, scrolled / scrollSpan));
-      // Stop ~50ms shy of the end so the decoder doesn't stall on the final
-      // frame boundary on some browsers.
-      const target = t * Math.max(0, dur - 0.05);
+      const dur = video!.duration;
+      if (!dur || Number.isNaN(dur)) return;
 
-      if (Math.abs(target - lastTarget) < 0.016) return;
+      // Map the parent section's scroll-through range to [0, 1]:
+      //   p = 0 -> section's TOP has just reached the viewport's TOP
+      //            (rect.top === 0). Video sits at frame 0.
+      //   p = 1 -> section's TOP has scrolled past the viewport's TOP by
+      //            (1 / SPEED) of the section's height. After that the
+      //            clamp keeps the video parked at the final frame while
+      //            the user finishes reading the section.
+      //
+      // SPEED > 1 compresses the playthrough into the first chunk of the
+      // section's scroll range (so videos feel snappy, not lethargic).
+      // Below 0 (section still entering from below) we clamp to 0.
+      //
+      // This is the right model for sticky-cinema scrubs: the playthrough
+      // happens *as the section fills the screen*, then the clip rests on
+      // its final frame while the chapter copy holds the eye. Critically,
+      // it makes the page-top hero start at frame 0 instead of mid-clip
+      // (the old visibility-window formula treated "entering" as progress
+      // and so half-played the hero at scrollY=0).
+      const SPEED = 1.0;
+      const rect = section!.getBoundingClientRect();
+      const h = rect.height || 1;
+      const p = Math.max(0, Math.min(1, (-rect.top / h) * SPEED));
+      // Pin a hair shy of the duration; some browsers rewind to 0 on
+      // out-of-range seeks.
+      const target = Math.min(dur - 0.05, p * dur);
+
+      if (Math.abs(target - lastTarget) < 0.03) return;
       lastTarget = target;
-      try { video!.currentTime = target; } catch {/* pre-metadata seek, ignore */}
+      try { video!.currentTime = target; } catch {/* pre-metadata, ignore */}
     }
 
     function onScroll() {
@@ -102,57 +114,39 @@ export default function SectionScrubVideo({ src, poster }: Props) {
       rafId = requestAnimationFrame(apply);
     }
 
-    function onMeta() { recacheLayout(); }
-    // Surface load failures (404, CORS, codec) — otherwise the component
-    // silently displays the poster forever and the failure is invisible
-    // to anyone debugging from the console.
-    function onError() {
-      console.warn("SectionScrubVideo: video failed to load", video!.error);
-    }
+    function onMeta() { apply(); }
 
-    const ro = new ResizeObserver(recacheLayout);
-    ro.observe(region);
+    const ro = new ResizeObserver(apply);
+    ro.observe(section);
 
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", recacheLayout);
-    video.addEventListener("error", onError);
-    if (video.readyState >= 1) recacheLayout();
+    window.addEventListener("resize", apply);
+    if (video.readyState >= 1) apply();
     else video.addEventListener("loadedmetadata", onMeta, { once: true });
 
     return () => {
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", recacheLayout);
+      window.removeEventListener("resize", apply);
       video.removeEventListener("loadedmetadata", onMeta);
-      video.removeEventListener("error", onError);
       ro.disconnect();
       if (rafId) cancelAnimationFrame(rafId);
     };
-  }, [reduced, src]);
+  }, [reduced]);
 
-  // Wrapper takes the full height of its `[data-scrub-region]` parent (which
-  // gets its height from the in-flow sibling sections — hero + ch01 = ~200vh).
-  // The sticky child pins at viewport top while the wrapper is in viewport,
-  // releases naturally as the wrapper exits at the bottom. Sibling sections
-  // are `position: relative` and thus paint above this absolute layer in
-  // document order without explicit z-index.
   if (reduced) {
     return (
       <div
         ref={wrapperRef}
         aria-hidden
-        className="pointer-events-none absolute inset-0 z-0"
+        className="pointer-events-none absolute inset-0 overflow-hidden"
       >
-        <div className="sticky top-0 h-screen w-full overflow-hidden">
-          <Image
-            src={poster}
-            alt=""
-            fill
-            // `preload` replaces deprecated `priority` in Next 16+; reduced-motion LCP candidate.
-            preload
-            sizes="100vw"
-            className="object-cover"
-          />
-        </div>
+        <Image
+          src={poster}
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover"
+        />
       </div>
     );
   }
@@ -161,22 +155,22 @@ export default function SectionScrubVideo({ src, poster }: Props) {
     <div
       ref={wrapperRef}
       aria-hidden
-      className="pointer-events-none absolute inset-0 z-0"
+      className="pointer-events-none absolute inset-0 overflow-hidden"
     >
-      <div className="sticky top-0 h-screen w-full overflow-hidden">
-        <video
-          ref={videoRef}
-          muted
-          playsInline
-          // preload="metadata" downloads only the moov atom (already at the head
-          // via faststart) so duration is known and apply() can seek immediately.
-          preload="metadata"
-          poster={poster}
-          className="absolute inset-0 h-full w-full object-cover"
-        >
-          <source src={src} type="video/mp4" />
-        </video>
-      </div>
+      <video
+        ref={videoRef}
+        muted
+        playsInline
+        // Matches PageScrubVideo: preload metadata, prime on first scroll.
+        // No autoplay (it fights the per-frame currentTime writes — the
+        // browser keeps trying to advance the playhead, our seek yanks it
+        // back, and the result is stutter or "video stops randomly").
+        preload="metadata"
+        poster={poster}
+        className="absolute inset-0 w-full h-full object-cover"
+      >
+        <source src={src} type="video/mp4" />
+      </video>
     </div>
   );
 }
