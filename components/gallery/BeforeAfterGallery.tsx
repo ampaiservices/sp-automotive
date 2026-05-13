@@ -137,7 +137,7 @@ export default function BeforeAfterGallery() {
         <div className="font-display text-ink leading-none tracking-[-0.02em] text-3xl md:text-5xl">
           06
         </div>
-        <p className="eyebrow mt-2 text-graphite">/ Featured builds</p>
+        <p className="eyebrow mt-2 text-graphite">/ Before + after</p>
       </div>
       <div className="relative z-10 max-w-7xl mx-auto">
         <h2 className="display-lg text-ink mb-6 md:mb-8 text-center">

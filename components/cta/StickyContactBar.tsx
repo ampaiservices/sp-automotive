@@ -106,6 +106,12 @@ export default function StickyContactBar() {
   return (
     <div
       aria-hidden={!visible}
+      // `inert` removes descendants from the tab order AND from pointer
+      // interaction while the bar is off-screen. Without it, the Call
+      // <button> stays Tab-focusable below the fold — pressing Enter on
+      // an invisible button fires window.location.replace(PHONE_HREF)
+      // and triggers an unintended call.
+      {...(!visible ? { inert: true } : {})}
       className={`fixed bottom-0 left-0 right-0 z-40 border-t backdrop-blur-md transition-transform duration-300 ease-out motion-reduce:transition-none ${container} ${
         visible ? "translate-y-0" : "pointer-events-none translate-y-full"
       }`}
