@@ -53,7 +53,7 @@ export default function FeaturedBuilds() {
       ref={sectionRef}
       id="work"
       aria-labelledby="featured-builds-heading"
-      className="featured-builds relative w-full overflow-hidden bg-paper text-ink px-6 py-20 md:px-10 md:py-28 scroll-mt-32"
+      className="featured-builds relative w-full overflow-hidden bg-paper text-ink px-6 py-20 md:px-10 md:py-28"
     >
       {/* Header row: tracked-uppercase label + headline + all-builds link. */}
       <div className="relative z-10 mx-auto max-w-7xl">
