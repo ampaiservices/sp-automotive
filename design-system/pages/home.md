@@ -30,7 +30,7 @@ The internal `§01–§08` numbering below is a **document-level reference only*
 
 - The two display-bleed words "Totaled." and "Paid in Full." enter at 200ms and 600ms respectively, with the `.display-bleed--shine` per-character gradient sweep
 - Liquid-glass lead card enters at 950ms; phone + SMS CTAs at 1100ms
-- The card uses `bg-white/[0.015]` — **extremely subtle**. If you increase this above `bg-white/[0.05]`, the card stops feeling like cinematic atmosphere and starts looking like a UI placeholder
+- The card uses `<Surface variant="glass">` (dark mid-alpha tint + strong backdrop blur + border + ring + shadow). Earlier iteration tried a hand-rolled `bg-white/[0.015]` treatment that read as nearly invisible — original audit P2-a. Committing to glass here keeps the card cinematic but actually visible.
 - Desktop parallax: text drifts at 0.22× scroll, card at 0.16× scroll. Hero only — no other section uses scroll-linked parallax
 - The `<h1>` is `sr-only` at line 83 — the display-bleed phrase is the visual h1
 - Mobile uses a stacked vertical layout (`md:hidden`); desktop uses absolute-positioned edge-bleed (`hidden md:block`). Don't try to unify these breakpoints
