@@ -102,7 +102,7 @@ export default function FeaturedBuilds() {
                 alt={hero.car}
                 fill
                 sizes="(min-width: 1024px) 80rem, 100vw"
-                className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.02]"
+                className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.02] motion-reduce:transition-none"
               />
               {/* Kit — top layer, fades out on hover. */}
               <Image
@@ -161,7 +161,7 @@ export default function FeaturedBuilds() {
                     alt={build.car}
                     fill
                     sizes="(min-width: 1024px) 25rem, 100vw"
-                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03] motion-reduce:transition-none"
                   />
                   {/* Kit — top layer, fades out on hover. */}
                   <Image

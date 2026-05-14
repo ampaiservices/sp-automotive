@@ -135,7 +135,10 @@ export default function HowItWorks() {
                     ruling that separates the chapter mark from the headline.
                     Dropped the redundant "Step 01" eyebrow since the numeral
                     now carries that role. */}
-                <div className="font-display leading-none tracking-[-0.03em] text-bone text-5xl md:text-6xl">
+                <div
+                  aria-label={`Step ${step.n}`}
+                  className="font-display leading-none tracking-[-0.03em] text-bone text-5xl md:text-6xl"
+                >
                   {step.n}
                 </div>
                 <span aria-hidden className="mt-5 block h-px w-12 bg-bone/25" />

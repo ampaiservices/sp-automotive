@@ -58,7 +58,14 @@ export function TextScramble({
   const ref = useRef<HTMLSpanElement | null>(null);
   const [displayText, setDisplayText] = useState(children);
   const [inView, setInView] = useState(false);
-  const ranRef = useRef(false);
+
+  // Stabilize the completion callback. Callers can pass inline functions
+  // (`onScrambleComplete={() => …}`) without the new identity restarting
+  // the scramble on every render — the interval reads through the ref.
+  const onCompleteRef = useRef(onScrambleComplete);
+  useEffect(() => {
+    onCompleteRef.current = onScrambleComplete;
+  }, [onScrambleComplete]);
 
   // In-view trigger. Only attaches when the caller hasn't passed an explicit
   // `trigger` prop — that way external trigger control still works.
@@ -78,13 +85,13 @@ export function TextScramble({
 
   const shouldRun = trigger ?? inView;
 
-  // Scramble effect. Runs once per mount (gated by ranRef). When reduced-
-  // motion is on, the scramble simply never runs and displayText stays at
-  // its useState initializer (= children). Cleans up the interval on
-  // unmount so a fast unmount mid-scramble doesn't leak.
+  // Scramble effect. Re-runs (and restarts the scramble) whenever
+  // `children` changes — supports dynamic content cleanly. When reduced-
+  // motion is on the scramble never runs and displayText stays at its
+  // useState initializer (= initial children). Cleans up the interval on
+  // unmount and on dep changes.
   useEffect(() => {
-    if (reduced || !shouldRun || ranRef.current) return;
-    ranRef.current = true;
+    if (reduced || !shouldRun) return;
 
     const steps = duration / speed;
     let step = 0;
@@ -112,14 +119,14 @@ export function TextScramble({
         if (step > steps) {
           clearInterval(interval);
           setDisplayText(children);
-          onScrambleComplete?.();
+          onCompleteRef.current?.();
         }
       },
       speed * 1000,
     );
 
     return () => clearInterval(interval);
-  }, [shouldRun, reduced, children, characterSet, duration, speed, onScrambleComplete]);
+  }, [shouldRun, reduced, children, characterSet, duration, speed]);
 
   return (
     <MotionSpan
