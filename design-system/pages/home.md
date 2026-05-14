@@ -19,7 +19,7 @@ The internal `§01–§08` numbering below is a **document-level reference only*
 | §05 | `HowItWorks` | `components/home/HowItWorks.tsx` | How it works | Dark, `data-theme="dark"` |
 | Selected work | `FeaturedBuilds` | `components/home/FeaturedBuilds.tsx` | // Selected work | Paper · carries `id="work"` anchor · stock↔kit crossfade on card hover |
 | §06 | `AboutStrip` | `components/about/AboutStrip.tsx` | The signature | Paper, `Surface variant="light"` card |
-| §07 | `HomeFAQ` | `components/home/HomeFAQ.tsx` | Common questions | Paper |
+| §07 | `HomeFAQ` | `components/home/HomeFAQ.tsx` | Common questions | Dark, `data-theme="dark"` |
 | §08 | `FinalCTA homepage` | `components/cta/FinalCTA.tsx` | Next move | Paper, `Surface variant="light"` card |
 
 > **Deprecated:** `components/gallery/BeforeAfterGallery.tsx` was removed from the homepage on 2026-05-14. Its job (visualizing the stock → kit transformation) is now done inside the FeaturedBuilds cards via the on-hover image crossfade. The component file remains in the repo for one cycle in case rollback is needed.
@@ -95,11 +95,14 @@ Three `Surface variant="light"` phase cards (Document / Supplement / Negotiate).
 - Stats values are currently placeholders — verify with Serge before launch (note in `AboutStrip.tsx:12`)
 - Display headline (inside the card): "One shop. One signature. Every weld."
 
-## §07 HomeFAQ — native details/summary
+## §07 HomeFAQ — native details/summary (dark interlude)
 
+- **Dark register** with `data-theme="dark"` — flipped from paper on 2026-05-14 to break the back-half paper run (Selected work / §06 / §07 / §08 were all paper in sequence and read as one cream slab). The sticky CTA bar's section-aware theme picks up `data-theme="dark"` and flips when scrolled over this section.
 - Built on native `<details>`/`<summary>` so keyboard + screen-reader support comes for free
 - Single-open enforced via `onToggle` handler closing siblings; we don't manage state in React
 - `+` indicator rotates 45° on open via `[open]` selector + `rotate(45deg)`
+- Bone-on-ink text, bone/10 dividers, focus-visible ring uses bone with ink offset
+- SmsCTA uses default dark theme (drop `theme="light"` if you re-render this elsewhere on a paper section — only the dark variant works on this section's bg)
 - **Six hardcoded questions.** The `/faq` page reads from `lib/faq-data.ts` (`PUBLISHED_FAQS`) — these two lists are intentionally independent. If you change the data file, the homepage will not auto-update
 
 ## §08 FinalCTA — closing card
