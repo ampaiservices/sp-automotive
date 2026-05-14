@@ -156,12 +156,15 @@ export default function HowItWorks() {
       {/* Bottom progressive blur — softens the §05 dark → Selected Work
           paper handoff. Apple-style gradient backdrop blur intensifying
           toward the bottom edge, so the workshop video reads as "fading
-          out" rather than cutting abruptly. z-20 so it sits above the
-          AmbientVideo + cards but below any potential nav overlays. */}
+          out" rather than cutting abruptly. blurIntensity=3 gives a
+          max blur of ~12px at the bottom-most layer (0.25 default was
+          invisible — only ~1px max). Taller runway (h-40 / h-56) so
+          the ramp is visible, not abrupt. */}
       <ProgressiveBlur
         direction="bottom"
         blurLayers={5}
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-32 md:h-40 z-20"
+        blurIntensity={3}
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-40 md:h-56 z-20"
       />
 
       <style jsx>{`
