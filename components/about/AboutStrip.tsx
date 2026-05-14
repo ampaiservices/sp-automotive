@@ -20,7 +20,7 @@ const STATS = [
 
 export default function AboutStrip() {
   return (
-    <section className="relative bg-paper text-ink px-6 md:px-10 py-20 md:py-28">
+    <section className="relative bg-paper text-ink px-6 md:px-10 py-20 md:py-28 border-t border-ink/10">
       <div className="relative z-10 mx-auto mb-12 max-w-4xl md:mb-16">
         <p className="font-display uppercase tracking-[0.10em] text-left text-ink text-3xl md:text-5xl leading-none">
           The signature
