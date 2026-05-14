@@ -41,8 +41,16 @@ export function ProgressiveBlur({
   const layers = Math.max(blurLayers, 2);
   const segmentSize = 1 / (blurLayers + 1);
 
+  // Caller owns positioning via className (typically `absolute inset-x-0
+  // bottom-0 …` to overlay a section's bottom edge). We do NOT prepend
+  // `relative` here — when both classes land on the same element,
+  // Tailwind's generated CSS emits `.relative` after `.absolute` in the
+  // position-utilities group, so `relative` wins via cascade and the
+  // wrapper falls back into normal flow instead of overlaying. The inner
+  // motion.div layers carry their own `absolute inset-0`, anchoring to
+  // the nearest positioned ancestor (the caller's positioned wrapper).
   return (
-    <div className={`relative ${className ?? ""}`.trim()}>
+    <div className={className ?? ""}>
       {Array.from({ length: layers }).map((_, index) => {
         const angle = GRADIENT_ANGLES[direction];
         const gradientStops = [
