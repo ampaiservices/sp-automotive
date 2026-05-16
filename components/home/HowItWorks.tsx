@@ -52,7 +52,17 @@ export default function HowItWorks() {
   // section enters and leaves the viewport. Five compositor layers of
   // `backdrop-filter: blur()` are cheap on the bottom edge of a
   // visible section but wasted when the section is offscreen.
-  const [blurVisible, setBlurVisible] = useState(false);
+  //
+  // Lazy initializer: SSR + modern clients start at false (blur mounts
+  // only after IO confirms intersection); ancient clients without IO
+  // default to true so the visual effect doesn't silently vanish.
+  // Mismatch is only possible on browsers older than IO support, which
+  // is acceptable.
+  const [blurVisible, setBlurVisible] = useState<boolean>(
+    () =>
+      typeof window !== "undefined" &&
+      typeof IntersectionObserver === "undefined",
+  );
   // Mobile compositor can't carry the full 5-layer blur stack without
   // jank on the §HowItWorks → §FeaturedBuilds handoff. Drop to 3 layers
   // on phones; the gradient is shallower but still reads as a soft fade.
@@ -81,13 +91,12 @@ export default function HowItWorks() {
   // on entry and exit) rather than one-shot. Generous rootMargin so
   // the blur is already mounted by the time the bottom edge is on
   // screen, avoiding a flash where the section cuts abruptly to paper.
+  // The IO-unavailable fallback is handled by the useState lazy
+  // initializer above; no need for a synchronous setBlurVisible here.
   useEffect(() => {
+    if (typeof IntersectionObserver === "undefined") return;
     const section = sectionRef.current;
     if (!section) return;
-    if (typeof IntersectionObserver === "undefined") {
-      setBlurVisible(true);
-      return;
-    }
     const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) setBlurVisible(e.isIntersecting);
