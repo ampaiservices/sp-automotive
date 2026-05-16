@@ -3,12 +3,17 @@ import { useEffect, useRef } from "react";
 import { useReducedMotion } from "framer-motion";
 import SplitText from "@/components/effects/SplitText";
 import Surface from "@/components/ui/Surface";
+import CarrierMarquee from "@/components/home/CarrierMarquee";
 
 // §02 Carrier-side advocacy. Mirrors the §05 composition: section label
 // top-left, display headline on the canvas, row of three light cards
 // below connected by a hairline that draws across on reveal. No per-
 // section backdrop — the html canvas ink gradient shows through. Cards
-// describe the three phases of how the claim is handled.
+// describe the three phases of how the claim is handled. Closes with a
+// "// We work with" carrier marquee — relocated from TrustStrip so the
+// carrier list lives where carriers are the actual subject. The carrier
+// data + render logic lives in CarrierMarquee; real SVG logos drop into
+// /public/logos/carriers/ to swap out the wordmark fallback.
 
 const SCRUB_TIME = 11; // unchanged — keeps PageScrubVideo waypoint timing
 
@@ -120,9 +125,21 @@ export default function InsuranceHandling() {
             ))}
           </ol>
 
-          <p className="mt-10 text-graphite max-w-2xl">
+          <p className="mt-10 text-ink/80 max-w-2xl">
             You don&apos;t sit on the phone. You see the number that came back.
           </p>
+        </div>
+
+        {/* Carrier strip — relocated from TrustStrip. Lives here because
+            this is the section where carriers are the actual subject. */}
+        <div className="insurance-handling__carriers mt-12 md:mt-16 pt-10 md:pt-14 border-t border-ink/10">
+          <p className="eyebrow text-graphite">{"// We work with"}</p>
+          <div className="mt-6 -mx-6 md:-mx-10">
+            {/* Negative margin pulls the marquee edge-to-edge of the
+                section padding so the mask gradient fades against the
+                section edge, not against the inner container. */}
+            <CarrierMarquee />
+          </div>
         </div>
       </div>
 

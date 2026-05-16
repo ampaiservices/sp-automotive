@@ -1,10 +1,11 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "framer-motion";
 import AmbientVideo from "@/components/effects/AmbientVideo";
 import { ProgressiveBlur } from "@/components/effects/ProgressiveBlur";
 import SplitText from "@/components/effects/SplitText";
 import Surface from "@/components/ui/Surface";
+import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
 
 // Section 05 — How It Works. Bridges the "what we do" chapters (02-04)
 // into the gallery. Composition is deliberately distinct from the
@@ -38,14 +39,24 @@ const STEPS = [
   },
   {
     n: "04",
-    label: "You walk away whole",
-    body: "Settlement plus repair completed. Indoor storage while we wait.",
+    label: "Keys back, file closed",
+    body: "Settlement paid in full, repair completed, car returned. Indoor storage covered while we wait.",
   },
 ];
 
 export default function HowItWorks() {
   const sectionRef = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
+  // Tracked separately from `data-revealed` (one-shot reveal flag) so
+  // we can mount/unmount the ProgressiveBlur stack continuously as the
+  // section enters and leaves the viewport. Five compositor layers of
+  // `backdrop-filter: blur()` are cheap on the bottom edge of a
+  // visible section but wasted when the section is offscreen.
+  const [blurVisible, setBlurVisible] = useState(false);
+  // Mobile compositor can't carry the full 5-layer blur stack without
+  // jank on the §HowItWorks → §FeaturedBuilds handoff. Drop to 3 layers
+  // on phones; the gradient is shallower but still reads as a soft fade.
+  const isMobile = useMediaQuery("(max-width: 767px)");
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -65,6 +76,27 @@ export default function HowItWorks() {
     io.observe(section);
     return () => io.disconnect();
   }, [reduced]);
+
+  // Separate IO for ProgressiveBlur visibility — continuous (toggles
+  // on entry and exit) rather than one-shot. Generous rootMargin so
+  // the blur is already mounted by the time the bottom edge is on
+  // screen, avoiding a flash where the section cuts abruptly to paper.
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    if (typeof IntersectionObserver === "undefined") {
+      setBlurVisible(true);
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) setBlurVisible(e.isIntersecting);
+      },
+      { rootMargin: "200px 0px", threshold: 0 },
+    );
+    io.observe(section);
+    return () => io.disconnect();
+  }, []);
 
   return (
     <section
@@ -153,16 +185,24 @@ export default function HowItWorks() {
         </ol>
       </div>
 
-      {/* Bottom progressive blur — softens the §05 dark → Selected Work
-          paper handoff. Apple-style gradient backdrop blur intensifying
-          toward the bottom edge, so the workshop video reads as "fading
-          out" rather than cutting abruptly. z-20 so it sits above the
-          AmbientVideo + cards but below any potential nav overlays. */}
-      <ProgressiveBlur
-        direction="bottom"
-        blurLayers={5}
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-32 md:h-40 z-20"
-      />
+      {/* Bottom progressive blur — softens the §HowItWorks dark →
+          §FeaturedBuilds paper handoff. Apple-style gradient backdrop
+          blur intensifying toward the bottom edge so the workshop video
+          reads as "fading out" rather than cutting abruptly. z-20 so it
+          sits above the AmbientVideo + cards but below any potential nav
+          overlays.
+          Conditionally rendered only while the section is in the viewport
+          (continuous IO above) — stacked `backdrop-filter` layers cost
+          compositor paint on every frame even when offscreen. Layer count
+          drops from 5 → 3 on mobile to stay under iOS Safari's blur
+          budget. */}
+      {blurVisible && (
+        <ProgressiveBlur
+          direction="bottom"
+          blurLayers={isMobile ? 3 : 5}
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-32 md:h-40 z-20"
+        />
+      )}
 
       <style jsx>{`
         .how-it-works__connector {

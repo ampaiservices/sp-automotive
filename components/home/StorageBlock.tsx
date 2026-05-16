@@ -119,7 +119,7 @@ export default function StorageBlock() {
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl">
-        <p className="mt-10 text-graphite max-w-2xl">
+        <p className="mt-10 text-ink/80 max-w-2xl">
           If overflow ever forces a different arrangement, you&apos;ll know
           before it happens.
         </p>

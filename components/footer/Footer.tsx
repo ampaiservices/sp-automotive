@@ -36,8 +36,8 @@ export default function Footer() {
             height={241}
             className="h-16 w-auto invert"
           />
-          <p className="mt-3 text-graphite text-sm">{CITY}, {REGION}</p>
-          <p className="mt-1 text-graphite text-xs">Exotic collision &amp; restoration</p>
+          <p className="mt-3 text-bone/85 text-sm">{CITY}, {REGION}</p>
+          <p className="mt-1 text-bone/85 text-xs">Exotic collision &amp; restoration</p>
         </div>
 
         <div className="flex flex-col items-start md:items-center gap-3">
@@ -53,7 +53,7 @@ export default function Footer() {
         {/* Mobile-only min-h-[44px] on each link to meet the 44pt touch-target
             rule — desktop reverts to natural inline-like line-height via
             `md:block md:min-h-0` on the link className. Audit P1-b (2026-05-14). */}
-        <nav aria-label="Footer" className="flex flex-col gap-3 md:gap-2 text-sm text-graphite md:items-end">
+        <nav aria-label="Footer" className="flex flex-col gap-3 md:gap-2 text-sm text-bone/85 md:items-end">
           <Link href="/about" className="link-underline flex md:block items-center min-h-[44px] md:min-h-0 hover:text-bone transition-colors">About Serge</Link>
           <Link href="/faq" className="link-underline flex md:block items-center min-h-[44px] md:min-h-0 hover:text-bone transition-colors">FAQ</Link>
           <Link href="/estimate" className="link-underline flex md:block items-center min-h-[44px] md:min-h-0 hover:text-bone transition-colors">Send 3 photos</Link>

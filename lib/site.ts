@@ -4,8 +4,29 @@ export const PHONE_HREF = "tel:+19415994025";
 // on `sms:` URIs; the encoded prefix keeps the text composer ready for the
 // owner to attach photos.
 export const SMS_HREF = `sms:+19415994025?body=${encodeURIComponent("Photos of damage:")}`;
-// TODO: replace with real domain once Serge approves v1 and DNS is set
-export const SITE_URL = "https://sp-automotive.vercel.app";
+// Resolved at build time. Set NEXT_PUBLIC_SITE_URL=https://<apex-domain>
+// (e.g. https://sp-automotive.com) in Vercel production env settings.
+// Preview deploys auto-fall-back to VERCEL_URL. Local dev → localhost.
+// Production without an explicit URL throws — refusing to ship preview
+// hostnames into canonicals, sitemap, JSON-LD, and OG metadata.
+function resolveSiteUrl(): string {
+  const override = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "");
+  if (override) return override;
+
+  if (process.env.VERCEL_ENV === "preview" && process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
+
+  if (process.env.VERCEL_ENV === "production") {
+    throw new Error(
+      "NEXT_PUBLIC_SITE_URL is required in production. Set it to the apex domain (e.g. https://sp-automotive.com) in Vercel project settings.",
+    );
+  }
+
+  return "http://localhost:3000";
+}
+
+export const SITE_URL = resolveSiteUrl();
 export const SITE_NAME = "SP Automotive Collision & Repair";
 export const CITY = "Sarasota";
 export const REGION = "FL";

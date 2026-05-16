@@ -27,6 +27,12 @@ import Surface from "@/components/ui/Surface";
 // the section element propagate to mobile + desktop subtrees so a single
 // rAF writer drives both breakpoints without a ref-collision bug.
 
+// Lead card copy. Single source of truth — rendered identically in the
+// mobile stacked layout and the desktop glass card, so a copy edit lands
+// in one place rather than two.
+const HERO_LEAD =
+  "We deal with the insurance. You walk away whole — sometimes ahead.";
+
 export default function HeroVideo() {
   const [cardReady, setCardReady] = useState(false);
   const [ctasReady, setCtasReady] = useState(false);
@@ -113,7 +119,7 @@ export default function HeroVideo() {
             cardReady ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
           }`}
         >
-          We deal with the insurance. You walk away whole — sometimes ahead.
+          {HERO_LEAD}
         </p>
         <div
           className={`flex flex-wrap gap-4 justify-center transition-opacity duration-300 ease-out ${
@@ -185,9 +191,7 @@ export default function HeroVideo() {
           variant="glass"
           className="rounded-2xl p-8 transition duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_36px_80px_-20px_rgba(0,0,0,0.7)] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
         >
-          <p className="lead text-bone/90">
-            We deal with the insurance. You walk away whole — sometimes ahead.
-          </p>
+          <p className="lead text-bone/90">{HERO_LEAD}</p>
           <div
             className={`mt-6 flex flex-wrap gap-3 transition-opacity duration-300 ease-out ${
               ctasReady ? "opacity-100" : "opacity-0"
