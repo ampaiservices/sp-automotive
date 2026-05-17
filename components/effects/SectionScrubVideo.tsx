@@ -56,50 +56,45 @@ export default function SectionScrubVideo({ src, poster }: Props) {
     let rafId = 0;
     let lastTarget = -1;
     let primed = false;
-    let lastNudgeMs = 0;
-    let trailingTimeout: number | undefined;
+    let playingForScroll = false;
+    let idlePauseTimeout: number | undefined;
 
     // Safari/WebKit quirk: setting currentTime on a paused video updates
-    // the property but doesn't repaint the displayed frame. Fix is to
-    // fire play()→pause() after each seek so play() forces a paint.
+    // the property but doesn't repaint the displayed frame. The
+    // canonical workaround is play()+pause() after each seek — but that
+    // creates 60+ Promise+microtask cycles/sec under Lenis, which lags
+    // hard. Throttling to ~20Hz helped but still felt sluggish.
     //
-    // But calling this on every seek lags Safari hard — each cycle is
-    // a state transition + Promise + microtasks. Lenis fires scroll
-    // events ~60×/sec; one nudge per seek = 60 nudges/sec ≈ 120 video
-    // state transitions/sec. The decoder backs up, the page judders.
+    // Better approach: keep the video in "playing" state during scroll
+    // bursts. Safari paints frames naturally for playing videos, so
+    // every currentTime write is rendered without per-seek nudges.
     //
-    // Solution: leading-edge throttle at NUDGE_INTERVAL_MS + a trailing
-    // call so the final frame paints when scrolling stops. ~20 Hz is
-    // smooth-perceived for cinematic atmospheric content but ~3× less
-    // load than per-seek nudges.
-    const NUDGE_INTERVAL_MS = 50;
-
-    function nudgeNow() {
-      if (!primed) return;
-      lastNudgeMs = performance.now();
+    // Between seeks (~16ms at 60Hz scroll) the video plays forward
+    // naturally by ~1 frame, then the next seek overrides — imperceptible
+    // drift on cinematic content.
+    //
+    // When the user stops scrolling, a 150ms idle timer fires pause()
+    // once so the video doesn't run to its end. Net per-seek overhead:
+    // a single ensurePlaying() check, NO Promise chain.
+    function ensurePlaying() {
+      if (!primed || playingForScroll) return;
+      playingForScroll = true;
       const p = video!.play();
       if (p && typeof p.then === "function") {
-        p.then(() => video!.pause()).catch(() => {/* ignore */});
-      } else {
-        try { video!.pause(); } catch {/* ignore */}
+        p.catch(() => {
+          // Autoplay rejected — reset so a later scroll can retry.
+          playingForScroll = false;
+        });
       }
     }
 
-    function scheduleNudge() {
-      if (!primed) return;
-      const elapsed = performance.now() - lastNudgeMs;
-      if (elapsed >= NUDGE_INTERVAL_MS) {
-        nudgeNow();
-        return;
-      }
-      // Within throttle window: schedule a trailing nudge so the LAST
-      // seek's frame paints when scroll comes to rest. Reset on each
-      // call — only one trailing nudge per burst.
-      if (trailingTimeout) clearTimeout(trailingTimeout);
-      trailingTimeout = window.setTimeout(() => {
-        trailingTimeout = undefined;
-        nudgeNow();
-      }, NUDGE_INTERVAL_MS - elapsed);
+    function scheduleIdlePause() {
+      if (idlePauseTimeout) clearTimeout(idlePauseTimeout);
+      idlePauseTimeout = window.setTimeout(() => {
+        idlePauseTimeout = undefined;
+        try { video!.pause(); } catch {/* ignore */}
+        playingForScroll = false;
+      }, 150);
     }
 
     // Prime: play() then pause() once so subsequent currentTime seeks
@@ -170,9 +165,10 @@ export default function SectionScrubVideo({ src, poster }: Props) {
       } catch {
         /* pre-metadata, ignore */
       }
-      // Schedule a single play→pause nudge for this frame's tick. If
-      // apply() runs many times in a 16ms window, only one nudge fires.
-      scheduleNudge();
+      // Keep video in "playing" state so Safari paints each seek.
+      // Schedule a single pause for 150ms after the user stops scrolling.
+      ensurePlaying();
+      scheduleIdlePause();
     }
 
     function onScroll() {
@@ -208,7 +204,7 @@ export default function SectionScrubVideo({ src, poster }: Props) {
       video.removeEventListener("loadedmetadata", onMeta);
       ro.disconnect();
       if (rafId) cancelAnimationFrame(rafId);
-      if (trailingTimeout) clearTimeout(trailingTimeout);
+      if (idlePauseTimeout) clearTimeout(idlePauseTimeout);
     };
   }, [reduced]);
 
