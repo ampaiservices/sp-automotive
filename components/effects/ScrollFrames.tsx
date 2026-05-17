@@ -4,25 +4,30 @@ import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
 
-// Image-sequence scroll-scrub. Replaces SectionScrubVideo for the hero
-// when the video element's decoder can't keep up with scroll-driven
-// seeks (Apple does this for their heavy scroll-reveals — JPG swaps on
-// cached images are essentially free vs. h264 seek+decode+paint cycles).
+// Image-sequence scroll-scrub via canvas. Replaces SectionScrubVideo
+// for the hero because video element seek+decode+paint cycles couldn't
+// keep up with Lenis-driven scroll on either Chrome or Safari.
 //
-// On mount: preload all N frames into the browser cache via new Image().
-// On scroll: compute frame index from the parent section's scroll
-// progress and swap <img src> to that frame. The browser serves from
-// memory cache — no network, no decode latency, no Promise chains.
+// Why canvas over <img src> swaps:
+//   The naive image-sequence approach swaps a single <img>'s src on
+//   each scroll tick. Even with frames preloaded into HTTP cache
+//   AND into Image() objects in JS, each src assignment triggers
+//   a fresh JPEG decode for the visible <img>'s own buffer — the
+//   preload's decoded buffer is NOT shared with the <img>. At 60
+//   swaps/sec on 1080p images, that's enough decode work to lag
+//   the main thread.
+//
+//   Canvas + drawImage paints DIRECTLY from the cached HTMLImageElement's
+//   own decoded buffer. No re-decode on scroll. GPU-composited paint.
+//   Same memory cost as the <img> approach (one decoded buffer per
+//   frame, held by the Image objects), but zero per-scroll decode.
 //
 // Reduced motion: render the fallback poster as a static <Image>.
 
 type Props = {
-  /** Total number of frames in the sequence. */
   frameCount: number;
-  /** URL pattern with `{n}` placeholder, replaced with 3-digit padded
-   *  1-indexed frame number. e.g. "/hero-clips/frames/frame-{n}.jpg" */
+  /** URL pattern with `{n}` replaced by 3-digit padded 1-indexed frame number. */
   framePattern: string;
-  /** Static poster shown before frames preload + as reduced-motion fallback. */
   fallbackPoster: string;
 };
 
@@ -32,29 +37,64 @@ function framePath(pattern: string, oneIndexed: number): string {
 
 export default function ScrollFrames({ frameCount, framePattern, fallbackPoster }: Props) {
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const imgRef = useRef<HTMLImageElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const reduced = useMediaQuery("(prefers-reduced-motion: reduce)");
 
   useEffect(() => {
     if (reduced) return;
     const wrapper = wrapperRef.current;
-    const img = imgRef.current;
-    if (!wrapper || !img) return;
+    const canvas = canvasRef.current;
+    if (!wrapper || !canvas) return;
     const section = wrapper.parentElement;
     if (!section) return;
+    const ctx = canvas.getContext("2d", { alpha: false });
+    if (!ctx) return;
 
     let rafId = 0;
     let lastIndex = -1;
+    const images: HTMLImageElement[] = [];
+    let loadedCount = 0;
 
-    // Preload every frame into the browser cache. We don't need to wait
-    // for them — first scroll may briefly fetch uncached frames, but
-    // subsequent passes are instant. Holding references on the array
-    // prevents GC from dropping the Image objects mid-fetch.
-    const preloaded: HTMLImageElement[] = [];
+    // Decode all frames once. Each Image holds its decoded buffer; we
+    // paint from those buffers on every scroll tick — no re-decode.
     for (let i = 1; i <= frameCount; i++) {
       const im = new window.Image();
       im.src = framePath(framePattern, i);
-      preloaded.push(im);
+      im.decoding = "async";
+      im.onload = () => {
+        loadedCount++;
+        // Once frame 1 is loaded, paint it as the initial frame.
+        if (i === 1) draw(0);
+      };
+      images.push(im);
+    }
+
+    function sizeCanvas() {
+      const rect = wrapper!.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const w = Math.max(1, Math.round(rect.width * dpr));
+      const h = Math.max(1, Math.round(rect.height * dpr));
+      if (canvas!.width !== w || canvas!.height !== h) {
+        canvas!.width = w;
+        canvas!.height = h;
+      }
+    }
+
+    function draw(index: number) {
+      const im = images[index];
+      if (!im || !im.complete || im.naturalWidth === 0) return;
+      sizeCanvas();
+      // Cover-fit: scale image to cover canvas, preserving aspect.
+      const cw = canvas!.width;
+      const ch = canvas!.height;
+      const iw = im.naturalWidth;
+      const ih = im.naturalHeight;
+      const scale = Math.max(cw / iw, ch / ih);
+      const dw = iw * scale;
+      const dh = ih * scale;
+      const dx = (cw - dw) / 2;
+      const dy = (ch - dh) / 2;
+      ctx!.drawImage(im, dx, dy, dw, dh);
     }
 
     function apply() {
@@ -63,12 +103,19 @@ export default function ScrollFrames({ frameCount, framePattern, fallbackPoster 
       const rect = section!.getBoundingClientRect();
       const h = rect.height || 1;
       const p = Math.max(0, Math.min(1, (-rect.top / h) * SPEED));
-      // Map [0, 1] to [0, frameCount-1]. Floor so frame 1 covers
-      // [0, 1/N) of progress, frame N covers [(N-1)/N, 1].
+      // Index in [0, frameCount-1]. Skip the paint if frame hasn't
+      // loaded yet — once loaded, the next scroll tick will paint it.
       const index = Math.min(frameCount - 1, Math.floor(p * frameCount));
       if (index === lastIndex) return;
+      // Don't update lastIndex until we actually painted; if image not
+      // loaded yet, retry on next scroll.
+      const im = images[index];
+      if (!im || !im.complete || im.naturalWidth === 0) {
+        // Loading — keep the previous frame on screen rather than blank.
+        return;
+      }
       lastIndex = index;
-      img!.src = framePath(framePattern, index + 1);
+      draw(index);
     }
 
     function onScroll() {
@@ -76,19 +123,22 @@ export default function ScrollFrames({ frameCount, framePattern, fallbackPoster 
       rafId = requestAnimationFrame(apply);
     }
 
-    const ro = new ResizeObserver(apply);
-    ro.observe(section);
+    const ro = new ResizeObserver(() => {
+      // On resize, repaint current frame at new canvas size.
+      if (lastIndex >= 0) draw(lastIndex);
+      else apply();
+    });
+    ro.observe(wrapper);
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", apply);
     apply();
 
     return () => {
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", apply);
       ro.disconnect();
       if (rafId) cancelAnimationFrame(rafId);
-      // Release preload refs so GC can clean up.
-      preloaded.length = 0;
+      // Release references; browser GC can free decoded buffers.
+      images.length = 0;
+      void loadedCount;
     };
   }, [reduced, frameCount, framePattern]);
 
@@ -102,12 +152,9 @@ export default function ScrollFrames({ frameCount, framePattern, fallbackPoster 
 
   return (
     <div ref={wrapperRef} aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-      {/* eslint-disable-next-line @next/next/no-img-element -- ScrollFrames swaps src per scroll; next/image's optimization pipeline would refetch on every swap, defeating the cache strategy */}
-      <img
-        ref={imgRef}
-        src={framePath(framePattern, 1)}
-        alt=""
-        className="absolute inset-0 w-full h-full object-cover"
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 w-full h-full"
       />
     </div>
   );
