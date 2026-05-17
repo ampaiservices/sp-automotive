@@ -137,6 +137,27 @@ export default function SectionScrubVideo({ src, poster }: Props) {
         if (writeCount <= 5 || writeCount % 20 === 0) {
           console.log("[scrub] write#", writeCount, "rect.top=", rect.top.toFixed(0), "target=", target.toFixed(3), "→ video.currentTime=", video!.currentTime.toFixed(3), "paused=", video!.paused, "primed=", primed);
         }
+        // Safari/WebKit quirk: setting currentTime on a paused video
+        // silently updates the property but does NOT repaint the
+        // displayed frame. The canonical fix is to nudge play() then
+        // pause() after each seek — play() forces a frame paint,
+        // pause() stops it before any subsequent frame plays. This
+        // pattern is what the popular scroll-scrub libraries
+        // (react-scroll-video etc.) all converge on for cross-browser
+        // scrub support.
+        //
+        // Guarded by `primed` — before the first play() resolves, the
+        // initial autoplay is already painting frames; piling more
+        // play() calls on top creates aborted-promise noise. After
+        // prime resolves, paused=true and seeks need the nudge.
+        if (primed) {
+          const p = video!.play();
+          if (p && typeof p.then === "function") {
+            p.then(() => video!.pause()).catch(() => {/* ignore — next seek will retry */});
+          } else {
+            try { video!.pause(); } catch {/* ignore */}
+          }
+        }
       } catch (e) {
         console.log("[scrub] write FAILED", e);
       }
