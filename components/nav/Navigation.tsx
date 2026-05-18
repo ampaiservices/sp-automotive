@@ -216,8 +216,6 @@ export default function Navigation() {
         // spec says children with default `auto` should still receive
         // events under a `none` ancestor, but Safari's hit-testing has
         // been inconsistent on this for years.
-        // z-[60] is one tier above the header's z-50 so paint and hit
-        // order both put the dialog unambiguously on top.
         <div
           ref={dialogRef}
           className="pointer-events-auto fixed inset-0 z-[60] bg-ink flex flex-col"

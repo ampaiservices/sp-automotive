@@ -24,10 +24,8 @@ export function useViewportHeight(): () => number {
     };
     update();
     window.addEventListener("resize", update);
-    window.addEventListener("orientationchange", update);
     return () => {
       window.removeEventListener("resize", update);
-      window.removeEventListener("orientationchange", update);
     };
   }, []);
 

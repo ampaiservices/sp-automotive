@@ -191,21 +191,21 @@ export default function HowItWorks() {
       </div>
 
       {/* Bottom progressive blur — softens the §HowItWorks dark →
-          §FeaturedBuilds paper handoff. Apple-style gradient backdrop
-          blur intensifying toward the bottom edge so the workshop video
-          reads as "fading out" rather than cutting abruptly. z-20 so it
-          sits above the AmbientVideo + cards but below any potential nav
-          overlays.
-          Conditionally rendered only while the section is in the viewport
-          (continuous IO above) — stacked `backdrop-filter` layers cost
-          compositor paint on every frame even when offscreen. Layer count
-          drops from 5 → 3 on mobile to stay under iOS Safari's blur
-          budget. */}
+          §FeaturedBuilds paper handoff. Conditionally rendered only
+          while the section is in the viewport (continuous IO above) —
+          stacked `backdrop-filter` layers cost compositor paint on
+          every frame even when offscreen. Layer count drops from
+          5 → 3 on mobile to stay under iOS Safari's blur budget.
+          blurIntensity={3} gives a max blur of ~12px at the bottom-most
+          layer (0.25 default was invisible — only ~1px max). Taller
+          runway (h-20 / h-56) — mobile stays short so it doesn't overlap
+          card 04 in landscape. */}
       {blurVisible && (
         <ProgressiveBlur
           direction="bottom"
           blurLayers={isMobile ? 3 : 5}
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-20 md:h-40 z-20"
+          blurIntensity={3}
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-20 md:h-56 z-20"
         />
       )}
 
