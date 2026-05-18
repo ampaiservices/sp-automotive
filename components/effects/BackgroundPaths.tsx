@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 
 // Animated SVG paths that flow across the viewport. Adapted from the
 // user-provided BackgroundPaths reference to fit this codebase:
@@ -21,14 +21,24 @@ import { motion } from "framer-motion";
 //      preserves the desync that produces the original cascade — each
 //      path snaps from `pathLength: 1` back to its `initial: 0.3` at a
 //      different time, so the layer reads as a wave of strokes drawing
-//      and redrawing themselves rather than a synced pulse.
+//      and redrawing themselves rather than a synced pulse. With 20
+//      paths per layer (i = 0..19) the modulus still emits all 10
+//      distinct durations, so the cascade is preserved.
+//   6. 20 paths per layer (40 total) — down from the source's 36 each.
+//      The reference was a single-viewport hero; here this underlays a
+//      long scrollable page, so the ambient layer is kept cheap to
+//      composite (120 property animations instead of 216).
+//   7. Honors `prefers-reduced-motion`: when set, `BackgroundPaths`
+//      returns null. The element is aria-hidden decoration, so removing
+//      it entirely is the cleanest opt-out and matches the codebase
+//      pattern used by `RevealWords`, `SplitText`, et al.
 //
 // Slice preserveAspectRatio fills the viewport on both narrow and wide
 // screens — curves extend well beyond the 696×316 viewBox, so cropping
 // keeps the canvas covered without empty bands.
 
 function FloatingPaths({ position }: { position: number }) {
-  const paths = Array.from({ length: 36 }, (_, i) => ({
+  const paths = Array.from({ length: 20 }, (_, i) => ({
     id: i,
     d: `M-${380 - i * 5 * position} -${189 + i * 6}C-${
       380 - i * 5 * position
@@ -80,6 +90,9 @@ function FloatingPaths({ position }: { position: number }) {
 }
 
 export default function BackgroundPaths() {
+  const reduced = useReducedMotion();
+  if (reduced) return null;
+
   return (
     <div
       aria-hidden="true"
