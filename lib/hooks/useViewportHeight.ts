@@ -23,11 +23,15 @@ export function useViewportHeight(): () => number {
       vhRef.current = window.innerHeight;
     };
     update();
+    // `resize` alone — NOT `orientationchange`. On iOS Safari (and some
+    // Android engines) `orientationchange` fires BEFORE innerHeight has
+    // committed the new viewport dimensions, so reading it there caches
+    // the pre-rotation height. The browser always fires `resize` once
+    // the post-rotation layout is settled, which is the correct moment
+    // to capture innerHeight.
     window.addEventListener("resize", update);
-    window.addEventListener("orientationchange", update);
     return () => {
       window.removeEventListener("resize", update);
-      window.removeEventListener("orientationchange", update);
     };
   }, []);
 

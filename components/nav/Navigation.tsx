@@ -216,8 +216,16 @@ export default function Navigation() {
         // spec says children with default `auto` should still receive
         // events under a `none` ancestor, but Safari's hit-testing has
         // been inconsistent on this for years.
-        // z-[60] is one tier above the header's z-50 so paint and hit
-        // order both put the dialog unambiguously on top.
+        //
+        // z-index note: <header> is `position: fixed` with `z-50`, so it
+        // creates its own stacking context. The dialog's `z-[60]` is
+        // SCOPED to that context — globally, the dialog paints as part
+        // of the z-50 group, not at z-60. The z-[60] only buys local
+        // ordering above the sibling <nav> (z-auto) within the header
+        // context. The dialog wins globally because the header context
+        // itself sits above StickyContactBar's z-40 elsewhere in the
+        // tree — bumping z-[60] to anything higher would NOT promote
+        // the dialog past a hypothetical sibling at z-70.
         <div
           ref={dialogRef}
           className="pointer-events-auto fixed inset-0 z-[60] bg-ink flex flex-col"
