@@ -28,16 +28,19 @@ import { motion, useReducedMotion } from "framer-motion";
 //      The reference was a single-viewport hero; here this underlays a
 //      long scrollable page, so the ambient layer is kept cheap to
 //      composite (120 property animations instead of 216).
-//   7. Honors `prefers-reduced-motion`: when set, `BackgroundPaths`
-//      returns null. The element is aria-hidden decoration, so removing
-//      it entirely is the cleanest opt-out and matches the codebase
-//      pattern used by `RevealWords`, `SplitText`, et al.
+//   7. Honors `prefers-reduced-motion`: when set, each path renders as a
+//      plain static `<path>` at full length with a fixed mid-range
+//      opacity (0.35 — the midpoint of the animated [0.2, 0.5, 0.2]
+//      oscillation). AGENTS.md requires animations fall back to their
+//      final state rather than disappear; this also avoids the
+//      one-frame flash that `useReducedMotion` would otherwise cause,
+//      since `motion.path` is never mounted in the reduced branch.
 //
 // Slice preserveAspectRatio fills the viewport on both narrow and wide
 // screens — curves extend well beyond the 696×316 viewBox, so cropping
 // keeps the canvas covered without empty bands.
 
-function FloatingPaths({ position }: { position: number }) {
+function FloatingPaths({ position, reduced }: { position: number; reduced: boolean }) {
   const paths = Array.from({ length: 20 }, (_, i) => ({
     id: i,
     d: `M-${380 - i * 5 * position} -${189 + i * 6}C-${
@@ -64,42 +67,53 @@ function FloatingPaths({ position }: { position: number }) {
         preserveAspectRatio="xMidYMid slice"
         aria-hidden="true"
       >
-        {paths.map((path) => (
-          <motion.path
-            key={path.id}
-            d={path.d}
-            stroke="currentColor"
-            strokeWidth={path.width}
-            strokeOpacity={0.04 + path.id * 0.004}
-            initial={{ pathLength: 0.3, opacity: 0.4 }}
-            animate={{
-              pathLength: 1,
-              opacity: [0.2, 0.5, 0.2],
-              pathOffset: [0, 1, 0],
-            }}
-            transition={{
-              duration: path.duration,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "linear",
-            }}
-          />
-        ))}
+        {paths.map((path) =>
+          reduced ? (
+            <path
+              key={path.id}
+              d={path.d}
+              stroke="currentColor"
+              strokeWidth={path.width}
+              strokeOpacity={0.04 + path.id * 0.004}
+              opacity={0.35}
+              fill="none"
+            />
+          ) : (
+            <motion.path
+              key={path.id}
+              d={path.d}
+              stroke="currentColor"
+              strokeWidth={path.width}
+              strokeOpacity={0.04 + path.id * 0.004}
+              initial={{ pathLength: 0.3, opacity: 0.4 }}
+              animate={{
+                pathLength: 1,
+                opacity: [0.2, 0.5, 0.2],
+                pathOffset: [0, 1, 0],
+              }}
+              transition={{
+                duration: path.duration,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "linear",
+              }}
+            />
+          ),
+        )}
       </svg>
     </div>
   );
 }
 
 export default function BackgroundPaths() {
-  const reduced = useReducedMotion();
-  if (reduced) return null;
+  const reduced = useReducedMotion() ?? false;
 
   return (
     <div
       aria-hidden="true"
       className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
     >
-      <FloatingPaths position={1} />
-      <FloatingPaths position={-1} />
+      <FloatingPaths position={1} reduced={reduced} />
+      <FloatingPaths position={-1} reduced={reduced} />
     </div>
   );
 }
