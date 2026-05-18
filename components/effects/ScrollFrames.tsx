@@ -94,6 +94,10 @@ export default function ScrollFrames({ frameCount, framePattern, fallbackPoster 
       const idx = i;
       im.onload = () => {
         if (idx === 1) draw(0);
+        // Idle-loaded frames may decode after the user already scrolled
+        // past them; apply() bailed without advancing lastIndex, so
+        // re-run it via onScroll's rAF coalescing.
+        else onScroll();
       };
       if (i <= EAGER_COUNT) {
         im.src = framePath(framePattern, i);
