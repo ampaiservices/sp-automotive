@@ -193,7 +193,12 @@ export default function ScrollFrames({ frameCount, framePattern, fallbackPoster 
   if (reduced) {
     return (
       <div ref={wrapperRef} aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <Image src={fallbackPoster} alt="" fill sizes="100vw" className="object-cover" />
+        {/* `priority`: the poster IS the hero in reduced-motion mode and
+            therefore the LCP candidate. Without it Next.js won't emit a
+            preload link and the browser only discovers the image when it
+            parses the body — a full RTT added to the LCP on the critical
+            path for ~15–20% of visitors. */}
+        <Image src={fallbackPoster} alt="" fill sizes="100vw" priority className="object-cover" />
       </div>
     );
   }
