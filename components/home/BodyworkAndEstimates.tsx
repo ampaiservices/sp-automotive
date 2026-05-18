@@ -104,7 +104,7 @@ export default function BodyworkAndEstimates() {
                 variant="light"
                 className="flex h-full flex-col rounded-2xl p-7 md:p-8 text-left"
               >
-                <p className="eyebrow text-graphite">{"// Next move"}</p>
+                <p className="eyebrow text-graphite">{"// On the schedule"}</p>
                 <h3 className="mt-3 font-display text-2xl md:text-3xl leading-tight text-ink">
                   Get on the schedule.
                 </h3>

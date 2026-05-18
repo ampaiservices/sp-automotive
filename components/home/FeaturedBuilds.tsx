@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useReducedMotion } from "framer-motion";
 import Surface from "@/components/ui/Surface";
+import MarqueMarquee from "@/components/home/MarqueMarquee";
 import { BUILDS } from "@/components/builds/builds-data";
 
 // SELECTED WORK — 1+3 builds grid, Lambo-style. Utility section with a
@@ -14,6 +15,10 @@ import { BUILDS } from "@/components/builds/builds-data";
 // Hero pick: urus-1016 (recognizable Lambo flagship).
 // Thumbnails: huracan-mansory, r8-libertywalk, g-wagon-brabus (variety
 // across brands).
+//
+// Closes with a "// We restore" marque marquee — same machinery as
+// §InsuranceHandling's carrier strip (both built on LogoMarquee). The
+// marque data lives in MarqueMarquee.tsx.
 
 const HERO_SLUG = "urus-1016";
 const THUMB_SLUGS = ["huracan-mansory", "r8-libertywalk", "g-wagon-brabus"];
@@ -186,6 +191,19 @@ export default function FeaturedBuilds() {
           </li>
         ))}
       </ul>
+
+      {/* Marque marquee — relocated from TrustStrip. Lives below the
+          build cards so the wider marque list reads as a coda to the
+          selected work above. */}
+      <div className="relative z-10 mx-auto mt-16 max-w-7xl pt-10 md:mt-20 md:pt-14 border-t border-ink/10">
+        <p className="eyebrow text-graphite">{"// We restore"}</p>
+        <div className="mt-6 -mx-6 md:-mx-10">
+          {/* Negative margin pulls the marquee edge-to-edge of the
+              section padding so the mask gradient fades against the
+              section edge, not the inner container. */}
+          <MarqueMarquee />
+        </div>
+      </div>
 
       <style jsx>{`
         :global(.featured-builds__card) {

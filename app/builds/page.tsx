@@ -33,7 +33,7 @@ export default function BuildsIndexPage() {
           <h1 className="mt-4 display-lg leading-[1.02] text-bone">
             Every build that left the shop.
           </h1>
-          <p className="mt-8 lead max-w-3xl text-graphite">
+          <p className="mt-8 lead max-w-3xl text-bone/85">
             Body-kit conversions for the cars people don&apos;t bring to the
             average shop. Hand-laid forged carbon, factory paint match, no
             clearance compromises. Each build below was photographed in the
@@ -69,7 +69,7 @@ export default function BuildsIndexPage() {
                     <h2 className="mt-2 font-display text-bone text-xl md:text-2xl leading-tight">
                       {build.car}
                     </h2>
-                    <p className="mt-3 text-graphite text-sm leading-snug line-clamp-3">
+                    <p className="mt-3 text-bone/85 text-sm leading-snug line-clamp-3">
                       {build.description}
                     </p>
                     <p className="mt-auto pt-6 text-bone uppercase tracking-[0.18em] text-xs">

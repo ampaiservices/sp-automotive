@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useRef } from "react";
 import { useReducedMotion } from "framer-motion";
-import SplitText from "@/components/effects/SplitText";
 import { TextScramble } from "@/components/effects/TextScramble";
 
 // Chapter 01 — paper-light editorial. Replaces the older corner-cinematic
@@ -12,7 +11,7 @@ import { TextScramble } from "@/components/effects/TextScramble";
 //
 // Layout choice: no glass card. The type IS the composition. Three big
 // numerals (70% / 100% / +30%) read like a Bloomberg ticker, sub-captioned
-// in mono. A single Anton display sub-headline closes the beat.
+// in mono.
 //
 // Like the other chapters, exposes a `data-scrub-time` attribute so the
 // shared PageScrubVideo dwells while this section fills the viewport (the
@@ -63,7 +62,7 @@ export default function TheMath() {
       ref={sectionRef}
       aria-labelledby="the-math-heading"
       data-scrub-time={SCRUB_TIME}
-      className="the-math relative min-h-[100svh] w-full overflow-hidden px-6 py-28 md:px-10 md:py-36"
+      className="the-math relative min-h-screen w-full overflow-hidden px-6 py-28 md:px-10 md:py-36"
       style={{
         // Paper-light editorial ground. The two adjacent dark sections
         // (hero above, ch02 below) make this a high-contrast rhythm break.
@@ -83,19 +82,21 @@ export default function TheMath() {
         }}
       />
 
-      {/* Section label — Anton uppercase, no chapter numeral. Wrapped in the
-          same max-w-6xl container as the numerals + closing line below so
-          the label aligns with the section's content grid (not the section's
-          edge padding). */}
-      <div className="relative z-10 mx-auto max-w-6xl">
-        <p className="font-display uppercase tracking-[0.10em] text-left text-ink text-3xl md:text-5xl leading-none">
+      {/* Section heading — Anton uppercase, no chapter numeral. Wrapped in the
+          same max-w-7xl container as the numerals below so the heading aligns
+          with the section's content grid (not the section's edge padding). */}
+      <div className="relative z-10 mx-auto max-w-7xl">
+        <h2
+          id="the-math-heading"
+          className="font-display uppercase tracking-[0.10em] text-left text-ink text-3xl md:text-5xl leading-none"
+        >
           The numbers
-        </p>
+        </h2>
       </div>
 
-      {/* Center stack: measurement rule -> three big numerals -> closing
-          line. max-w keeps the columns from spreading on ultra-wide. */}
-      <div className="relative z-10 mx-auto mt-20 max-w-6xl md:mt-28">
+      {/* Center stack: measurement rule -> three big numerals. max-w keeps
+          the columns from spreading on ultra-wide. */}
+      <div className="relative z-10 mx-auto mt-20 max-w-7xl md:mt-28">
         {/* Animated measurement rule — draws left -> right when the section
             reveals. CSS var `--rule-progress` drives scaleX. */}
         <span
@@ -127,18 +128,6 @@ export default function TheMath() {
             caption="& up recovered"
           />
         </div>
-
-        {/* Closing line — display sub-headline, max two lines on desktop. */}
-        <SplitText
-          as="h2"
-          id="the-math-heading"
-          className="display-md mt-20 max-w-4xl leading-[1.05] text-ink md:mt-28"
-          reveal="mount"
-          mountDelayMs={400}
-          staggerMs={22}
-        >
-          {"We make the file whole.\nYou walk away even — sometimes ahead."}
-        </SplitText>
       </div>
 
       {/* Scoped animation rules. We can't drive these from Tailwind alone
@@ -203,7 +192,7 @@ function NumeralBlock({
           {value}
         </TextScramble>
       </div>
-      <p className="mt-3 text-graphite">{caption}</p>
+      <p className="mt-3 text-ink/80">{caption}</p>
     </div>
   );
 }

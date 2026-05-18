@@ -391,7 +391,7 @@ function EmptyState() {
       <h3 className="mt-3 font-display text-2xl md:text-3xl text-bone leading-tight">
         Text Serge a photo. He answers.
       </h3>
-      <p className="mt-4 text-graphite max-w-md mx-auto">
+      <p className="mt-4 text-bone/85 max-w-md mx-auto">
         Not every question fits a list. Send the damage and a quick note —
         the reply comes back from the bench.
       </p>

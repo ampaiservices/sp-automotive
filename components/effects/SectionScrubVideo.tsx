@@ -56,62 +56,80 @@ export default function SectionScrubVideo({ src, poster }: Props) {
     let rafId = 0;
     let lastTarget = -1;
     let primed = false;
+    let playingForScroll = false;
+    let idlePauseTimeout: number | undefined;
+
+    // Safari/WebKit quirk: setting currentTime on a paused video updates
+    // the property but doesn't repaint the displayed frame. The
+    // canonical workaround is play()+pause() after each seek — but that
+    // creates 60+ Promise+microtask cycles/sec under Lenis, which lags
+    // hard. Throttling to ~20Hz helped but still felt sluggish.
+    //
+    // Better approach: keep the video in "playing" state during scroll
+    // bursts. Safari paints frames naturally for playing videos, so
+    // every currentTime write is rendered without per-seek nudges.
+    //
+    // Between seeks (~16ms at 60Hz scroll) the video plays forward
+    // naturally by ~1 frame, then the next seek overrides — imperceptible
+    // drift on cinematic content.
+    //
+    // When the user stops scrolling, a 150ms idle timer fires pause()
+    // once so the video doesn't run to its end. Net per-seek overhead:
+    // a single ensurePlaying() check, NO Promise chain.
+    function ensurePlaying() {
+      if (!primed || playingForScroll) return;
+      playingForScroll = true;
+      const p = video!.play();
+      if (p && typeof p.then === "function") {
+        p.catch(() => {
+          // Autoplay rejected — reset so a later scroll can retry.
+          playingForScroll = false;
+        });
+      }
+    }
+
+    function scheduleIdlePause() {
+      if (idlePauseTimeout) clearTimeout(idlePauseTimeout);
+      idlePauseTimeout = window.setTimeout(() => {
+        idlePauseTimeout = undefined;
+        try { video!.pause(); } catch {/* ignore */}
+        playingForScroll = false;
+      }, 150);
+    }
 
     // Prime: play() then pause() once so subsequent currentTime seeks
     // render frames. Without this, Safari / WebKit shows the poster
     // forever on a never-played paused video, even after setting
-    // currentTime — which looks identical to a frozen still image.
+    // currentTime — which looks identical to a frozen still image. We
+    // try to prime as early as possible (on loadedmetadata / canplay),
+    // and again as a fallback on the first scroll event.
     //
-    // Three things this implementation guards against:
-    //   1. Visible autoplay during the play() promise's async window —
-    //      call pause() SYNCHRONOUSLY right after play() so the video
-    //      element doesn't render its way through frames before the
-    //      promise resolves. Without this, the video appears to play
-    //      from frame 0 forward until the .then() finally fires.
-    //   2. Stale playhead — after priming, immediately call apply()
-    //      so currentTime jumps to wherever the scroll position now
-    //      maps to. Covers the case where the user scrolled during
-    //      the play() window.
-    //   3. Silent autoplay rejection — `primed` flips to true ONLY in
-    //      the .then() success branch. If play() rejects (autoplay
-    //      throttling, no user gesture, hidden tab), primed stays
-    //      false and the next scroll/metadata event retries.
+    // `primed` flips to true ONLY after play() resolves successfully.
+    // If the browser rejects play() (autoplay throttling, no user
+    // gesture yet, hidden tab, etc.), `primed` stays false and the
+    // next scroll/metadata event retries. Previously this flag was set
+    // unconditionally before the play() result was known, so a single
+    // silent rejection would lock the video on its poster forever.
     function prime() {
-      if (primed) {
-        console.log("[scrub] prime: already primed, skipping");
-        return;
-      }
-      console.log("[scrub] prime: calling play()");
-      const playPromise = video!.play();
-      try {
-        video!.pause();
-        console.log("[scrub] prime: sync pause called, video.paused=", video!.paused);
-      } catch (e) {
-        console.log("[scrub] prime: sync pause failed", e);
-      }
-      if (playPromise && typeof playPromise.then === "function") {
-        playPromise.then(() => {
+      if (primed) return;
+      const p = video!.play();
+      if (p && typeof p.then === "function") {
+        p.then(() => {
           primed = true;
-          console.log("[scrub] prime: play resolved, primed=true, video.paused=", video!.paused, "currentTime=", video!.currentTime);
-          try { video!.pause(); } catch {/* ignore */}
-          apply();
-        }).catch((err) => {
-          console.log("[scrub] prime: play REJECTED", err);
+          video!.pause();
+        }).catch(() => {
+          /* leave primed=false so the next event retries */
         });
       } else {
         primed = true;
-        console.log("[scrub] prime: synchronous play path, primed=true");
-        apply();
+        try { video!.pause(); } catch {/* ignore */}
       }
     }
 
     function apply() {
       rafId = 0;
       const dur = video!.duration;
-      if (!dur || Number.isNaN(dur)) {
-        console.log("[scrub] apply: no duration yet, bailing. video.readyState=", video!.readyState);
-        return;
-      }
+      if (!dur || Number.isNaN(dur)) return;
 
       // Map the parent section's scroll-through range to [0, 1]:
       //   p = 0 -> section's TOP has just reached the viewport's TOP
@@ -140,29 +158,17 @@ export default function SectionScrubVideo({ src, poster }: Props) {
       const target = Math.min(dur - 0.05, p * dur);
 
       const delta = Math.abs(target - lastTarget);
-      if (delta < 1 / 120) {
-        // Gate blocked — too small a delta to be worth a seek.
-        return;
-      }
-      console.log(
-        "[scrub] apply: rect.top=",
-        rect.top.toFixed(1),
-        "p=",
-        p.toFixed(3),
-        "target=",
-        target.toFixed(3),
-        "lastTarget=",
-        lastTarget.toFixed(3),
-        "delta=",
-        delta.toFixed(3),
-      );
+      if (delta < 1 / 120) return;
       lastTarget = target;
       try {
         video!.currentTime = target;
-        console.log("[scrub] apply: SET currentTime=", target.toFixed(3), "→ video.currentTime is now", video!.currentTime.toFixed(3));
-      } catch (e) {
-        console.log("[scrub] apply: currentTime write FAILED", e);
+      } catch {
+        /* pre-metadata, ignore */
       }
+      // Keep video in "playing" state so Safari paints each seek.
+      // Schedule a single pause for 150ms after the user stops scrolling.
+      ensurePlaying();
+      scheduleIdlePause();
     }
 
     function onScroll() {
@@ -170,7 +176,6 @@ export default function SectionScrubVideo({ src, poster }: Props) {
       if (rafId) return;
       rafId = requestAnimationFrame(apply);
     }
-    console.log("[scrub] effect mounted, attaching scroll listener");
 
     // Prime + seek as soon as metadata is available so the video element
     // actually renders a frame on first paint — without this, the poster
@@ -199,6 +204,7 @@ export default function SectionScrubVideo({ src, poster }: Props) {
       video.removeEventListener("loadedmetadata", onMeta);
       ro.disconnect();
       if (rafId) cancelAnimationFrame(rafId);
+      if (idlePauseTimeout) clearTimeout(idlePauseTimeout);
     };
   }, [reduced]);
 

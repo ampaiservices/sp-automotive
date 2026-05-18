@@ -12,8 +12,8 @@ import Surface from "@/components/ui/Surface";
 // Stats values are placeholders — verify with Serge before launch.
 
 const STATS = [
-  { value: "17", label: "yrs at the bench" },
-  { value: "200+", label: "exotics restored" },
+  { value: "4", label: "yrs at the bench" },
+  { value: "15+", label: "exotics restored" },
   { value: "100%", label: "paid-in-full target" },
   { value: "0", label: "totaled twice" },
 ];
@@ -58,7 +58,7 @@ export default function AboutStrip() {
                   {s.value}
                 </TextScramble>
               </dt>
-              <dd className="mt-3 text-graphite text-sm leading-tight max-w-[14ch]">
+              <dd className="mt-3 text-ink/80 text-sm leading-tight max-w-[14ch]">
                 {s.label}
               </dd>
             </div>

@@ -28,7 +28,7 @@ const QUESTIONS: { q: string; a: string }[] = [
   },
   {
     q: "Do you work outside the Sarasota area?",
-    a: "We service all of Florida and select out-of-state cases. The mobile estimate model means we come to you wherever the car is.",
+    a: "Sarasota and within an hour's drive. The mobile estimate model means we come to you — but only inside that radius. Outside it, we can take a look from photos and coordinate transport into the shop.",
   },
   {
     q: "What does 'paid in full' actually mean for my settlement?",

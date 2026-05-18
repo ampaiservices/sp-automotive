@@ -9,7 +9,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 **Tokens** (all in `app/globals.css` under `@theme`):
 - Backgrounds: `--color-ink` #0E0F11, `--color-ink-deep` #0A0B0D, `--color-steel` #2A2D32, `--color-paper` #F4F2EE
-- Text: `--color-bone` #C9C4BB (headlines), `--color-graphite` #6E727A (body, secondary)
+- Text: `--color-bone` #C9C4BB (headlines + body on dark), `--color-graphite` #6E727A — **labels only** (eyebrows, `.spec`/`.annotation` mono, uppercase tracked captions, `text-[10px]` annotations, placeholders, decorative `text-graphite/X` opacity variants). Do not use `text-graphite` for body prose: it sits at ~3.9–4.3:1 on both ink and paper which fails WCAG AA. Body prose on dark → `text-bone/85` (~8.3:1); body prose on paper → `text-ink/80` (~9.9:1).
 - Accent: `--color-ignite` #C8281D — **brake-light reserved**, use exactly once per section maximum
 - Structure: `--color-hairline` rgba(201,196,187,0.10) for borders; never full-strength borders
 - Tailwind utilities work directly off these tokens: `bg-ink`, `text-bone`, `border-hairline`, `bg-steel`, etc.
