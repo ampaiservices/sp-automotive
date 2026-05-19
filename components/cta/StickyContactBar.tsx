@@ -96,7 +96,7 @@ export default function StickyContactBar() {
       window.removeEventListener("resize", check);
       if (raf) cancelAnimationFrame(raf);
     };
-  }, [hidden, getVh]);
+  }, [hidden, getVh, pathname]);
 
   // Theme — watch dark sections and flip when any of them overlap the
   // bottom strip of the viewport (where the sticky bar sits). The strip
